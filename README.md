@@ -50,9 +50,13 @@ cd app
 ```
 
 ### Crie um ambiente virtual
+
+```
 python -m venv venv
+```
 
 ### Ative o ambiente virtual
+
 ### No Windows:
 ```
 venv\Scripts\activate
