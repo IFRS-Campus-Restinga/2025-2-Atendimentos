@@ -99,3 +99,62 @@ npm install
 ```
 npm run dev
 ```
+
+---
+
+## 👩‍💻 Como começar a codar (Fluxo de trabalho com Git)
+
+### Entre na sua branch de trabalho:
+```
+git checkout seu-nome
+```
+
+### Atualize sua branch com as últimas mudanças da develop:
+```
+git pull origin develop
+```
+
+### Comece a codar normalmente.
+
+
+### Verifique o status dos arquivos:
+```
+git status
+```
+
+### 
+Antes de commitar, garanta que não há conflitos trazendo novamente a develop:
+```
+git pull origin develop
+```
+
+### Adicione e commite suas alterações:
+```
+git add .
+git commit -m "Descreva sua alteração"
+```
+
+### Envie suas alterações para o repositório remoto:
+```
+git push origin sua-branch
+```
+
+## 🧰 Comandos Git úteis
+
+Salvar alterações temporariamente (stash)
+Guarda suas alterações não commitadas para limpar o diretório de trabalho:
+```
+git stash
+```
+
+Recuperar alterações salvas com stash
+Restaura as alterações guardadas pelo último stash:
+```
+git stash pop
+```
+
+Aplicar um commit específico de outra branch (cherry-pick)
+Aplica um commit de outra branch na sua branch atual:
+```
+git cherry-pick <hash-do-commit>
+```
