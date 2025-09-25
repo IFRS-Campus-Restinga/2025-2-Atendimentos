@@ -1,3 +1,4 @@
+from .base import *
 from .usuario import Usuario, TipoPerfil
 from .aluno import *
 from .professor import *
