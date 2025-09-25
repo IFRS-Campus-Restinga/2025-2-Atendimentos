@@ -5,3 +5,4 @@ from .professor import *
 from .coordenador import *
 from .curso import *
 from .disciplina import *
+from .turma import *
