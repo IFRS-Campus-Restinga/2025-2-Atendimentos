@@ -3,7 +3,7 @@ from accounts.models import Curso, Turma
 from accounts.serializers.cursoSerializer import CursoSerializer
 
 class TurmaSerializer(serializers.ModelSerializer):
-    curso = CursoSerializer(read_only=True) 
+    curso = serializers.PrimaryKeyRelatedField(queryset=Curso.objects.all())
 
     class Meta:
         model = Turma

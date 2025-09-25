@@ -8,6 +8,8 @@ import './index.css'
 import Disciplinas from "./pages/Disciplina.jsx";
 import CadastrarCurso from './pages/Curso/CadastrarCurso.jsx';
 import ListarCurso from './pages/Curso/ListarCurso.jsx';
+import CadastrarTurma from './pages/Turma/CadastrarTurma.jsx';
+import ListarTurma from './pages/Turma/ListarTurma.jsx';
 
 function App() {
   //const [usuario, setUsuario] = useState(null);
@@ -33,6 +35,10 @@ function App() {
         
               <Route path="/curso" element={<ListarCurso />} key="listar-cursos"/>
               <Route path="/curso/cadastrar" element={<CadastrarCurso />}key="cadastrar-cursos" />
+
+              <Route path="/turma" element={<ListarTurma />} key="listar-turmas"/>
+              <Route path="/turma/cadastrar" element={<CadastrarTurma />}key="cadastrar-turmas" />
+
 
             </Routes>
         </div>

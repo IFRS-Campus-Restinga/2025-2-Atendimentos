@@ -15,11 +15,11 @@ function Header() {
           <Link to="/disciplina" className="btn btn-light fw-semibold shadow-sm">
             DISCIPLINAS
           </Link>
-          <Link to="/curso/cadastrar" className="btn btn-light fw-semibold shadow-sm">
-            cadastrar Cursos
-          </Link>
           <Link to="/curso" className="btn btn-light fw-semibold shadow-sm">
             Listar Cursos
+          </Link>
+          <Link to="/turma" className="btn btn-light fw-semibold shadow-sm">
+            Listar Turmas
           </Link>
 
         </nav>
