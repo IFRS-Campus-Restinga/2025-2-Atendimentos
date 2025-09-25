@@ -21,6 +21,9 @@ function Header() {
           <Link to="/turma" className="btn btn-light fw-semibold shadow-sm">
             Listar Turmas
           </Link>
+            <Link to="/coord" className="btn btn-light fw-semibold shadow-sm">
+            Listar Coordenadores
+          </Link>
 
         </nav>
       </div>
