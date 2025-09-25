@@ -78,7 +78,7 @@ function CadastrarCurso() {
         <button type="submit">Cadastrar Curso</button>
       </form>
 
-      <Link to="/" className="voltar-btn">Voltar</Link>
+      <Link to="/curso" className="voltar-btn">Voltar</Link>
     </div>
   );
 }
