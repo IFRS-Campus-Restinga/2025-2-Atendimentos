@@ -10,6 +10,8 @@ import CadastrarCurso from './pages/Curso/CadastrarCurso.jsx';
 import ListarCurso from './pages/Curso/ListarCurso.jsx';
 import CadastrarTurma from './pages/Turma/CadastrarTurma.jsx';
 import ListarTurma from './pages/Turma/ListarTurma.jsx';
+import CadastraCoordenador from './pages/Coordenador/CadastraCoordenador.jsx'
+import ListarCoordenador from './pages/Coordenador/ListarCoordenador.jsx';
 
 function App() {
   //const [usuario, setUsuario] = useState(null);
@@ -24,7 +26,6 @@ function App() {
 
   return (
     <Router>
-      
         <div>
           <Header />
           <hr />
@@ -39,8 +40,8 @@ function App() {
               <Route path="/turma" element={<ListarTurma />} key="listar-turmas"/>
               <Route path="/turma/cadastrar" element={<CadastrarTurma />}key="cadastrar-turmas" />
 
-
-            </Routes>
+              <Route path="/coord" element={<ListarCoordenador />} key="listar-coordenador"/>
+              <Route path="/coord/cadastrar" element={<CadastraCoordenador />} key="cadastrar-coordenador" />            </Routes>
         </div>
     </Router>
   );
