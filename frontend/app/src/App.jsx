@@ -6,6 +6,8 @@ import Header from "./components/Header.jsx";
 import Login from "./pages/Login.jsx";
 import './index.css'
 import Disciplinas from "./pages/Disciplina.jsx";
+import CadastrarCurso from './pages/Curso/CadastrarCurso.jsx';
+import ListarCurso from './pages/Curso/ListarCurso.jsx';
 
 function App() {
   //const [usuario, setUsuario] = useState(null);
@@ -27,11 +29,16 @@ function App() {
             <Routes>
               <Route path="/" element={<Login />} />
               <Route path="/appointments" element={<h1>Página de Atendimentos</h1>} />
-              <Route path="/disciplina" element={<Disciplinas />} />              
+              <Route path="/disciplina" element={<Disciplinas />} />
+        
+              <Route path="/curso" element={<ListarCurso />} key="listar-cursos"/>
+              <Route path="/curso/cadastrar" element={<CadastrarCurso />}key="cadastrar-cursos" />
+
             </Routes>
         </div>
     </Router>
   );
+  
 }
 
 export default App;
