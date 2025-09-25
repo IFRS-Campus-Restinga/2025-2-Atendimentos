@@ -4,3 +4,7 @@ from accounts.models.disciplina import Disciplina
 # Register your models here.
 
 admin.site.register(Disciplina)
+
+
+
+
