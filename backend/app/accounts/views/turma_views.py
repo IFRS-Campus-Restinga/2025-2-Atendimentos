@@ -2,7 +2,7 @@ from rest_framework import generics, status
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from ..models import Turma
-from ..serializers.turmaSerializer import TurmaSerializer
+from ..serializers.turma_serializer import TurmaSerializer
 
 class TurmaListCreateView(generics.ListCreateAPIView):
     """

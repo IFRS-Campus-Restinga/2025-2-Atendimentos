@@ -2,7 +2,7 @@ from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from accounts.models.disciplina import Disciplina
-from accounts.serializers.disciplinaSerializer import DisciplinaSerializer
+from accounts.serializers.disciplina_serializer import DisciplinaSerializer
 
 class DisciplinaViewSet(viewsets.ModelViewSet):
     queryset = Disciplina.objects.all()
