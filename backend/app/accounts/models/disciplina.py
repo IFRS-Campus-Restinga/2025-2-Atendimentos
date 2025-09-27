@@ -21,6 +21,7 @@ class Disciplina(BaseModel):
         blank=False, 
         null=False
     )
+
     codigo = models.CharField(
         max_length=10, 
         validators=[MinLengthValidator (3)], 
@@ -29,28 +30,14 @@ class Disciplina(BaseModel):
         null=False, 
         verbose_name="Código",
     )
-    carga_horaria = models.PositiveIntegerField(
-        validators=[MinValueValidator(1)],  # Exemplo: mínimo de 1 hora
-        blank=False, 
-        null=False,
-        verbose_name="Carga Horária (em horas)"
-    )
-    semestre = models.IntegerField(
-        validators=[MinValueValidator(1)],  # Exemplo: mínimo semestre 1
-        blank=False, 
-        null=False,
-        verbose_name="Semestre da disciplina (1,2,...,10)"
-    )    # Semestre da disciplina (1,2,...)
+
     descricao = models.TextField(
         max_length=100,
         blank=True, 
         null=True, 
         verbose_name="Descrição"
         )  # Descrição da disciplina
-    data_criacao = models.DateTimeField(
-        auto_now_add=True, 
-        verbose_name="Data de Criação"
-        )
+
     ativo = models.BooleanField(
         default=True, 
         verbose_name="Ativo"

@@ -58,42 +58,42 @@ class Command(BaseCommand):
             self.stdout.write(self.style.SUCCESS(f'Curso: {curso.nome}'))
 
             # Criando Turmas
-            if tipo == TipoCurso.SUPERIOR:  # Para cursos superiores, cria turmas com semestre
+            if tipo == TipoCurso.SUPERIOR or tipo == TipoCurso.PROEJA:  # Para cursos superiores e Proeja (semestre)
                 for semestre in [1, 2]:
                     for turno in [Turno.MANHA, Turno.TARDE, Turno.NOITE]:
                         nome_turma = f"{codigo}{semestre}{turno[0]}"
                         turma, _ = Turma.objects.get_or_create(
                             nome=nome_turma,
                             curso=curso,
-                            periodo=f"Semestre {semestre}",
-                            turno=turno[0]
+                            semestre=semestre,  
+                            turno=turno[0],
                         )
                         self.stdout.write(self.style.SUCCESS(f'Turma: {turma.nome}'))
-            else:  # Para técnicos, cria turmas simples
-                for i in range(1, 4):  # Exemplo: Turma 121, 221, etc.
-                    turma, _ = Turma.objects.get_or_create(
-                        nome=f"Turma {i}",
-                        curso=curso,
-                        periodo="Técnico",
-                        turno=Turno.MANHA[0] 
-                    )
-                    self.stdout.write(self.style.SUCCESS(f'Turma: {turma.nome}'))
+            else:  # Para cursos técnicos (anual)
+                for ano in [1, 2]:  
+                    for turno in [Turno.MANHA, Turno.TARDE, Turno.NOITE]:
+                        nome_turma = f"{codigo}{ano}{turno[0]}"
+                        turma, _ = Turma.objects.get_or_create(
+                            nome=nome_turma,
+                            curso=curso,
+                            ano=ano,  
+                            turno=turno[0],
+                        )
+                        self.stdout.write(self.style.SUCCESS(f'Turma: {turma.nome}'))
 
             # Criando Disciplinas
             disciplinas = [
-                ("Algoritmos e Lógica de Programação", f"ALGO{codigo[:3]}1", 60, 1),
-                ("Estrutura de Dados", f"ESTR{codigo[:3]}2", 60, 2),
-                ("Matemática Discreta", f"MATH{codigo[:3]}1", 40, 1)
+                ("Algoritmos e Lógica de Programação", f"ALGO{codigo[:3]}1"),
+                ("Estrutura de Dados", f"ESTR{codigo[:3]}2"),
+                ("Matemática Discreta", f"MATH{codigo[:3]}1",)
             ]
-            for nome_disciplina, codigo_disciplina, carga_horaria, semestre in disciplinas:
+            for nome_disciplina, codigo_disciplina in disciplinas:
                 disciplina, _ = Disciplina.objects.get_or_create(
                     nome=nome_disciplina,
                     codigo=codigo_disciplina,
-                    carga_horaria=carga_horaria,
-                    semestre=semestre,
                     descricao=f"Descrição da disciplina {nome_disciplina}",
                 )
-                disciplina.cursos.add(curso)  # Associa a disciplina ao curso
+                disciplina.cursos.add(curso)  
                 self.stdout.write(self.style.SUCCESS(f'Disciplina: {disciplina.nome}'))
 
         self.stdout.write(self.style.SUCCESS('Banco populado com sucesso!'))
