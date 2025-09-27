@@ -1,6 +1,9 @@
 from .usuario import Usuario
 
 class Coordenador(Usuario):
+    """
+    Model que representa um coordenador de curso.
+    """
     def ListaRegistros(self):
         # Ainda não temos o model registro
         pass

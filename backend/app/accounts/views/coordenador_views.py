@@ -2,7 +2,7 @@ from rest_framework import generics, status
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from ..models.coordenador import Coordenador
-from ..serializers.coordenadorSerializer import CoordenadorSerializer
+from ..serializers.coordenador_serializer import CoordenadorSerializer
 
 class CoordenadorListCreateView(generics.ListCreateAPIView):
     """

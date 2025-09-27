@@ -2,7 +2,7 @@ from rest_framework import generics, status
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from ..models import Curso
-from ..serializers.cursoSerializer import CursoSerializer
+from ..serializers.curso_serializer import CursoSerializer
 
 class CursoListCreateView(generics.ListCreateAPIView):
     """

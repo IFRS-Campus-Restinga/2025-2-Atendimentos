@@ -1,23 +1,26 @@
-import random
-import string
 from django.core.validators import MinLengthValidator, MaxValueValidator, MinValueValidator
 from django.db import models
 from rest_framework.exceptions import ValidationError
-from .base import *
-#from .curso import Curso
+from .base_model import *
+from .curso import Curso
 #from .professor impot Professor
 
 class Disciplina(BaseModel):
-    #cursos = models.ManyToManyField(Curso, related_name='disciplinas')
+    """
+    Model que representa uma disciplina ofertada.
+    """
+    cursos = models.ManyToManyField(Curso, related_name='disciplinas')
+
     #professor = models.ForeignKey('Professor', on_delete=models.SET_NULL, null=True, blank=True)
 
-    cursos = models.CharField(max_length=50, blank=True, null=True)
     professor = models.CharField(max_length=100, blank=True, null=True, verbose_name="Nome do professor (opcional)")  # Nome do professor, opcional
+    
     nome = models.CharField(
         max_length=50, 
         verbose_name="Nome da Disciplina",
         blank=False, 
-        null=False)# Nome da disciplina
+        null=False
+    )
     codigo = models.CharField(
         max_length=10, 
         validators=[MinLengthValidator (3)], 
@@ -25,9 +28,9 @@ class Disciplina(BaseModel):
         blank=False, 
         null=False, 
         verbose_name="Código",
-        )  # Código único da disciplina
+    )
     carga_horaria = models.PositiveIntegerField(
-        validators=[MaxValueValidator(100)],  # Exemplo: mínimo de 100 horas
+        validators=[MinValueValidator(1)],  # Exemplo: mínimo de 1 hora
         blank=False, 
         null=False,
         verbose_name="Carga Horária (em horas)"

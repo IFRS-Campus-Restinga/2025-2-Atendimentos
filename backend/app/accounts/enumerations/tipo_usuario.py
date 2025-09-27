@@ -1,8 +1,8 @@
 from django.db import models
 
-class TipoPerfil(models.TextChoices):
+class TipoUsuario(models.TextChoices):
 
     ADMIN = 'ADM', 'Administrador'
     PROFESSOR = 'PROF', 'Professor'
     ALUNO = 'ALU', 'Aluno'
-    COORDENADOR = 'COOR', 'Coordenador'
+    COORDENADOR = 'COORD', 'Coordenador'
