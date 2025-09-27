@@ -9,7 +9,7 @@ function CadastrarCurso() {
 
   const [formData, setFormData] = useState({
     nome: "",
-    duracao: "",
+    cod: "",
     tipocurso: "",
     coordenador: ""
   });
@@ -24,12 +24,12 @@ function CadastrarCurso() {
 
     const payload = {
       nome: formData.nome.trim(),
-      duracao: parseInt(formData.duracao),
+      cod: ormData.cod.trim(),
       tipocurso: formData.tipocurso,
       coordenador: formData.coordenador.trim()
     };
 
-    if (!payload.nome || !payload.duracao || !payload.tipocurso || !payload.coordenador) {
+    if (!payload.nome || !payload.tipocurso || !payload.cod || !payload.coordenador) {
       alert("Preencha todos os campos obrigatórios.");
       return;
     }
@@ -37,7 +37,7 @@ function CadastrarCurso() {
     try {
       await DB_CURSOS.post("/", payload);
       alert("Curso cadastrado com sucesso!");
-      setFormData({ nome: "", duracao: "", tipocurso: "", coordenador: "" });
+      setFormData({ nome: "", cod: "", tipocurso: "", coordenador: "" });
       navigate("/curso");
     } catch (err) {
       console.error("Erro ao criar curso:", err);
@@ -53,27 +53,23 @@ function CadastrarCurso() {
         <label>Nome do Curso:</label>
         <input name="nome" value={formData.nome} onChange={handleChange} required />
 
+        <label>Código do Curso:</label>
+        <input name="cod" value={formData.cod} onChange={handleChange} required />
+
         <label>Duração:</label>
         <input type="number" name="duracao" value={formData.duracao} onChange={handleChange} required min={1} />
 
         <label>Tipo de Curso:</label>
           <select name="tipocurso" value={formData.tipocurso} onChange={handleChange} required>
             <option value="">Selecione</option>
-            <option value="SAE">superior_agroecologia</option>
-            <option value="SADS">superior_ads</option>
-            <option value="SEI">superior_eletronica_industrial</option>
-            <option value="SGDL">superior_gestao_desportiva_lazer</option>
-            <option value="SLPE">superior_letras_port_esp</option>
-            <option value="SPG">superior_processos_gerenciais</option>
-            <option value="TCS">tecnico_concomitante_subsequente</option>
-            <option value="TI">tecnico_integrado</option>
-            <option value="TP">tecnico_proeja</option>
-            <option value="TS">tecnico_subsequente</option>
+            <option value="SUPERIOR">Superior</option>
+            <option value="TECNICO_INTEGRADO">Técnico Integrado</option>
+            <option value="TECINICO_SUBSEQUENTE">Técnico Subsequente</option>
+            <option value="PROEJA">Proeja</option>
           </select>
 
-
         <label>Coordenador:</label>
-        <input name="coordenador" value={formData.coordenador} onChange={handleChange} required />
+        <input name="coordenador" value={formData.coordenador} onChange={handleChange} required /> 
 
         <button type="submit">Cadastrar Curso</button>
       </form>
