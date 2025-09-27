@@ -7,4 +7,4 @@ class TurmaSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Turma
-        fields = ['id', 'nome', 'periodo', 'turno', 'curso'] 
+        fields = '__all__'
