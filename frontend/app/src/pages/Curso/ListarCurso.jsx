@@ -9,7 +9,7 @@ function ListarCurso() {
   const DB = axios.create({ baseURL: 'http://127.0.0.1:8000/services/cursos' });
   const [cursos, setCursos] = useState([]);
   const [editId, setEditId] = useState(null);
-  const [editData, setEditData] = useState({ nome: "", duracao: "", tipocurso: "", coordenador: "" });
+  const [editData, setEditData] = useState({ nome: "", codigo: "", });
   const navigate = useNavigate();
 
   function handleEditChange(e) {
@@ -38,21 +38,25 @@ function ListarCurso() {
     }
   }
 
-  async function salvaEdicao(id) {
+async function salvaEdicao(id) {
     try {
-      await DB.put(`/${id}/`, {
+      await DB.patch(`/${id}/`, {
         nome: editData.nome,
-        duracao: parseInt(editData.duracao),
-        tipocurso: editData.tipocurso,
-        coordenador: editData.coordenador
+        codigo: editData.codigo
       });
       setEditId(null);
-      setEditData({ nome: "", duracao: "", tipocurso: "", coordenador: "" });
+      setEditData({ nome: "", codigo: "" });
       await recuperaCursos();
     } catch (err) {
       console.error("Erro ao atualizar curso:", err);
-      alert("Falha ao atualizar curso!");
     }
+  }
+
+  function capitalizarPrimeiraLetra(texto) {
+  texto = texto.replace(/_/g, ' ');           
+  texto = texto.toLowerCase();                
+  texto = texto.charAt(0).toUpperCase() + texto.slice(1); 
+  return texto;
   }
 
   useEffect(() => {
@@ -61,13 +65,18 @@ function ListarCurso() {
 
   return (
     <div className="cursos-container">
-      <h1 className="cursos-title">Listar Cursos</h1>
+      <h1 className="cursos-title">Lista de Cursos</h1>
+      <div style={{ textAlign: "center", marginTop: "1.5rem" }}>
+            <button className="btn-salvar" onClick={() => navigate("/curso/cadastrar")}>
+                Cadastrar Novo Curso
+            </button>
+        </div>
       <table className="cursos-table">
         <thead>
           <tr>
             <th>Nome</th>
-            <th>Duração</th>
-            <th>Tipo</th>
+            <th>Código</th>
+            <th>Tipo do Curso</th>
             <th>Coordenador</th>
             <th>Ações</th>
           </tr>
@@ -83,34 +92,12 @@ function ListarCurso() {
               </td>
               <td>
                 {editId === curso.id ? 
-                  <input type="number" name="duracao" value={editData.duracao} onChange={handleEditChange} /> : 
-                  curso.duracao
+                  <input name="codigo" value={editData.codigo} onChange={handleEditChange} /> : 
+                  curso.codigo
                 }
               </td>
-              <td>
-                {editId === curso.id ? 
-                  <select name="tipocurso" value={editData.tipocurso} onChange={handleEditChange}>
-                    <option value="">Selecione</option>
-                    <option value="SAE">superior_agroecologia</option>
-                    <option value="SADS">superior_ads</option>
-                    <option value="SEI">superior_eletronica_industrial</option>
-                    <option value="SGDL">superior_gestao_desportiva_lazer</option>
-                    <option value="SLPE">superior_letras_port_esp</option>
-                    <option value="SPG">superior_processos_gerenciais</option>
-                    <option value="TCS">tecnico_concomitante_subsequente</option>
-                    <option value="TI">tecnico_integrado</option>
-                    <option value="TP">tecnico_proeja</option>
-                    <option value="TS">tecnico_subsequente</option>
-                  </select> :
-                  curso.tipocurso
-                }
-              </td>
-              <td>
-                {editId === curso.id ? 
-                  <input name="coordenador" value={editData.coordenador} onChange={handleEditChange} /> : 
-                  curso.coordenador
-                }
-              </td>
+              <td>{capitalizarPrimeiraLetra(curso.tipo_curso)}</td>
+              <td>{curso.coordenador?.email || "—"}</td>
               <td className="btn-group">
                 {editId === curso.id ? (
                   <>
@@ -123,9 +110,7 @@ function ListarCurso() {
                       setEditId(curso.id);
                       setEditData({
                         nome: curso.nome,
-                        duracao: curso.duracao,
-                        tipocurso: curso.tipocurso,
-                        coordenador: curso.coordenador
+                        codigo: curso.codigo
                       });
                     }}>Editar</button>
                     <button className="btn-deletar" onClick={() => deletaCurso(curso.id)}>Deletar</button>
@@ -136,11 +121,6 @@ function ListarCurso() {
           ))}
         </tbody>
       </table>
-        <div style={{ textAlign: "center", marginTop: "1.5rem" }}>
-            <button className="btn-salvar" onClick={() => navigate("/curso/cadastrar")}>
-                Cadastrar Novo Curso
-            </button>
-        </div>
     </div>
   );
 }
