@@ -9,8 +9,8 @@ class Usuario(BaseModel):
     class Meta:
         abstract = True
 
-    nome = models.CharField(max_length=50, verbose_name="Nome")
-    email = models.EmailField(unique=True, verbose_name="Email")
+    nome = models.CharField(max_length=100, verbose_name="Nome")
+    email = models.EmailField(unique=True,  verbose_name="Email")
     registro = models.CharField(max_length=20, unique=True, verbose_name="Registro")
     tipoPerfil = models.CharField(
         max_length=20,

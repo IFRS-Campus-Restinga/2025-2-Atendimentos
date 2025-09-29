@@ -14,7 +14,7 @@ class Curso(BaseModel):
         help_text="Nome do curso"
     )
 
-    cod = models.CharField(
+    codigo = models.CharField(
         max_length=4,
         validators=[MinLengthValidator(3)],
         help_text="Codigo do curso"
@@ -28,17 +28,12 @@ class Curso(BaseModel):
 
     coordenador = models.OneToOneField(
         Coordenador,
-        on_delete=models.SET_NULL,  # Ao deletar o coordenador, o curso permanece 
+        on_delete=models.CASCADE,
         null=True,
         blank=True,
         related_name="curso",
         help_text="Coordenador responsável pelo curso"
     )
-
-    def delete(self, *args, **kwargs): 
-        if self.coordenador:
-            self.coordenador.delete() ## Mas se deletar o curso, o coordenador também é deletado
-        super().delete(*args, **kwargs)
 
     def __str__(self):
         return f"{self.nome} ({self.get_tipo_curso_display()})"
