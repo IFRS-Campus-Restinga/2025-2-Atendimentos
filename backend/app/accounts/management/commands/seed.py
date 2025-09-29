@@ -51,7 +51,7 @@ class Command(BaseCommand):
             # Criando Curso
             curso, _ = Curso.objects.get_or_create(
                 nome=nome,
-                cod=codigo,
+                codigo=codigo,
                 tipo_curso=tipo,
                 coordenador=coordenador
             )
