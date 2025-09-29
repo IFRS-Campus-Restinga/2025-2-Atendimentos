@@ -1,10 +1,21 @@
 from rest_framework import serializers
-from accounts.models import Curso, Turma
-from accounts.serializers.curso_serializer import CursoSerializer
+from accounts.models import Turma
+from accounts.models import Curso
+from accounts.serializers.curso_coordenador_resumido_serializer import CursoComCoordenadorResumidoSerializer
 
 class TurmaSerializer(serializers.ModelSerializer):
-    curso = serializers.PrimaryKeyRelatedField(queryset=Curso.objects.all())
+    curso = CursoComCoordenadorResumidoSerializer(read_only=True)
+    curso_id = serializers.PrimaryKeyRelatedField(
+        queryset= Curso.objects.all(),
+        source='curso',
+        write_only=True
+    )
 
     class Meta:
         model = Turma
-        fields = '__all__'
+        fields = [
+            'id', 'nome', 'semestre', 'ano', 'turno',
+            'curso',       
+            'curso_id',    
+            'created_at', 'updated_at'
+        ]
