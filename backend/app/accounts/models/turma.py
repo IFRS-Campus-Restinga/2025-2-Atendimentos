@@ -49,6 +49,8 @@ class Turma(BaseModel):
         blank=True
     )
 
+    ##Relação com alunos
+
     class Meta:
         unique_together = ('nome', 'curso', 'turno')
 
