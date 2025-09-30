@@ -1,22 +1,12 @@
-<<<<<<< HEAD
-// ListarTurma.jsx
-import { useEffect, useState } from "react";
-import axios from "axios";
-import './Turma.css'; // pode usar o mesmo CSS do curso, alterando nomes se quiser
-=======
 import { useEffect, useState } from "react";
 import axios from "axios";
 import './Turma.css';
->>>>>>> 626478a657c38b2393702f90d64c6b3b5d74365e
 import { useNavigate } from "react-router-dom";
 
 function ListarTurma() {
   const DB = axios.create({ baseURL: 'http://127.0.0.1:8000/services/turmas' });
   const [turmas, setTurmas] = useState([]);
   const [editId, setEditId] = useState(null);
-<<<<<<< HEAD
-  const [editData, setEditData] = useState({ nome: "", periodo: "", turno: "", curso: "" });
-=======
   const [editData, setEditData] = useState({
     nome: "",
     semestre: "",
@@ -24,7 +14,6 @@ function ListarTurma() {
     turno: "",
   });
   const [cursos, setCursos] = useState([]);
->>>>>>> 626478a657c38b2393702f90d64c6b3b5d74365e
   const navigate = useNavigate();
 
   function handleEditChange(e) {
@@ -32,8 +21,6 @@ function ListarTurma() {
     setEditData(prev => ({ ...prev, [name]: value }));
   }
 
-<<<<<<< HEAD
-=======
   function turnoPorExtenso(sigla) {
     const turnos = { M: "Manhã", T: "Tarde", N: "Noite" };
     return turnos[sigla] || sigla;
@@ -44,7 +31,6 @@ function ListarTurma() {
     return tipo === "SUPERIOR" || tipo === "PROEJA";
   }
 
->>>>>>> 626478a657c38b2393702f90d64c6b3b5d74365e
   async function recuperaTurmas() {
     try {
       const response = await DB.get("/");
@@ -55,8 +41,6 @@ function ListarTurma() {
     }
   }
 
-<<<<<<< HEAD
-=======
   async function recuperaCursos() {
     try {
       const resp = await axios.get('http://127.0.0.1:8000/services/cursos/');
@@ -67,7 +51,6 @@ function ListarTurma() {
     }
   }
 
->>>>>>> 626478a657c38b2393702f90d64c6b3b5d74365e
   async function deletaTurma(id) {
     if (!window.confirm("Tem certeza que deseja deletar esta turma?")) return;
     try {
@@ -81,16 +64,6 @@ function ListarTurma() {
 
   async function salvaEdicao(id) {
     try {
-<<<<<<< HEAD
-      await DB.put(`/${id}/`, {
-        nome: editData.nome,
-        periodo: editData.periodo,
-        turno: editData.turno,
-        curso: parseInt(editData.curso)
-      });
-      setEditId(null);
-      setEditData({ nome: "", periodo: "", turno: "", curso: "" });
-=======
       const payload = {
         nome: editData.nome,
         turno: editData.turno,
@@ -108,7 +81,6 @@ function ListarTurma() {
       await DB.patch(`/${id}/`, payload);
       setEditId(null);
       setEditData({ nome: "", semestre: "", ano: "", turno: "" });
->>>>>>> 626478a657c38b2393702f90d64c6b3b5d74365e
       await recuperaTurmas();
     } catch (err) {
       console.error("Erro ao atualizar turma:", err);
@@ -116,10 +88,6 @@ function ListarTurma() {
     }
   }
 
-<<<<<<< HEAD
-  useEffect(() => {
-    recuperaTurmas();
-=======
     function capitalizarPrimeiraLetra(texto) {
     texto = texto.replace(/_/g, ' ');           
     texto = texto.toLowerCase();                
@@ -131,86 +99,16 @@ function ListarTurma() {
   useEffect(() => {
     recuperaTurmas();
     recuperaCursos();
->>>>>>> 626478a657c38b2393702f90d64c6b3b5d74365e
   }, []);
 
   return (
     <div className="turmas-container">
-<<<<<<< HEAD
-      <h1 className="turmas-title">Listar Turmas</h1>
-      <table className="turmas-table">
-        <thead>
-          <tr>
-            <th>Nome</th>
-            <th>Período</th>
-            <th>Turno</th>
-            <th>Curso</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody>
-          {turmas.map(turma => (
-            <tr key={turma.id}>
-              <td>
-                {editId === turma.id ?
-                  <input name="nome" value={editData.nome} onChange={handleEditChange} /> :
-                  turma.nome
-                }
-              </td>
-              <td>
-                {editId === turma.id ?
-                  <input name="periodo" value={editData.periodo} onChange={handleEditChange} /> :
-                  turma.periodo
-                }
-              </td>
-              <td>
-                {editId === turma.id ?
-                  <input name="turno" value={editData.turno} onChange={handleEditChange} /> :
-                  turma.turno
-                }
-              </td>
-              <td>
-                {editId === turma.id ?
-                  <input name="curso" value={editData.curso} onChange={handleEditChange} /> :
-                  turma.curso_nome || turma.curso // exibe nome do curso, dependendo do JSON
-                }
-              </td>
-              <td className="btn-group">
-                {editId === turma.id ? (
-                  <>
-                    <button className="btn-salvar" onClick={() => salvaEdicao(turma.id)}>Salvar</button>
-                    <button className="btn-cancelar" onClick={() => setEditId(null)}>Cancelar</button>
-                  </>
-                ) : (
-                  <>
-                    <button className="btn-editar" onClick={() => {
-                      setEditId(turma.id);
-                      setEditData({
-                        nome: turma.nome,
-                        periodo: turma.periodo,
-                        turno: turma.turno,
-                        curso: turma.curso // id do curso
-                      });
-                    }}>Editar</button>
-                    <button className="btn-deletar" onClick={() => deletaTurma(turma.id)}>Deletar</button>
-                  </>
-                )}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <div style={{ textAlign: "center", marginTop: "1.5rem" }}>
-=======
       <h1 className="turmas-title">Lista de Turmas</h1>
         <div style={{ textAlign: "center", marginTop: "1.5rem" }}>
->>>>>>> 626478a657c38b2393702f90d64c6b3b5d74365e
         <button className="btn-salvar" onClick={() => navigate("/turma/cadastrar")}>
           Cadastrar Nova Turma
         </button>
       </div>
-<<<<<<< HEAD
-=======
       <table className="turmas-table">
         <thead>
           <tr>
@@ -296,7 +194,6 @@ function ListarTurma() {
           })}
         </tbody>
       </table>
->>>>>>> 626478a657c38b2393702f90d64c6b3b5d74365e
     </div>
   );
 }
