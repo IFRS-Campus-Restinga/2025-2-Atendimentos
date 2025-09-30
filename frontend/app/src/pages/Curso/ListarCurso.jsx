@@ -9,7 +9,11 @@ function ListarCurso() {
   const DB = axios.create({ baseURL: 'http://127.0.0.1:8000/services/cursos' });
   const [cursos, setCursos] = useState([]);
   const [editId, setEditId] = useState(null);
+<<<<<<< HEAD
   const [editData, setEditData] = useState({ nome: "", duracao: "", tipocurso: "", coordenador: "" });
+=======
+  const [editData, setEditData] = useState({ nome: "", codigo: "", });
+>>>>>>> 626478a657c38b2393702f90d64c6b3b5d74365e
   const navigate = useNavigate();
 
   function handleEditChange(e) {
@@ -38,6 +42,7 @@ function ListarCurso() {
     }
   }
 
+<<<<<<< HEAD
   async function salvaEdicao(id) {
     try {
       await DB.put(`/${id}/`, {
@@ -55,19 +60,56 @@ function ListarCurso() {
     }
   }
 
+=======
+async function salvaEdicao(id) {
+    try {
+      await DB.patch(`/${id}/`, {
+        nome: editData.nome,
+        codigo: editData.codigo
+      });
+      setEditId(null);
+      setEditData({ nome: "", codigo: "" });
+      await recuperaCursos();
+    } catch (err) {
+      console.error("Erro ao atualizar curso:", err);
+    }
+  }
+
+  function capitalizarPrimeiraLetra(texto) {
+  texto = texto.replace(/_/g, ' ');           
+  texto = texto.toLowerCase();                
+  texto = texto.charAt(0).toUpperCase() + texto.slice(1); 
+  return texto;
+  }
+
+>>>>>>> 626478a657c38b2393702f90d64c6b3b5d74365e
   useEffect(() => {
     recuperaCursos();
   }, []);
 
   return (
     <div className="cursos-container">
+<<<<<<< HEAD
       <h1 className="cursos-title">Listar Cursos</h1>
+=======
+      <h1 className="cursos-title">Lista de Cursos</h1>
+      <div style={{ textAlign: "center", marginTop: "1.5rem" }}>
+            <button className="btn-salvar" onClick={() => navigate("/curso/cadastrar")}>
+                Cadastrar Novo Curso
+            </button>
+        </div>
+>>>>>>> 626478a657c38b2393702f90d64c6b3b5d74365e
       <table className="cursos-table">
         <thead>
           <tr>
             <th>Nome</th>
+<<<<<<< HEAD
             <th>Duração</th>
             <th>Tipo</th>
+=======
+            <th>Código</th>
+            <th>Tipo do Curso</th>
+>>>>>>> 626478a657c38b2393702f90d64c6b3b5d74365e
             <th>Coordenador</th>
             <th>Ações</th>
           </tr>
@@ -83,6 +125,7 @@ function ListarCurso() {
               </td>
               <td>
                 {editId === curso.id ? 
+<<<<<<< HEAD
                   <input type="number" name="duracao" value={editData.duracao} onChange={handleEditChange} /> : 
                   curso.duracao
                 }
@@ -111,6 +154,14 @@ function ListarCurso() {
                   curso.coordenador
                 }
               </td>
+=======
+                  <input name="codigo" value={editData.codigo} onChange={handleEditChange} /> : 
+                  curso.codigo
+                }
+              </td>
+              <td>{capitalizarPrimeiraLetra(curso.tipo_curso)}</td>
+              <td>{curso.coordenador?.email || "—"}</td>
+>>>>>>> 626478a657c38b2393702f90d64c6b3b5d74365e
               <td className="btn-group">
                 {editId === curso.id ? (
                   <>
@@ -123,9 +174,13 @@ function ListarCurso() {
                       setEditId(curso.id);
                       setEditData({
                         nome: curso.nome,
+<<<<<<< HEAD
                         duracao: curso.duracao,
                         tipocurso: curso.tipocurso,
                         coordenador: curso.coordenador
+=======
+                        codigo: curso.codigo
+>>>>>>> 626478a657c38b2393702f90d64c6b3b5d74365e
                       });
                     }}>Editar</button>
                     <button className="btn-deletar" onClick={() => deletaCurso(curso.id)}>Deletar</button>
@@ -136,11 +191,14 @@ function ListarCurso() {
           ))}
         </tbody>
       </table>
+<<<<<<< HEAD
         <div style={{ textAlign: "center", marginTop: "1.5rem" }}>
             <button className="btn-salvar" onClick={() => navigate("/curso/cadastrar")}>
                 Cadastrar Novo Curso
             </button>
         </div>
+=======
+>>>>>>> 626478a657c38b2393702f90d64c6b3b5d74365e
     </div>
   );
 }

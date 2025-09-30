@@ -1,10 +1,10 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from accounts.views.alunoViews import AlunoViewSet
 from .views.disciplina_view_set import DisciplinaViewSet
-from accounts.views.cursoViews import CursoListCreateView, CursoRetrieveUpdateDestroyView
-from accounts.views.turmaViews import TurmaListCreateView, TurmaRetrieveUpdateDestroyView
-from accounts.views.coordenadorViews import CoordenadorListCreateView, CoordenadorRetrieveUpdateDestroyView
+from accounts.views.alunoViews import AlunoViewSet
+from accounts.views.curso_views import CursoListCreateView, CursoRetrieveUpdateDestroyView
+from accounts.views.turma_views import TurmaListCreateView, TurmaRetrieveUpdateDestroyView
+from accounts.views.coordenador_views import CoordenadorListCreateView, CoordenadorRetrieveUpdateDestroyView
 app_name = 'api'
 router = DefaultRouter()
 

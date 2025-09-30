@@ -13,7 +13,7 @@ function Header() {
             Home
           </Link>
           <Link to="/disciplina" className="btn btn-light fw-semibold shadow-sm">
-            DISCIPLINAS
+            Listar Disciplinas
           </Link>
           <Link to="/curso" className="btn btn-light fw-semibold shadow-sm">
             Listar Cursos
@@ -24,7 +24,6 @@ function Header() {
             <Link to="/coord" className="btn btn-light fw-semibold shadow-sm">
             Listar Coordenadores
           </Link>
-
         </nav>
       </div>
     </header>
