@@ -24,6 +24,9 @@ function Header() {
             <Link to="/coord" className="btn btn-light fw-semibold shadow-sm">
             Listar Coordenadores
           </Link>
+          <Link to="/alunos" className="btn btn-light fw-semibold shadow-sm">
+            Listar Alunos
+          </Link>
         </nav>
       </div>
     </header>

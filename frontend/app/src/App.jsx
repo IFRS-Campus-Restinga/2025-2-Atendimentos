@@ -1,4 +1,3 @@
-
 // App.jsx
 import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
@@ -12,6 +11,8 @@ import CadastrarTurma from './pages/Turma/CadastrarTurma.jsx';
 import ListarTurma from './pages/Turma/ListarTurma.jsx';
 import CadastraCoordenador from './pages/Coordenador/CadastraCoordenador.jsx'
 import ListarCoordenador from './pages/Coordenador/ListarCoordenador.jsx';
+import ListarAluno from './pages/Aluno/ListarAluno.jsx';
+import CadastraAluno from './pages/Aluno/CadastraAluno'; 
 
 function App() {
   //const [usuario, setUsuario] = useState(null);
@@ -41,7 +42,10 @@ function App() {
               <Route path="/turma/cadastrar" element={<CadastrarTurma />}key="cadastrar-turmas" />
 
               <Route path="/coord" element={<ListarCoordenador />} key="listar-coordenador"/>
-              <Route path="/coord/cadastrar" element={<CadastraCoordenador />} key="cadastrar-coordenador" />            
+              <Route path="/coord/cadastrar" element={<CadastraCoordenador />} key="cadastrar-coordenador" />
+
+              <Route path="/alunos" element={<ListarAluno />} key="listar-alunos"/>
+              <Route path="/alunos/cadastrar" element={<CadastraAluno />} />            
             </Routes>
         </div>
     </Router>
