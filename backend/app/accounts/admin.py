@@ -1,5 +1,11 @@
 from django.contrib import admin
-from .models.professor import Professor
+from accounts.models import *
 
-admin.site.register(Professor)
 # Register your models here.
+admin.site.register(Professor)
+admin.site.register(Disciplina)
+admin.site.register(Turma)
+admin.site.register(Curso)
+admin.site.register(Coordenador)
+admin.site.register(Aluno)
+admin.site.register(Atendimento)
