@@ -41,7 +41,8 @@ function App() {
               <Route path="/turma/cadastrar" element={<CadastrarTurma />}key="cadastrar-turmas" />
 
               <Route path="/coord" element={<ListarCoordenador />} key="listar-coordenador"/>
-              <Route path="/coord/cadastrar" element={<CadastraCoordenador />} key="cadastrar-coordenador" />            </Routes>
+              <Route path="/coord/cadastrar" element={<CadastraCoordenador />} key="cadastrar-coordenador" />            
+            </Routes>
         </div>
     </Router>
   );
