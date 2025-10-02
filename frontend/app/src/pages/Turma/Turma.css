@@ -1,0 +1,111 @@
+.turma-container {
+  max-width: 500px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+}
+
+.turma-form label {
+  display: block;
+  margin-top: 1rem;
+  font-weight: bold;
+}
+
+.turma-form input,
+.turma-form select,
+.turma-form textarea {
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 0.25rem;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.turma-form button {
+  margin-top: 1.5rem;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+}
+
+.turma-form button:hover {
+  background-color: #0056b3;
+}
+
+/* Reaproveita estilos da listagem */
+.turmas-container {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 1rem;
+}
+
+.turmas-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  text-align: left;
+}
+
+.turmas-table th, .turmas-table td {
+  border: 1px solid #ccc;
+  padding: 0.5rem;
+}
+
+.turmas-table th {
+  background-color: #f0f0f0;
+}
+
+.turmas-table input, .turmas-table select {
+  width: 100%;
+  padding: 0.3rem;
+  box-sizing: border-box;
+}
+
+.btn-group {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn-salvar {
+  background-color: #28a745 !important;
+  color: white;
+  border: none;
+  padding: 0.3rem 0.6rem;
+  cursor: pointer;
+  margin-right: 0.3rem;
+}
+
+.btn-cancelar {
+  background-color: #6c757d !important;
+  color: white;
+  border: none;
+  padding: 0.3rem 0.6rem;
+  cursor: pointer;
+  margin-right: 0.3rem;
+}
+
+.btn-editar {
+  border: none;
+  padding: 0.3rem 0.6rem;
+  cursor: pointer;
+  margin-right: 0.3rem;
+  background-color: #ffc107;
+}
+
+.btn-deletar {
+  background-color: #dc3545 !important;
+  color: white;
+  border: none;
+  padding: 0.3rem 0.6rem;
+  cursor: pointer;
+}
+
+.turmas-title {
+  text-align: center;
+  margin-bottom: 1rem;
+}
