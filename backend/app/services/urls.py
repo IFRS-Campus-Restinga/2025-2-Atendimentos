@@ -3,6 +3,7 @@ from rest_framework.routers import DefaultRouter
 from .views.disciplina_view_set import DisciplinaViewSet
 from accounts.views.curso_views import CursoListCreateView, CursoRetrieveUpdateDestroyView
 from accounts.views.turma_views import TurmaListCreateView, TurmaRetrieveUpdateDestroyView
+from accounts.views.atendimento_views import AtendimentoListCreateView, AtendimentoRetrieveUpdateDestroyView
 from accounts.views.coordenador_views import CoordenadorListCreateView, CoordenadorRetrieveUpdateDestroyView
 app_name = 'api'
 router = DefaultRouter()
@@ -24,4 +25,8 @@ urlpatterns = [
     # URLs do Coordenador
     path('coord/', CoordenadorListCreateView.as_view(), name='coord-list-create'),
     path('coord/<int:id>/', CoordenadorRetrieveUpdateDestroyView.as_view(), name='coord-detail'),
+
+    #URLs do Atendimento
+    path('atendimento/', AtendimentoListCreateView.as_view(), name='atendimento-list-create'),
+    path('atendimento/<int:id>/', AtendimentoRetrieveUpdateDestroyView.as_view(), name='atendimento-detail'),
 ]

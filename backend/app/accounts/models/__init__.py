@@ -6,3 +6,4 @@ from .coordenador import *
 from .curso import *
 from .disciplina import *
 from .turma import *
+from .atendimento import *
