@@ -12,7 +12,10 @@ import ListarTurma from './pages/Turma/ListarTurma.jsx';
 import CadastraCoordenador from './pages/Coordenador/CadastraCoordenador.jsx'
 import ListarCoordenador from './pages/Coordenador/ListarCoordenador.jsx';
 import ListarAluno from './pages/Aluno/ListarAluno.jsx';
-import CadastraAluno from './pages/Aluno/CadastraAluno'; 
+import CadastraAluno from './pages/Aluno/CadastraAluno';
+import ListarProfessor from './pages/Professor/ListarProfessor.jsx';
+import CadastraProfessor from './pages/Professor/CadastraProfessor';
+ 
 
 function App() {
   //const [usuario, setUsuario] = useState(null);
@@ -45,7 +48,10 @@ function App() {
               <Route path="/coord/cadastrar" element={<CadastraCoordenador />} key="cadastrar-coordenador" />
 
               <Route path="/alunos" element={<ListarAluno />} key="listar-alunos"/>
-              <Route path="/alunos/cadastrar" element={<CadastraAluno />} />            
+              <Route path="/alunos/cadastrar" element={<CadastraAluno />} />  
+
+              <Route path="/professores" element={<ListarProfessor />} />
+              <Route path="/professores/cadastrar" element={<CadastraProfessor />} />          
             </Routes>
         </div>
     </Router>

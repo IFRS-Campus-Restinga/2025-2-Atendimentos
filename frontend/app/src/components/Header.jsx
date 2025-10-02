@@ -27,6 +27,9 @@ function Header() {
           <Link to="/alunos" className="btn btn-light fw-semibold shadow-sm">
             Listar Alunos
           </Link>
+          <Link to="/professores" className="btn btn-light fw-semibold shadow-sm">
+            Listar Professores
+          </Link>
         </nav>
       </div>
     </header>

@@ -1,165 +1,123 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import "./Aluno.css";
+import './Professor.css';
 import { useNavigate } from "react-router-dom";
 
-function ListarAluno() {
-  const DB = axios.create({
-    baseURL: "http://127.0.0.1:8000/services/alunos/",
-  });
-  const [alunos, setAlunos] = useState([]); 
+function ListarProfessor() {
+  const DB = axios.create({ baseURL: 'http://127.0.0.1:8000/services/professores' });
+  
+  const [professores, setProfessores] = useState([]);
   const [editId, setEditId] = useState(null);
-  const [editData, setEditData] = useState({
-    nome_completo: "",
-    matricula: "",
-    curso: "",
-    turma: "",
-  });
+  const [editData, setEditData] = useState({ registro: "", disciplina: "" });
   const navigate = useNavigate();
 
   function handleEditChange(e) {
     const { name, value } = e.target;
-    setEditData((prev) => ({ ...prev, [name]: value }));
+    setEditData(prev => ({ ...prev, [name]: value }));
   }
 
-  async function recuperaAlunos() {
+  async function recuperaProfessores() {
     try {
       const response = await DB.get("/");
       const data = response.data;
-      setAlunos(Array.isArray(data) ? data : data.results);
+      setProfessores(Array.isArray(data) ? data : data.results || []);
     } catch (err) {
-      console.error("Erro ao buscar alunos:", err);
+      console.error("Erro ao buscar professores:", err);
+      alert("Falha ao carregar a lista de professores!");
     }
   }
 
-  async function deletaAluno(id) {
-    if (!window.confirm("Tem certeza que deseja deletar este aluno?")) return;
+  async function deletaProfessor(id) {
+    if (!window.confirm("Tem certeza que deseja deletar este professor?")) return;
     try {
-      await DB.delete(`/${id}/`);
-      await recuperaAlunos(); 
+      await DB.delete(`/${id}/`); 
+      await recuperaProfessores();
+      alert("Professor deletado com sucesso!");
     } catch (err) {
-      console.error("Erro ao deletar aluno:", err);
-      alert("Falha ao deletar aluno!");
+      console.error("Erro ao deletar professor:", err);
+      alert("Falha ao deletar professor!");
     }
   }
 
-  
-  async function salvaEdicaoAluno(id) {
+  async function salvaEdicao(id) {
     try {
-      
-      await DB.put(`/${id}/`, {
-        nome_completo: editData.nome_completo,
-        matricula: editData.matricula,
-        curso: editData.curso,
-        turma: editData.turma,
-        alunoPEI: editData.alunoPEI, 
+      await DB.put(`/${id}/`, { 
+        registro: editData.registro,
+        disciplina: editData.disciplina,
       });
-      setEditData({ nome_completo: "", matricula: "", curso: "", turma: "" });
-      await recuperaAlunos(); 
+      setEditId(null);
+      setEditData({ registro: "", disciplina: "" });
+      await recuperaProfessores(); 
+      alert("Professor atualizado com sucesso!");
     } catch (err) {
-      console.error("Erro ao atualizar aluno:", err);
-      alert("Falha ao atualizar aluno!");
+      console.error("Erro ao atualizar professor:", err.response ? err.response.data : err.message);
+      alert("Falha ao atualizar professor! Verifique os dados.");
     }
   }
 
   useEffect(() => {
-    recuperaAlunos(); 
+    recuperaProfessores();
   }, []);
 
   return (
-    <div className="alunos-container">
-      {" "}
-      
-      <h1 className="alunos-title">Lista de Alunos</h1>
+    <div className="coordenadores-container"> 
+      <h1 className="coordenadores-title">Lista de Professores</h1>
       <div style={{ textAlign: "center", marginTop: "1.5rem" }}>
-       
-        <button
-          className="btn-salvar"
-          onClick={() => navigate("/alunos/cadastrar")}
-        >
-          Cadastrar Novo Aluno{" "}
+        <button className="btn-salvar" onClick={() => navigate("/professores/cadastrar")}>
+          Cadastrar Novo Professor
         </button>
       </div>
-      <table className="alunos-table">
+      <table className="coordenadores-table">
         <thead>
           <tr>
-            <th>Nome Completo</th>
-            <th>Matrícula</th> 
-            <th>Curso</th> 
-            <th>Turma</th> 
+            <th>ID</th>
+            <th>Registro</th>
+            <th>Disciplina</th>
             <th>Ações</th>
           </tr>
         </thead>
         <tbody>
-        
-          {alunos.map((aluno) => (
-            <tr key={aluno.id}>
+          {professores.map(professor => (
+            <tr key={professor.id}>
+              <td>{professor.id}</td>
               <td>
-                {
-                  editId === aluno.id ? (
-                    <input
-                      name="nome_completo"
-                      value={editData.nome_completo}
-                      onChange={handleEditChange}
-                    />
-                  ) : (
-                    aluno.nome_completo
-                  ) 
+                {editId === professor.id ?
+                  <input 
+                    name="registro" 
+                    value={editData.registro} 
+                    onChange={handleEditChange} 
+                    maxLength={20}
+                  /> :
+                  professor.registro
                 }
               </td>
               <td>
-                {
-                  editId === aluno.id ? (
-                    <input
-                      name="matricula"
-                      value={editData.matricula}
-                      onChange={handleEditChange}
-                    />
-                  ) : (
-                    aluno.matricula
-                  ) 
+                {editId === professor.id ?
+                  <input 
+                    name="disciplina" 
+                    value={editData.disciplina} 
+                    onChange={handleEditChange} 
+                    maxLength={100}
+                  /> :
+                  professor.disciplina
                 }
               </td>
-              <td>{aluno.curso}</td>
-              <td>{aluno.turma}</td> 
               <td className="btn-group">
-                {editId === aluno.id ? (
+                {editId === professor.id ? (
                   <>
-                    <button
-                      className="btn-salvar"
-                      onClick={() => salvaEdicaoAluno(aluno.id)}
-                    >
-                      Salvar
-                    </button>
-                    <button
-                      className="btn-cancelar"
-                      onClick={() => setEditId(null)}
-                    >
-                      Cancelar
-                    </button>
+                    <button className="btn-salvar" onClick={() => salvaEdicao(professor.id)}>Salvar</button>
+                    <button className="btn-cancelar" onClick={() => setEditId(null)}>Cancelar</button>
                   </>
                 ) : (
                   <>
-                    <button
-                      className="btn-editar"
-                      onClick={() => {
-                        setEditId(aluno.id);
-                        setEditData({
-                          nome_completo: aluno.nome_completo,
-                          matricula: aluno.matricula,
-                          curso: aluno.curso,
-                          turma: aluno.turma,
-                        });
-                      }}
-                    >
-                      Editar
-                    </button>
-                    <button
-                      className="btn-deletar"
-                      onClick={() => deletaAluno(aluno.id)}
-                    >
-                      Deletar
-                    </button>
+                    <button className="btn-editar" onClick={() => {
+                      setEditId(professor.id);
+                      setEditData({
+                        registro: professor.registro,
+                        disciplina: professor.disciplina,
+                      });
+                    }}>Editar</button>
+                    <button className="btn-deletar" onClick={() => deletaProfessor(professor.id)}>Deletar</button>
                   </>
                 )}
               </td>
@@ -171,4 +129,4 @@ function ListarAluno() {
   );
 }
 
-export default ListarAluno;
+export default ListarProfessor;

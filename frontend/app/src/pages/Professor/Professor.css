@@ -1,4 +1,4 @@
-.aluno-container {
+.professor-container {
   max-width: 500px;
   margin: 2rem auto;
   padding: 1.5rem;
@@ -7,15 +7,15 @@
   background-color: #f9f9f9;
 }
 
-.aluno-form label {
+.professor-form label {
   display: block;
   margin-top: 1rem;
   font-weight: bold;
 }
 
-.aluno-form input,
-.aluno-form select,
-.aluno-form textarea {
+.professor-form input,
+.professor-form select,
+.professor-form textarea {
   width: 100%;
   padding: 0.5rem;
   margin-top: 0.25rem;
@@ -23,7 +23,7 @@
   border: 1px solid #ccc;
 }
 
-.aluno-form button {
+.professor-form button {
   margin-top: 1.5rem;
   padding: 0.75rem 1.5rem;
   border: none;
@@ -33,33 +33,33 @@
   cursor: pointer;
 }
 
-.aluno-form button:hover {
+.professor-form button:hover {
   background-color: #0056b3;
 }
 
-.alunos-container {
+.professores-container {
   max-width: 900px;
   margin: 2rem auto;
   padding: 1rem;
 }
 
-.alunos-table {
+.professores-table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 1rem;
   text-align: left;
 }
 
-.alunos-table th, .alunos-table td {
+.professores-table th, .professores-table td {
   border: 1px solid #ccc;
   padding: 0.5rem;
 }
 
-.alunos-table th {
+.professores-table th {
   background-color: #f0f0f0;
 }
 
-.alunos-table input {
+.professores-table input {
   width: 100%;
   padding: 0.3rem;
   box-sizing: border-box;
@@ -70,7 +70,7 @@
   gap: 0.5rem;
 }
 
-.alunos-container .btn-salvar {
+.professores-container .btn-salvar {
   background-color: #28a745 !important;
   color: white;
   border: none;
@@ -79,7 +79,7 @@
   margin-right: 0.3rem;
 }
 
-.alunos-container .btn-cancelar {
+.professores-container .btn-cancelar {
   background-color: #6c757d !important;
   color: white;
   border: none;
@@ -88,14 +88,14 @@
   margin-right: 0.3rem;
 }
 
-.alunos-container .btn-editar {
+.professores-container .btn-editar {
   border: none;
   padding: 0.3rem 0.6rem;
   cursor: pointer;
   margin-right: 0.3rem;
 }
 
-.alunos-container .btn-deletar {
+.professores-container .btn-deletar {
   background-color: #dc3545 !important;
   color: white;
   border: none;
@@ -103,7 +103,7 @@
   cursor: pointer;
 }
 
-.alunos-title {
+.professores-title {
   text-align: center;
   margin-bottom: 1rem;
 }
@@ -115,8 +115,3 @@
   text-decoration: none;
   font-weight: bold;
 }
-
-
-
-
-

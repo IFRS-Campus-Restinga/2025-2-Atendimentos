@@ -2,6 +2,7 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views.disciplina_view_set import DisciplinaViewSet
 from accounts.views.aluno_views import AlunoViewSet
+from accounts.views.professor_views import ProfessorViewSet
 from accounts.views.curso_views import CursoListCreateView, CursoRetrieveUpdateDestroyView
 from accounts.views.turma_views import TurmaListCreateView, TurmaRetrieveUpdateDestroyView
 from accounts.views.atendimento_views import AtendimentoListCreateView, AtendimentoRetrieveUpdateDestroyView
@@ -10,6 +11,7 @@ app_name = 'api'
 router = DefaultRouter()
 
 router.register(r'disciplinas', DisciplinaViewSet, basename='disciplinas')
+router.register(r'professores', ProfessorViewSet, basename='professores')
 router.register(r'alunos', AlunoViewSet)
 
 
