@@ -1,8 +1,12 @@
 from django.db import models
+from .usuario import Usuario
 
-class Professor(models.Model):
-    registro = models.CharField(max_length=20)
+class Professor(Usuario):
     disciplina = models.CharField(max_length=100)
+
+    class Meta:
+        verbose_name = "Professor"
+        verbose_name_plural = "Professores"
 
     def criar_atendimento(self):
         pass
@@ -14,4 +18,4 @@ class Professor(models.Model):
         pass
 
     def __str__(self):
-        return f"{self.registro} - {self.disciplina}"
+        return f"{self.nome} ({self.registro}) - Disciplina: {self.disciplina}"
