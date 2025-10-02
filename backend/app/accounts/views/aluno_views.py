@@ -1,5 +1,5 @@
 from accounts.models.aluno import Aluno
-from accounts.serializers.alunoSerializer import AlunoSerializer
+from accounts.serializers.aluno_serializer import AlunoSerializer
 from rest_framework import viewsets
 from rest_framework.permissions import AllowAny
 
