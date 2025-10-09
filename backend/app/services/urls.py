@@ -7,6 +7,7 @@ from accounts.views.curso_views import CursoListCreateView, CursoRetrieveUpdateD
 from accounts.views.turma_views import TurmaListCreateView, TurmaRetrieveUpdateDestroyView
 from accounts.views.atendimento_views import AtendimentoListCreateView, AtendimentoRetrieveUpdateDestroyView
 from accounts.views.coordenador_views import CoordenadorListCreateView, CoordenadorRetrieveUpdateDestroyView
+from accounts.views.registro_atendimento_views import RegistroAtendimentoListCreateView, RegistroAtendimentoRetrieveUpdateDestroyView
 app_name = 'api'
 router = DefaultRouter()
 
@@ -33,4 +34,10 @@ urlpatterns = [
     #URLs do Atendimento
     path('atendimento/', AtendimentoListCreateView.as_view(), name='atendimento-list-create'),
     path('atendimento/<int:id>/', AtendimentoRetrieveUpdateDestroyView.as_view(), name='atendimento-detail'),
+
+    #URLs de RegistroAtendimento
+    path('registros/', RegistroAtendimentoListCreateView.as_view(), name='registro-list-create'),
+    path('registros/<int:id>/', RegistroAtendimentoRetrieveUpdateDestroyView.as_view(), name='registro-detail'),
+
+
 ]

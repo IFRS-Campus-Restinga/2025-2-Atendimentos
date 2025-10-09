@@ -15,6 +15,8 @@ import ListarAluno from './pages/Aluno/ListarAluno.jsx';
 import CadastraAluno from './pages/Aluno/CadastraAluno';
 import ListarProfessor from './pages/Professor/ListarProfessor.jsx';
 import CadastraProfessor from './pages/Professor/CadastraProfessor';
+import ListarRegistro from './pages/RegistroAtendimento/ListarRegistro.jsx';
+import CadastrarRegistroAtendimento from './pages/RegistroAtendimento/CadastrarRegistro.jsx';
  
 
 function App() {
@@ -51,7 +53,12 @@ function App() {
               <Route path="/alunos/cadastrar" element={<CadastraAluno />} />  
 
               <Route path="/professores" element={<ListarProfessor />} />
-              <Route path="/professores/cadastrar" element={<CadastraProfessor />} />          
+              <Route path="/professores/cadastrar" element={<CadastraProfessor />} />      
+              
+              <Route path="/registros" element={<ListarRegistro />} />
+              <Route path="/registros/cadastrar" element={<CadastrarRegistroAtendimento />} />      
+              
+
             </Routes>
         </div>
     </Router>

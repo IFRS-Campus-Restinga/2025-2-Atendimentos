@@ -30,6 +30,9 @@ function Header() {
           <Link to="/professores" className="btn btn-light fw-semibold shadow-sm">
             Listar Professores
           </Link>
+          <Link to="/registros" className="btn btn-light fw-semibold shadow-sm">
+            Listar Registros
+          </Link>
         </nav>
       </div>
     </header>
