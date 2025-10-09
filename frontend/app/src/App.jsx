@@ -13,7 +13,7 @@ import Header from "./components/Header.jsx";
 import Login from "./pages/Login.jsx";
 import RoleSelection from './pages/RoleSelection.jsx';
 import NotAvailable from './pages/NotAvailable.jsx';
-import AdminDashboard from './pages/CoordinatorDashboard.jsx';
+import AdminDashboard from './pages/AdminDashboard.jsx';
 import './index.css';
 
 import CadastrarCurso from './pages/Curso/CadastrarCurso.jsx';
