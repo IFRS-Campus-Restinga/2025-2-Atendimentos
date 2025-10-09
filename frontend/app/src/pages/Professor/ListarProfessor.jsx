@@ -117,7 +117,7 @@ function ListarProfessor() {
                         disciplina: professor.disciplina,
                       });
                     }}>Editar</button>
-                    <button className="btn-deletar" onClick={() => deletaProfessor(professor.id)}>Deletar</button>
+                    
                   </>
                 )}
               </td>
@@ -128,5 +128,5 @@ function ListarProfessor() {
     </div>
   );
 }
-
+//<button className="btn-deletar" onClick={() => deletaProfessor(professor.id)}>Deletar</button>
 export default ListarProfessor;
