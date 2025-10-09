@@ -1,9 +1,5 @@
 from django.db import models
 from accounts.models.base_model import BaseModel
-from django.core.validators import (
-    MinValueValidator,
-    MaxValueValidator,
-)
 
 
 class Aluno(BaseModel):
@@ -20,19 +16,13 @@ class Aluno(BaseModel):
         verbose_name="Aluno PEI",
         help_text="É um aluno PEI?"
     )
-    matricula = models.BigIntegerField(
-        verbose_name="Número da Matricula",
-        help_text="Insira o número da matrícula",
+    matricula = models.CharField(
+        max_length=15,
         unique=True,
-        validators=[
-            MinValueValidator(
-                10**9, message="O número da matricula deve conter 10 números."
-            ),
-            MaxValueValidator(
-                10**10 - 1, message="O número da matricula deve conter 10 números."
-            ),
-        ],
+        verbose_name="Número da Matrícula",
+        help_text="Insira o número da matrícula, matrícula deve conter entre 1 e 15 dígitos numéricos.",
     )
+
     curso = models.CharField(
         max_length=50,
         verbose_name="Nome do Curso",

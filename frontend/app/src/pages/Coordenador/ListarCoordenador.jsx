@@ -106,7 +106,7 @@ function ListarCoordenador() {
                         email: coord.email
                       });
                     }}>Editar</button>
-                    <button className="btn-deletar" onClick={() => deletaCoordenador(coord.id)}>Deletar</button>
+                   
                   </>
                 )}
               </td>
@@ -117,5 +117,5 @@ function ListarCoordenador() {
     </div>
   );
 }
-
+// <button className="btn-deletar" onClick={() => deletaCoordenador(coord.id)}>Deletar</button>
 export default ListarCoordenador;
