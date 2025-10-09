@@ -29,12 +29,12 @@ function Login({ onLoginSuccess }) {
         {usuario && (
           <div className="mt-4 text-center">
             <img
-              src={usuario.imageUrl}
+              src={usuario.foto}
               alt="Foto de perfil"
               className="rounded-circle border"
               style={{ width: "80px", height: "80px", objectFit: "cover" }}
             />
-            <h5 className="mt-2 fw-semibold">Olá, {usuario.name}!</h5>
+            <h5 className="mt-2 fw-semibold">Olá, {usuario.nome}!</h5>
           </div>
         )}
       </div>

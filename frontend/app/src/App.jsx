@@ -11,6 +11,9 @@ import { getApiUrl } from "./services/api.js";
 // App.jsx
 import Header from "./components/Header.jsx";
 import Login from "./pages/Login.jsx";
+import RoleSelection from './pages/RoleSelection.jsx';
+import NotAvailable from './pages/NotAvailable.jsx';
+import AdminDashboard from './pages/CoordinatorDashboard.jsx';
 import './index.css';
 
 import CadastrarCurso from './pages/Curso/CadastrarCurso.jsx';
@@ -54,6 +57,7 @@ function App() {
       setLogado(true);
       localStorage.setItem("usuario", JSON.stringify(userData));
       localStorage.setItem("token", credentialResponse.credential);
+      localStorage.removeItem('selectedRole');
 
       const response = await fetch(getApiUrl('googleLogin'), {
         method: "POST",
@@ -74,6 +78,11 @@ function App() {
         const text = await response.text();
         console.error("Resposta inesperada do backend:", text);
         //alert("Erro inesperado ao autenticar.");
+      }
+      try {
+        window.history.replaceState({}, '', '/selecionar-perfil');
+      } catch (_) {
+        // noop
       }
     } catch (erro) {
       console.error("Erro ao decodificar token do Google:", erro);
@@ -108,7 +117,6 @@ function App() {
         {logado && (
           <>
             <Header usuario={usuario} onLogout={logout} />
-            <hr />
           </>
         )}
         <Routes>
@@ -116,7 +124,11 @@ function App() {
             path="/"
             element={
               logado ? (
-                <Navigate to="/appointments" />
+                (() => {
+                  const role = localStorage.getItem('selectedRole');
+                  if (role === 'Administrador') return <Navigate to="/dashboard" />;
+                  return <Navigate to="/selecionar-perfil" />;
+                })()
               ) : (
                 <Login
                   onLoginSuccess={sucessoLoginGoogle}
@@ -127,6 +139,9 @@ function App() {
               )
             }
           />
+          <Route path="/selecionar-perfil" element={<RotaProtegida><RoleSelection /></RotaProtegida>} />
+          <Route path="/nao-disponivel" element={<RotaProtegida><NotAvailable /></RotaProtegida>} />
+          <Route path="/dashboard" element={<RotaProtegida><AdminDashboard /></RotaProtegida>} />
           <Route path="/appointments" element={<RotaProtegida><h1>Página de Atendimentos</h1></RotaProtegida>} />
           <Route path="/disciplina" element={<RotaProtegida><ListarDisciplina /></RotaProtegida>} />
           <Route path="/disciplina/cadastrar" element={<RotaProtegida><CadastrarDisciplina /></RotaProtegida>} />
