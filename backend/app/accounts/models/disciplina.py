@@ -9,11 +9,11 @@ class Disciplina(BaseModel):
     """
     Model que representa uma disciplina ofertada.
     """
-    cursos = models.ManyToManyField(Curso, related_name='disciplinas')
+    #cursos = models.ManyToManyField(Curso, related_name='disciplinas')
 
     #professor = models.ForeignKey('Professor', on_delete=models.SET_NULL, null=True, blank=True)
 
-    professor = models.CharField(max_length=100, blank=True, null=True, verbose_name="Nome do professor (opcional)")  # Nome do professor, opcional
+    #professor = models.CharField(max_length=100, blank=True, null=True, verbose_name="Nome do professor (opcional)")  # Nome do professor, opcional
     
     nome = models.CharField(
         max_length=50, 
@@ -30,13 +30,6 @@ class Disciplina(BaseModel):
         null=False, 
         verbose_name="Código",
     )
-
-    descricao = models.TextField(
-        max_length=100,
-        blank=True, 
-        null=True, 
-        verbose_name="Descrição"
-        )  # Descrição da disciplina
 
     ativo = models.BooleanField(
         default=True, 

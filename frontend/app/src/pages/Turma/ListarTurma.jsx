@@ -185,7 +185,7 @@ function ListarTurma() {
                           ano: turma.ano ?? ""
                         });
                       }}>Editar</button>
-                      <button className="btn-deletar" onClick={() => deletaTurma(turma.id)}>Deletar</button>
+                     
                     </>
                   )}
                 </td>
@@ -197,5 +197,5 @@ function ListarTurma() {
     </div>
   );
 }
-
+// <button className="btn-deletar" onClick={() => deletaTurma(turma.id)}>Deletar</button>
 export default ListarTurma;

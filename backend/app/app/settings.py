@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken', 
     "corsheaders",
     'accounts',
+    'services',
 ]
 
 MIDDLEWARE = [
@@ -53,10 +54,23 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
 ]
+
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
 ]
 
+CORS_ALLOW_HEADERS = [
+    "accept",
+    "accept-encoding",
+    "authorization",
+    "content-type",
+    "dnt",
+    "origin",
+    "user-agent",
+    "x-csrftoken",
+    "x-requested-with",
+    "x-backend-token",  # permite o header customizado
+]
 # configuracao para uso de token para autenticacao
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [

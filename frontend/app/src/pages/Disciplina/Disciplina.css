@@ -1,0 +1,114 @@
+/* Disciplinas.css */
+.disciplina-container {
+  max-width: 500px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+}
+
+.disciplina-form label {
+  display: block;
+  margin-top: 1rem;
+  font-weight: bold;
+}
+
+.disciplina-form input,
+.disciplina-form select,
+.disciplina-form textarea {
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 0.25rem;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.disciplina-form button {
+  margin-top: 1.5rem;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+}
+
+.disciplina-form button:hover {
+  background-color: #0056b3;
+}
+
+/* Tabela de disciplinas */
+.disciplinas-container {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 1rem;
+}
+
+.disciplinas-title {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.disciplinas-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  text-align: left;
+}
+
+.disciplinas-table th,
+.disciplinas-table td {
+  border: 1px solid #ccc;
+  padding: 0.75rem;
+}
+
+.disciplinas-table th {
+  background-color: #f0f0f0;
+}
+
+.disciplinas-table input,
+.disciplinas-table select {
+  width: 100%;
+  padding: 0.3rem;
+  box-sizing: border-box;
+}
+
+/* Botões de ação */
+.btn-group {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.disciplinas-container .btn-editar {
+  background-color: #ffc107;
+  color: #212529;
+  border: none;
+  padding: 0.3rem 0.6rem;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.disciplinas-container .btn-editar:hover {
+  background-color: #e0a800;
+}
+
+.disciplinas-container .btn-deletar {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 0.3rem 0.6rem;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+/* Status visual */
+.status-ativo {
+  color: #28a745;
+  font-weight: bold;
+}
+
+.status-inativo {
+  color: #dc3545;
+  font-weight: bold;
+}

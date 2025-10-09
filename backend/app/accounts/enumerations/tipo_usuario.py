@@ -3,6 +3,6 @@ from django.db import models
 class TipoUsuario(models.TextChoices):
 
     ADMIN = 'ADM', 'Administrador'
-    PROFESSOR = 'PROF', 'Professor'
+    SERVIDOR = 'SERV', 'Servidor'
     ALUNO = 'ALU', 'Aluno'
     COORDENADOR = 'COORD', 'Coordenador'

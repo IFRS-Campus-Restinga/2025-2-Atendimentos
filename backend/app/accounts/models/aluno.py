@@ -1,38 +1,22 @@
 from django.db import models
 from accounts.models.base_model import BaseModel
-from django.core.validators import (
-    MinValueValidator,
-    MaxValueValidator,
-)
+from django.conf import settings
 
 
 class Aluno(BaseModel):
-    nome_completo = models.CharField(
-        max_length=50,
-        verbose_name="Nome Completo",
-        help_text="Insira o nome completo do(a) aluno(a)",
-        null=False,
-        blank=False,
+
+    usuario = models.OneToOneField(
+        settings.AUTH_USER_MODEL, # precisa ser confirmado
+        on_delete=models.CASCADE,
+        related_name='aluno'
     )
     #Aluno que precisa de mais tempo nos atendimentos
     alunoPEI = models.BooleanField(
         default=False, 
-        verbose_name="Aluno PEI",
-        help_text="É um aluno PEI?"
+        verbose_name="Aluno PEI"
     )
-    matricula = models.BigIntegerField(
-        verbose_name="Número da Matricula",
-        help_text="Insira o número da matrícula",
-        unique=True,
-        validators=[
-            MinValueValidator(
-                10**9, message="O número da matricula deve conter 10 números."
-            ),
-            MaxValueValidator(
-                10**10 - 1, message="O número da matricula deve conter 10 números."
-            ),
-        ],
-    )
+
+
     curso = models.CharField(
         max_length=50,
         verbose_name="Nome do Curso",
@@ -48,6 +32,39 @@ class Aluno(BaseModel):
         blank=False,
     )
 
+    '''
+    nome_completo = models.CharField(
+        max_length=50,
+        verbose_name="Nome Completo",
+        help_text="Insira o nome completo do(a) aluno(a)",
+        null=False,
+        blank=False,
+    )
+    matricula = models.CharField(
+        max_length=15,
+        unique=True,
+        verbose_name="Número da Matrícula",
+        help_text="Insira o número da matrícula, matrícula deve conter entre 1 e 15 dígitos numéricos.",
+    )
+    '''
+    # função para pegar a matrícula (ou registro caso seja o caso) do usuario
+    def get_identificador(self):
+        if hasattr(self.usuario, 'registro'):
+            return self.usuario.registro
+        if hasattr(self.usuario, 'matricula'):
+            return self.usuario.matricula
+        return getattr(self.usuario, 'username', self.usuario.email)
+
+    class Meta:
+        verbose_name = "Aluno"
+        verbose_name_plural = "Alunos"
+
+    def __str__(self):
+        nome = getattr(self.usuario, 'get_full_name', lambda: self.usuario.email)()
+        return f"(Nome Completo: {nome} - Matrícula(ou Registro): {self.get_identificador()} - Curso: {self.curso} - Turma: {self.turma})"
+
+
+
 
 def solicitaAtendimento(request):
     pass
@@ -57,5 +74,4 @@ def cancelaAtendimento(request):
     pass
 
 
-def __str__(self):
-    return f"{self.nome_completo} (Matrícula: {self.matricula})"
+    
