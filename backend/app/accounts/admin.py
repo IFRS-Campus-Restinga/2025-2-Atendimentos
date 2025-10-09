@@ -10,5 +10,3 @@ admin.site.register(Coordenador)
 admin.site.register(Aluno)
 admin.site.register(Atendimento)
 admin.site.register(RegistroAtendimento)
-admin.site.register(Evento)
-
