@@ -115,3 +115,23 @@
   font-size: 0.9rem;
   margin-top: 4px;
 }
+
+.paginacao {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.paginacao button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  margin: 0 0.3rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.paginacao button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}

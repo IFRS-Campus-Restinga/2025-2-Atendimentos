@@ -14,6 +14,8 @@ function ListarTurma() {
     turno: "",
   });
   const [cursos, setCursos] = useState([]);
+  const [paginaAtual, setPaginaAtual] = useState(1); // Página atual
+  const turmasPorPagina = 10; // Número de turmas por página
   const navigate = useNavigate();
 
   function handleEditChange(e) {
@@ -88,13 +90,22 @@ function ListarTurma() {
     }
   }
 
-    function capitalizarPrimeiraLetra(texto) {
+  function capitalizarPrimeiraLetra(texto) {
     texto = texto.replace(/_/g, ' ');           
     texto = texto.toLowerCase();                
     texto = texto.charAt(0).toUpperCase() + texto.slice(1); 
     return texto;
-    }
+  }
 
+  // Paginação: filtra as turmas da página atual
+  const turmasPaginaAtual = turmas.slice(
+    (paginaAtual - 1) * turmasPorPagina,
+    paginaAtual * turmasPorPagina
+  );
+
+  const totalPaginas = Math.ceil(turmas.length / turmasPorPagina);
+  const proximaPagina = () => { if (paginaAtual < totalPaginas) setPaginaAtual(paginaAtual + 1); }
+  const paginaAnterior = () => { if (paginaAtual > 1) setPaginaAtual(paginaAtual - 1); }
 
   useEffect(() => {
     recuperaTurmas();
@@ -104,11 +115,12 @@ function ListarTurma() {
   return (
     <div className="turmas-container">
       <h1 className="turmas-title">Lista de Turmas</h1>
-        <div style={{ textAlign: "center", marginTop: "1.5rem" }}>
+      <div style={{ textAlign: "center", marginTop: "1.5rem" }}>
         <button className="btn-salvar" onClick={() => navigate("/turma/cadastrar")}>
           Cadastrar Nova Turma
         </button>
       </div>
+
       <table className="turmas-table">
         <thead>
           <tr>
@@ -121,7 +133,7 @@ function ListarTurma() {
           </tr>
         </thead>
         <tbody>
-          {turmas.map(turma => {
+          {turmasPaginaAtual.map(turma => {
             const curso = turma.curso || {};
             const coordenador = curso.coordenador || {};
             const mostraSemestre = cursoEhSuperOuProeja(turma);
@@ -131,11 +143,8 @@ function ListarTurma() {
                 <td>
                   {editId === turma.id ? (
                     <input name="nome" value={editData.nome} onChange={handleEditChange} />
-                  ) : (
-                    turma.nome
-                  )}
+                  ) : turma.nome}
                 </td>
-
                 <td>
                   {editId === turma.id ? (
                     mostraSemestre ? (
@@ -143,11 +152,8 @@ function ListarTurma() {
                     ) : (
                       <input name="ano" value={editData.ano} onChange={handleEditChange} placeholder="Ano" />
                     )
-                  ) : (
-                    mostraSemestre ? turma.semestre : turma.ano
-                  )}
+                  ) : mostraSemestre ? turma.semestre : turma.ano}
                 </td>
-
                 <td>
                   {editId === turma.id ? (
                     <select name="turno" value={editData.turno} onChange={handleEditChange}>
@@ -156,35 +162,19 @@ function ListarTurma() {
                       <option value="T">Tarde</option>
                       <option value="N">Noite</option>
                     </select>
-                  ) : (
-                    turnoPorExtenso(turma.turno)
-                  )}
+                  ) : turnoPorExtenso(turma.turno)}
                 </td>
-
                 <td>{curso.codigo}, {capitalizarPrimeiraLetra(curso.tipo_curso)}</td>
-
                 <td>{coordenador.email || "-"}</td>
-
                 <td className="btn-group">
                   {editId === turma.id ? (
                     <>
                       <button className="btn-salvar" onClick={() => salvaEdicao(turma.id)}>Salvar</button>
-                      <button className="btn-cancelar" onClick={() => {
-                        setEditId(null);
-                        setEditData({ nome: "", semestre: "", ano: "", turno: "" });
-                      }}>Cancelar</button>
+                      <button className="btn-cancelar" onClick={() => { setEditId(null); setEditData({ nome: "", semestre: "", ano: "", turno: "" }); }}>Cancelar</button>
                     </>
                   ) : (
                     <>
-                      <button className="btn-editar" onClick={() => {
-                        setEditId(turma.id);
-                        setEditData({
-                          nome: turma.nome,
-                          turno: turma.turno,
-                          semestre: turma.semestre ?? "",
-                          ano: turma.ano ?? ""
-                        });
-                      }}>Editar</button>
+                      <button className="btn-editar" onClick={() => { setEditId(turma.id); setEditData({ nome: turma.nome, turno: turma.turno, semestre: turma.semestre ?? "", ano: turma.ano ?? "" }); }}>Editar</button>
                       <button className="btn-deletar" onClick={() => deletaTurma(turma.id)}>Deletar</button>
                     </>
                   )}
@@ -194,6 +184,13 @@ function ListarTurma() {
           })}
         </tbody>
       </table>
+
+      {/* Paginação */}
+      <div className="paginacao">
+        <button onClick={paginaAnterior} disabled={paginaAtual === 1}>Anterior</button>
+        <span>Página {paginaAtual} de {totalPaginas}</span>
+        <button onClick={proximaPagina} disabled={paginaAtual === totalPaginas}>Próxima</button>
+      </div>
     </div>
   );
 }
