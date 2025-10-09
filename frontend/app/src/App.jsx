@@ -7,6 +7,7 @@ import {
   useLocation
 } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+// App.jsx
 import Header from "./components/Header.jsx";
 import Login from "./pages/Login.jsx";
 import './index.css';
@@ -23,6 +24,8 @@ import ListarProfessor from './pages/Professor/ListarProfessor.jsx';
 import CadastraProfessor from './pages/Professor/CadastraProfessor';
 import ListarDisciplina from './pages/Disciplina/ListarDisciplina.jsx';
 import CadastrarDisciplina from './pages/Disciplina/CadastrarDisciplina.jsx';
+import Agenda from './pages/Agenda/Agenda.jsx';
+ 
 
 function App() {
   const [usuario, setUsuario] = useState(null);
@@ -136,6 +139,7 @@ function App() {
           <Route path="/alunos/cadastrar" element={<RotaProtegida><CadastraAluno /></RotaProtegida>} />
           <Route path="/professores" element={<RotaProtegida><ListarProfessor /></RotaProtegida>} />
           <Route path="/professores/cadastrar" element={<RotaProtegida><CadastraProfessor /></RotaProtegida>} />
+          <Route path="/agenda" element={<RotaProtegida><Agenda /></RotaProtegida>} />
         </Routes>
       </div>
     </Router>
