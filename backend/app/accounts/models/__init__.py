@@ -7,3 +7,4 @@ from .curso import *
 from .disciplina import *
 from .turma import *
 from .atendimento import *
+from .registro_atendimento import *
