@@ -1,3 +1,9 @@
+.bg-success-subtle {
+  background-color: rgba(25, 135, 84, 0.1) !important;
+}
+.border-success-subtle {
+  border-color: rgba(25, 135, 84, 0.3) !important;
+}
 #root {
   max-width: 1280px;
   margin: 0 auto;
