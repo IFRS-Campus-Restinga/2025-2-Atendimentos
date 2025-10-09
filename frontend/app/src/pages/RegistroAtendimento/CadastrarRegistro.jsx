@@ -17,17 +17,35 @@ function CadastrarRegistroAtendimento() {
 
   const [atendimentos, setAtendimentos] = useState([]);
   const [erros, setErros] = useState({});
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function recuperaAtendimentos() {
       try {
-        const response = await DB_ATENDIMENTOS.get("/");
-        const data = Array.isArray(response.data) ? response.data : response.data.results;
+        setLoading(true);
 
-        // Filtra apenas os atendimentos confirmados
-        setAtendimentos(data.filter(a => a.status === "CONF"));
+        // Busca todos os atendimentos
+        const atendResp = await DB_ATENDIMENTOS.get("/");
+        const atendimentosData = Array.isArray(atendResp.data) ? atendResp.data : atendResp.data.results;
+
+        // Busca todos os registros
+        const registrosResp = await DB_REGISTROS.get("/");
+        const registrosData = Array.isArray(registrosResp.data) ? registrosResp.data : registrosResp.data.results;
+
+        // IDs dos atendimentos que já têm registro
+        const atendComRegistro = registrosData.map(r => r.atendimento_id);
+
+        // Filtra apenas os confirmados e que ainda não têm registro
+        const filtrados = atendimentosData.filter(a => 
+          a.status === "CONF" && !atendComRegistro.includes(a.id)
+        );
+
+        setAtendimentos(filtrados);
       } catch (err) {
-        console.error("Erro ao buscar atendimentos: ", err);
+        console.error("Erro ao buscar atendimentos ou registros: ", err);
+        alert("Falha ao carregar atendimentos.");
+      } finally {
+        setLoading(false);
       }
     }
 
@@ -42,7 +60,6 @@ function CadastrarRegistroAtendimento() {
   async function adicionaRegistro(event) {
     event.preventDefault();
 
-    // Validação simples
     if (!formData.atendimento || !formData.data_atendimento || !formData.descricao) {
       alert("Preencha todos os campos obrigatórios.");
       return;
@@ -50,15 +67,15 @@ function CadastrarRegistroAtendimento() {
 
     try {
       await DB_REGISTROS.post("/", {
-        atendimento: parseInt(formData.atendimento, 10), // 👈 aqui deve ser 'atendimento', não 'atendimento_id'
+        atendimento: parseInt(formData.atendimento, 10),
         data_atendimento: formData.data_atendimento,
         descricao: formData.descricao.trim()
-    }, {
+      }, {
         headers: { "Content-Type": "application/json" }
-    });
+      });
 
       alert("Registro cadastrado com sucesso!");
-      navigate("/registros"); // ou rota de listagem de registros
+      navigate("/registros");
     } catch (err) {
       console.error("Erro ao criar registro:", err);
       if (err.response && err.response.data) {
@@ -75,19 +92,27 @@ function CadastrarRegistroAtendimento() {
 
       <form className="registro-form" onSubmit={adicionaRegistro}>
         <label>Atendimento:</label>
-        <select
-          name="atendimento"
-          value={formData.atendimento}
-          onChange={handleChange}
-          required
-        >
-          <option value="">Selecione</option>
-          {atendimentos.map(a => (
-            <option key={a.id} value={a.id}>
-              {a.turma?.nome} - {a.tipo_atendimento} ({new Date(a.data_hora).toLocaleString()})
-            </option>
-          ))}
-        </select>
+        {loading ? (
+          <p>Carregando atendimentos...</p>
+        ) : (
+          atendimentos.length > 0 ? (
+            <select
+              name="atendimento"
+              value={formData.atendimento}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Selecione</option>
+              {atendimentos.map(a => (
+                <option key={a.id} value={a.id}>
+                  {a.turma?.nome} - {a.tipo_atendimento} ({new Date(a.data_hora).toLocaleString()})
+                </option>
+              ))}
+            </select>
+          ) : (
+            <p>Nenhum atendimento disponível para registro.</p>
+          )
+        )}
         {erros.atendimento && <p className="erro-campo">{erros.atendimento}</p>}
 
         <label>Data e Hora do Atendimento:</label>
@@ -109,7 +134,9 @@ function CadastrarRegistroAtendimento() {
         />
         {erros.descricao && <p className="erro-campo">{erros.descricao}</p>}
 
-        <button type="submit">Cadastrar Registro</button>
+        <button type="submit" disabled={loading || atendimentos.length === 0}>
+          Cadastrar Registro
+        </button>
       </form>
 
       <Link to="/registros" className="voltar-btn">Voltar</Link>

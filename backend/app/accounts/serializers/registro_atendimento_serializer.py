@@ -12,6 +12,9 @@ class RegistroAtendimentoSerializer(serializers.ModelSerializer):
         write_only=True
     )
 
+    # Campo adicional para frontend saber qual atendimento já tem registro
+    atendimento_id = serializers.IntegerField(source="atendimento.id", read_only=True)
+
     # Campos derivados para exibição no GET
     turma_nome = serializers.SerializerMethodField()
     tipo_atendimento = serializers.SerializerMethodField()
@@ -21,7 +24,8 @@ class RegistroAtendimentoSerializer(serializers.ModelSerializer):
         model = RegistroAtendimento
         fields = [
             "id",
-            "atendimento",   # apenas para POST
+            "atendimento",       # apenas para POST
+            "atendimento_id",    # novo campo somente leitura
             "data_atendimento",
             "descricao",
             "turma_nome",
