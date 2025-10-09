@@ -7,6 +7,7 @@ import {
   useLocation
 } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import { getApiUrl } from "./services/api.js";
 // App.jsx
 import Header from "./components/Header.jsx";
 import Login from "./pages/Login.jsx";
@@ -54,7 +55,7 @@ function App() {
       localStorage.setItem("usuario", JSON.stringify(userData));
       localStorage.setItem("token", credentialResponse.credential);
 
-      const response = await fetch("http://127.0.0.1:8000/api/google-login/", {
+      const response = await fetch(getApiUrl('googleLogin'), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: dados.email }) // envia email, não token
