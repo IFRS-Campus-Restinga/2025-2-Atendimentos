@@ -1,15 +1,46 @@
-function ButtonGoogle() {
-    return (
-      <button className="btn btn-outline-secondary d-flex align-items-center gap-2 px-3 py-2 rounded-pill shadow-sm">
-        <img
-          src="https://www.svgrepo.com/show/355037/google.svg"
-          alt="Google Logo"
-          style={{ width: "20px", height: "20px" }}
-        />
-        Sign in with Google
-      </button>
-    );
-  }
-  
-  export default ButtonGoogle;
-  
+import { GoogleLogin } from '@react-oauth/google';
+import { useState } from 'react';
+
+function ButtonGoogle({ onLoginSuccess }) {
+  const [error, setError] = useState(null);
+
+  const handleLoginSuccess = (credentialResponse) => {
+    try {
+      if (!credentialResponse?.credential) {
+        throw new Error("Credencial ausente ou inválida");
+      }
+
+      console.log("Login realizado com sucesso:", credentialResponse);
+      setError(null); // Limpa qualquer erro anterior
+      
+      // Chama a função passada pelo App.jsx para atualizar o estado
+      onLoginSuccess(credentialResponse);
+    } catch (err) {
+      console.error("Erro no handleLoginSuccess:", err);
+      setError(err.message);
+    }
+  };
+
+  const handleLoginError = (error) => {
+    console.error("Erro ao fazer login com o Google:", error);
+    setError("Falha no login com Google. Tente novamente.");
+  };
+
+  return (
+    <div>
+      {error && (
+        <div className="alert alert-danger mb-3">
+          {error}
+        </div>
+      )}
+      <GoogleLogin
+        onSuccess={handleLoginSuccess}
+        onError={handleLoginError}
+        useOneTap={false}
+        auto_select={false}
+      />
+    </div>
+  );
+}
+
+export default ButtonGoogle;

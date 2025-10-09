@@ -11,7 +11,7 @@ function CadastraCoordenador() {
     nome: "",
     email: "",
     registro: "",
-    tipoPerfil: "COOR"
+    tipoPerfil: "COORD"
   });
 
   function handleChange(e) {
@@ -30,7 +30,7 @@ function CadastraCoordenador() {
     try {
       await DB.post("/", formData);
       alert("Coordenador cadastrado com sucesso!");
-      setFormData({ nome: "", email: "", registro: "", tipoPerfil: "COOR" });
+      setFormData({ nome: "", email: "", registro: "", tipoPerfil: "COORD" });
       navigate("/coord");
     } catch (err) {
       alert("Falha ao cadastrar coordenador!");
@@ -49,9 +49,6 @@ function CadastraCoordenador() {
 
         <label>Registro:</label>
         <input name="registro" value={formData.registro} onChange={handleChange} required />
-
-        <label>Tipo de Perfil:</label>
-        <input name="tipoPerfil" value={formData.tipoPerfil} disabled />
 
         <button type="submit">Cadastrar Coordenador</button>
       </form>

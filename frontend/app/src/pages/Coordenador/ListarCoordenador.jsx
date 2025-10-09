@@ -7,7 +7,7 @@ function ListarCoordenador() {
   const DB = axios.create({ baseURL: 'http://127.0.0.1:8000/services/coord' });
   const [coordenadores, setCoordenadores] = useState([]);
   const [editId, setEditId] = useState(null);
-  const [editData, setEditData] = useState({ nome: "", email: "", senha: "" });
+  const [editData, setEditData] = useState({ nome: "", registro: "" });
   const navigate = useNavigate();
 
   function handleEditChange(e) {
@@ -40,11 +40,12 @@ function ListarCoordenador() {
     try {
       await DB.put(`/${id}/`, {
         nome: editData.nome,
+        registro: editData.registro,
         email: editData.email,
-        senha: editData.senha
+        tipoPerfil: "COORD"
       });
       setEditId(null);
-      setEditData({ nome: "", email: "", senha: "" });
+      setEditData({ nome: "", email: "", registro: "" });
       await recuperaCoordenadores();
     } catch (err) {
       console.error("Erro ao atualizar coordenador:", err);
@@ -58,12 +59,18 @@ function ListarCoordenador() {
 
   return (
     <div className="coordenadores-container">
-      <h1 className="coordenadores-title">Listar Coordenadores</h1>
+      <h1 className="coordenadores-title">Lista de Coordenadores</h1>
+      <div style={{ textAlign: "center", marginTop: "1.5rem" }}>
+        <button className="btn-salvar" onClick={() => navigate("/coord/cadastrar")}>
+          Cadastrar Novo Coordenador
+        </button>
+      </div>
       <table className="coordenadores-table">
         <thead>
           <tr>
             <th>Nome</th>
             <th>Email</th>
+            <th>Registro</th>
             <th>Ações</th>
           </tr>
         </thead>
@@ -76,10 +83,11 @@ function ListarCoordenador() {
                   coord.nome
                 }
               </td>
+              <td>{coord.email}</td>
               <td>
                 {editId === coord.id ?
-                  <input name="email" value={editData.email} onChange={handleEditChange} /> :
-                  coord.email
+                  <input name="registro" value={editData.registro} onChange={handleEditChange} /> :
+                  coord.registro
                 }
               </td>
               <td className="btn-group">
@@ -94,11 +102,11 @@ function ListarCoordenador() {
                       setEditId(coord.id);
                       setEditData({
                         nome: coord.nome,
-                        email: coord.email,
-                        senha: ""
+                        registro: coord.registro,
+                        email: coord.email
                       });
                     }}>Editar</button>
-                    <button className="btn-deletar" onClick={() => deletaCoordenador(coord.id)}>Deletar</button>
+                   
                   </>
                 )}
               </td>
@@ -106,13 +114,8 @@ function ListarCoordenador() {
           ))}
         </tbody>
       </table>
-      <div style={{ textAlign: "center", marginTop: "1.5rem" }}>
-        <button className="btn-salvar" onClick={() => navigate("/coord/cadastrar")}>
-          Cadastrar Novo Coordenador
-        </button>
-      </div>
     </div>
   );
 }
-
+// <button className="btn-deletar" onClick={() => deletaCoordenador(coord.id)}>Deletar</button>
 export default ListarCoordenador;

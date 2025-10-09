@@ -1,19 +1,26 @@
 from django.db import models
 from accounts.models.base_model import BaseModel
-from accounts.enumerations.TipoUsuario import TipoPerfil
+from accounts.enumerations.tipo_usuario import TipoUsuario
 
 class Usuario(BaseModel):
-    
-    class Meta:
-        abstract = True
 
-    nome = models.CharField(max_length=50, verbose_name="Nome")
-    email = models.EmailField(unique=True, verbose_name="Email")
-    registro = models.CharField(max_length=20, unique=True, verbose_name="Registro")
+    nome = models.CharField(
+        max_length=100, 
+        verbose_name="Nome")
+
+    email = models.EmailField(
+        unique=True,  
+        verbose_name="Email")
+    
+    registro = models.CharField(
+        max_length=20, 
+        unique=True, 
+        verbose_name="Registro")
+
     tipoPerfil = models.CharField(
         max_length=20,
-        choices=TipoPerfil.choices,
-        verbose_name="Tipo de Perfil"
+        choices=TipoUsuario.choices,
+        verbose_name="Tipo de Usuario"
     )
 
     def __str__(self):
@@ -23,5 +30,6 @@ class Usuario(BaseModel):
         try:
             self.save()
             return True
+        
         except Exception as e:
             return False
