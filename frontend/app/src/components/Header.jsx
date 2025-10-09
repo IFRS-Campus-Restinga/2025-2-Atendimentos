@@ -42,7 +42,7 @@ function Header() {
               <Link to="/turma" className="btn btn-light fw-semibold shadow-sm">Listar Turmas</Link>
               <Link to="/coord" className="btn btn-light fw-semibold shadow-sm">Listar Coordenadores</Link>
               <Link to="/alunos" className="btn btn-light fw-semibold shadow-sm">Listar Alunos</Link>
-              <Link to="/professores" className="btn btn-light fw-semibold shadow-sm">Listar Professores</Link>
+              <Link to="/servidores" className="btn btn-light fw-semibold shadow-sm">Listar Servidores</Link>
               <Link to="/agenda" className="btn btn-light fw-semibold shadow-sm">Agenda</Link>
             </nav>
           )}
