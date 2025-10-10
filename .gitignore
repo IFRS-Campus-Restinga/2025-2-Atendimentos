@@ -1,5 +1,6 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
+
 *.py[codz]
 *$py.class
 
@@ -217,3 +218,6 @@ __marimo__/
 
 #node_modules
 node_modules/
+
+#Vscode
+/.vscode/

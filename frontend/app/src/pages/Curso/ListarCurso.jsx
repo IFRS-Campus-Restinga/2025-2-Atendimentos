@@ -113,7 +113,7 @@ async function salvaEdicao(id) {
                         codigo: curso.codigo
                       });
                     }}>Editar</button>
-                    <button className="btn-deletar" onClick={() => deletaCurso(curso.id)}>Deletar</button>
+                    
                   </>
                 )}
               </td>
@@ -124,5 +124,5 @@ async function salvaEdicao(id) {
     </div>
   );
 }
-
+//<button className="btn-deletar" onClick={() => deletaCurso(curso.id)}>Deletar</button>
 export default ListarCurso;

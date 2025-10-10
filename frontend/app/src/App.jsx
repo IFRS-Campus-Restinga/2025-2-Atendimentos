@@ -1,15 +1,26 @@
-// App.jsx
 import { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+  useLocation
+} from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
+import { getApiUrl } from "./services/api.js";
+// App.jsx
 import Header from "./components/Header.jsx";
 import Login from "./pages/Login.jsx";
-import './index.css'
-import Disciplinas from "./pages/Disciplina.jsx";
+import RoleSelection from './pages/RoleSelection.jsx';
+import NotAvailable from './pages/NotAvailable.jsx';
+import AdminDashboard from './pages/CoordinatorDashboard.jsx';
+import './index.css';
+
 import CadastrarCurso from './pages/Curso/CadastrarCurso.jsx';
 import ListarCurso from './pages/Curso/ListarCurso.jsx';
 import CadastrarTurma from './pages/Turma/CadastrarTurma.jsx';
 import ListarTurma from './pages/Turma/ListarTurma.jsx';
-import CadastraCoordenador from './pages/Coordenador/CadastraCoordenador.jsx'
+import CadastraCoordenador from './pages/Coordenador/CadastraCoordenador.jsx';
 import ListarCoordenador from './pages/Coordenador/ListarCoordenador.jsx';
 import ListarAluno from './pages/Aluno/ListarAluno.jsx';
 import CadastraAluno from './pages/Aluno/CadastraAluno';
@@ -17,76 +28,140 @@ import ListarProfessor from './pages/Professor/ListarProfessor.jsx';
 import CadastraProfessor from './pages/Professor/CadastraProfessor';
 import ListarRegistro from './pages/RegistroAtendimento/ListarRegistro.jsx';
 import CadastrarRegistroAtendimento from './pages/RegistroAtendimento/CadastrarRegistro.jsx';
+import ListarDisciplina from './pages/Disciplina/ListarDisciplina.jsx';
+import CadastrarDisciplina from './pages/Disciplina/CadastrarDisciplina.jsx';
+import Agenda from './pages/Agenda/Agenda.jsx';
  
 
 function App() {
-  //const [usuario, setUsuario] = useState(null);
-  //const [logado, setLogado] = useState(false);
-  //useEffect(() => {
-  //  const usuarioSalvo = localStorage.getItem("usuario");
-  //  if (usuarioSalvo) {
-  //    setUsuario(JSON.parse(usuarioSalvo));
-  //    setLogado(true);
-  //  }
-  //}, []);
+  const [usuario, setUsuario] = useState(null);
+  const [logado, setLogado] = useState(false);
+
+  useEffect(() => {
+    const usuarioSalvo = localStorage.getItem("usuario");
+    const tokenSalvo = localStorage.getItem("token");
+    if (usuarioSalvo && tokenSalvo) {
+      setUsuario(JSON.parse(usuarioSalvo));
+      setLogado(true);
+    }
+  }, []);
+
+  const sucessoLoginGoogle = async (credentialResponse) => {
+    try {
+      const dados = jwtDecode(credentialResponse.credential);
+      const userData = {
+        email: dados.email,
+        nome: dados.name,
+        foto: dados.picture
+      };
+
+      setUsuario(userData);
+      setLogado(true);
+      localStorage.setItem("usuario", JSON.stringify(userData));
+      localStorage.setItem("token", credentialResponse.credential);
+      localStorage.removeItem('selectedRole');
+
+      const response = await fetch(getApiUrl('googleLogin'), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: dados.email }) // envia email, não token
+      });
+
+      const contentType = response.headers.get("content-type");
+      if (contentType && contentType.includes("application/json")) {
+        const data = await response.json();
+        if (response.ok && data.token) {
+          localStorage.setItem("authToken", data.token);
+        } else {
+          console.error("Erro ao validar token no backend:", data);
+          //alert("Falha na autenticação com o servidor.");
+        }
+      } else {
+        const text = await response.text();
+        console.error("Resposta inesperada do backend:", text);
+        //alert("Erro inesperado ao autenticar.");
+      }
+      try {
+        window.history.replaceState({}, '', '/selecionar-perfil');
+      } catch (_) {
+        // noop
+      }
+    } catch (erro) {
+      console.error("Erro ao decodificar token do Google:", erro);
+      logout();
+    }
+  };
+
+  const erroLoginGoogle = () => {
+    console.error('Falha no login com o Google');
+    logout();
+  };
+
+  const logout = () => {
+    setUsuario(null);
+    setLogado(false);
+    localStorage.removeItem("usuario");
+    localStorage.removeItem("token");
+    localStorage.removeItem("authToken");
+  };
+
+  const RotaProtegida = ({ children }) => {
+    const location = useLocation();
+    if (!logado && location.pathname !== "/") {
+      return <Navigate to="/" replace />;
+    }
+    return children;
+  };
 
   return (
     <Router>
-        <div>
-          <Header />
-          <hr />
-            <Routes>
-              <Route path="/" element={<Login />} />
-              <Route path="/appointments" element={<h1>Página de Atendimentos</h1>} />
-              <Route path="/disciplina" element={<Disciplinas />} />
-        
-              <Route path="/curso" element={<ListarCurso />} key="listar-cursos"/>
-              <Route path="/curso/cadastrar" element={<CadastrarCurso />}key="cadastrar-cursos" />
-
-              <Route path="/turma" element={<ListarTurma />} key="listar-turmas"/>
-              <Route path="/turma/cadastrar" element={<CadastrarTurma />}key="cadastrar-turmas" />
-
-              <Route path="/coord" element={<ListarCoordenador />} key="listar-coordenador"/>
-              <Route path="/coord/cadastrar" element={<CadastraCoordenador />} key="cadastrar-coordenador" />
-
-              <Route path="/alunos" element={<ListarAluno />} key="listar-alunos"/>
-              <Route path="/alunos/cadastrar" element={<CadastraAluno />} />  
-
-              <Route path="/professores" element={<ListarProfessor />} />
-              <Route path="/professores/cadastrar" element={<CadastraProfessor />} />      
-              
-              <Route path="/registros" element={<ListarRegistro />} />
-              <Route path="/registros/cadastrar" element={<CadastrarRegistroAtendimento />} />      
-              
-
-            </Routes>
-        </div>
+      <div>
+        {logado && (
+          <>
+            <Header usuario={usuario} onLogout={logout} />
+          </>
+        )}
+        <Routes>
+          <Route
+            path="/"
+            element={
+              logado ? (
+                (() => {
+                  const role = localStorage.getItem('selectedRole');
+                  if (role === 'Administrador') return <Navigate to="/dashboard" />;
+                  return <Navigate to="/selecionar-perfil" />;
+                })()
+              ) : (
+                <Login
+                  onLoginSuccess={sucessoLoginGoogle}
+                  onLoginError={erroLoginGoogle}
+                  logado={logado}
+                  usuario={usuario}
+                />
+              )
+            }
+          />
+          <Route path="/selecionar-perfil" element={<RotaProtegida><RoleSelection /></RotaProtegida>} />
+          <Route path="/nao-disponivel" element={<RotaProtegida><NotAvailable /></RotaProtegida>} />
+          <Route path="/dashboard" element={<RotaProtegida><AdminDashboard /></RotaProtegida>} />
+          <Route path="/appointments" element={<RotaProtegida><h1>Página de Atendimentos</h1></RotaProtegida>} />
+          <Route path="/disciplina" element={<RotaProtegida><ListarDisciplina /></RotaProtegida>} />
+          <Route path="/disciplina/cadastrar" element={<RotaProtegida><CadastrarDisciplina /></RotaProtegida>} />
+          <Route path="/curso" element={<RotaProtegida><ListarCurso /></RotaProtegida>} />
+          <Route path="/curso/cadastrar" element={<RotaProtegida><CadastrarCurso /></RotaProtegida>} />
+          <Route path="/turma" element={<RotaProtegida><ListarTurma /></RotaProtegida>} />
+          <Route path="/turma/cadastrar" element={<RotaProtegida><CadastrarTurma /></RotaProtegida>} />
+          <Route path="/coord" element={<RotaProtegida><ListarCoordenador /></RotaProtegida>} />
+          <Route path="/coord/cadastrar" element={<RotaProtegida><CadastraCoordenador /></RotaProtegida>} />
+          <Route path="/alunos" element={<RotaProtegida><ListarAluno /></RotaProtegida>} />
+          <Route path="/alunos/cadastrar" element={<RotaProtegida><CadastraAluno /></RotaProtegida>} />
+          <Route path="/professores" element={<RotaProtegida><ListarProfessor /></RotaProtegida>} />
+          <Route path="/professores/cadastrar" element={<RotaProtegida><CadastraProfessor /></RotaProtegida>} />
+          <Route path="/agenda" element={<RotaProtegida><Agenda /></RotaProtegida>} />
+        </Routes>
+      </div>
     </Router>
   );
-  
 }
 
 export default App;
-
-
-
-
-//import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-//import Header from "./components/Header";
-//import Login from "./pages/Login";
-//import './index.css'
-//
-//
-//function App() {
-//  return (
-//    <Router>
-//      <Header />
-//      <Routes>
-//        <Route path="/" element={<Login />} />
-//        <Route path="/appointments" element={<h1>Página de Atendimentos</h1>} />
-//      </Routes>
-//    </Router>
-//  );
-//}
-//
-//export default App;

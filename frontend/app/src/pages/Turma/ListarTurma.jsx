@@ -167,7 +167,6 @@ function ListarTurma() {
                       ) : (
                         <>
                           <button className="btn-editar" onClick={() => { setEditId(turma.id); setEditData({ nome: turma.nome, turno: turma.turno, semestre: turma.semestre ?? "", ano: turma.ano ?? "" }); }}>Editar</button>
-                          <button className="btn-deletar" onClick={() => deletaTurma(turma.id)}>Deletar</button>
                         </>
                       )}
                     </td>
@@ -182,4 +181,5 @@ function ListarTurma() {
   );
 }
 
+//<button className="btn-deletar" onClick={() => deletaTurma(turma.id)}>Deletar</button>
 export default ListarTurma;

@@ -1,43 +1,36 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
+
 from .views.disciplina_view_set import DisciplinaViewSet
-from accounts.views.aluno_views import AlunoViewSet
-from accounts.views.professor_views import ProfessorViewSet
-from accounts.views.curso_views import CursoListCreateView, CursoRetrieveUpdateDestroyView
-from accounts.views.turma_views import TurmaListCreateView, TurmaRetrieveUpdateDestroyView
-from accounts.views.atendimento_views import AtendimentoListCreateView, AtendimentoRetrieveUpdateDestroyView
-from accounts.views.coordenador_views import CoordenadorListCreateView, CoordenadorRetrieveUpdateDestroyView
+from services.views.aluno_views_set import AlunoViewSet
+from .views.professor_views_set import ProfessorViewSet
+from .views.curso_views_set import CursoViewSet
+from .views.turma_views_set import TurmaViewSet
+from .views.evento_view_set import EventoViewSet
+from .views.evento_ordinario_views import EventoOrdinarioViewSet
+from .views.evento_extraordinario_views import EventoExtraordinarioViewSet
+from .views.usuario_view_set import UsuarioViewSet
+from .views.coordenador_views_set import CoordenadorViewSet
+from services.views.auth_views import GoogleLoginView
 from accounts.views.registro_atendimento_views import RegistroAtendimentoListCreateView, RegistroAtendimentoRetrieveUpdateDestroyView
+
+
 app_name = 'api'
 router = DefaultRouter()
 
-router.register(r'disciplinas', DisciplinaViewSet, basename='disciplinas')
+router.register(r'alunos', AlunoViewSet, basename='alunos')
+router.register(r'cursos', CursoViewSet, basename='cursos')
+router.register(r'turmas', TurmaViewSet, basename='turmas')
+router.register(r'coord', CoordenadorViewSet, basename='Coordenadores')
 router.register(r'professores', ProfessorViewSet, basename='professores')
-router.register(r'alunos', AlunoViewSet)
+router.register(r'disciplinas', DisciplinaViewSet, basename='disciplinas')
+router.register(r'eventos', EventoViewSet, basename='eventos')
+router.register(r'evento-ordinario', EventoOrdinarioViewSet, basename='evento-ordinario')   
+router.register(r'evento-extraordinario', EventoExtraordinarioViewSet, basename='evento-extraordinario')
+router.register(r'usuario', UsuarioViewSet, basename='usuario')
 
 
 urlpatterns = [
+    path('api/google-login/', GoogleLoginView.as_view(), name='google-login'),
     path('', include(router.urls)),
-
-    # URLs de Curso
-    path('cursos/', CursoListCreateView.as_view(), name='curso-list-create'),
-    path('cursos/<int:id>/', CursoRetrieveUpdateDestroyView.as_view(), name='curso-detail'),
-
-    # URLs de Turma
-    path('turmas/', TurmaListCreateView.as_view(), name='turma-list-create'),
-    path('turmas/<int:id>/', TurmaRetrieveUpdateDestroyView.as_view(), name='turma-detail'),
-
-    # URLs do Coordenador
-    path('coord/', CoordenadorListCreateView.as_view(), name='coord-list-create'),
-    path('coord/<int:id>/', CoordenadorRetrieveUpdateDestroyView.as_view(), name='coord-detail'),
-
-    #URLs do Atendimento
-    path('atendimento/', AtendimentoListCreateView.as_view(), name='atendimento-list-create'),
-    path('atendimento/<int:id>/', AtendimentoRetrieveUpdateDestroyView.as_view(), name='atendimento-detail'),
-
-    #URLs de RegistroAtendimento
-    path('registros/', RegistroAtendimentoListCreateView.as_view(), name='registro-list-create'),
-    path('registros/<int:id>/', RegistroAtendimentoRetrieveUpdateDestroyView.as_view(), name='registro-detail'),
-
-
 ]

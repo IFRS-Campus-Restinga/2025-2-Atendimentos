@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import "./Aluno.css"; 
+import "./Aluno.css";
 
 function CadastraAluno() {
   const ALUNO_API_URL = "http://127.0.0.1:8000/services/alunos/";
@@ -9,21 +9,27 @@ function CadastraAluno() {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    nome_completo: "", 
-    matricula: "", 
-    curso: "", 
-    alunoPEI: false, 
+    nome_completo: "",
+    matricula: "",
+    curso: "",
+    turma: "",
+    alunoPEI: false,
   });
 
   function handleChange(e) {
     const { name, value, type, checked } = e.target;
     const newValue = type === "checkbox" ? checked : value;
-
     setFormData((prev) => ({ ...prev, [name]: newValue }));
   }
 
   async function adicionaAluno(event) {
     event.preventDefault();
+
+    // Validação: matrícula deve conter entre 1 e 15 dígitos numéricos
+    if (!/^\d{1,15}$/.test(formData.matricula)) {
+      alert("A matrícula deve conter entre 1 e 15 dígitos numéricos.");
+      return;
+    }
 
     if (
       !formData.nome_completo ||
@@ -31,14 +37,12 @@ function CadastraAluno() {
       !formData.curso ||
       !formData.turma
     ) {
-      alert(
-        "Por favor, preencha todos os campos obrigatórios (Nome, Matrícula, Curso e Turma)."
-      );
+      alert("Preencha todos os campos obrigatórios.");
       return;
     }
 
     try {
-      await DB.post("", formData); 
+      await DB.post("", formData);
       alert("Aluno(a) cadastrado(a) com sucesso!");
 
       setFormData({
@@ -51,10 +55,7 @@ function CadastraAluno() {
 
       navigate("/alunos");
     } catch (err) {
-      console.error(
-        "Erro na requisição:",
-        err.response ? err.response.data : err.message
-      );
+      console.error("Erro na requisição:", err.response?.data || err.message);
       alert("Falha ao cadastrar aluno(a)! Verifique o console para detalhes.");
     }
   }
@@ -71,15 +72,14 @@ function CadastraAluno() {
           required
         />
 
-        <label>Matrícula (10 dígitos):</label>
+        <label>Matrícula (até 15 dígitos):</label>
         <input
           name="matricula"
-          type="number"
+          type="text"
           value={formData.matricula}
           onChange={handleChange}
           required
-          maxLength="10"
-          minLength="10"
+          placeholder="Ex: 123456789012345"
         />
 
         <label>Nome do Curso:</label>
@@ -98,7 +98,6 @@ function CadastraAluno() {
           required
         />
 
-        
         <div className="aluno-checkbox">
           <input
             name="alunoPEI"
@@ -107,7 +106,9 @@ function CadastraAluno() {
             onChange={handleChange}
             id="alunoPEI"
           />
-          <label htmlFor="alunoPEI">Aluno PEI (Necessita de mais tempo nos Atendimentos)</label>
+          <label htmlFor="alunoPEI">
+            Aluno PEI (Necessita de mais tempo nos Atendimentos)
+          </label>
         </div>
 
         <button type="submit">Cadastrar Aluno</button>

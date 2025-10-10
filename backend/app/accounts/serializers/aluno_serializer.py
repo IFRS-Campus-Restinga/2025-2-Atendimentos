@@ -9,13 +9,13 @@ class AlunoSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Por favor, insira o nome completo.")
         return nome_completo
 
-    def validate_matricula(self, matricula):
-        if len(str(matricula)) != 10:
-            raise serializers.ValidationError(
-                "O número da matrícula deve possuir exatamente 10 digitos!"
-            )
-        return matricula
-    
+    #def validate_matricula(self, matricula):
+    #    if len(str(matricula)) != 10:
+    #        raise serializers.ValidationError(
+    #            "O número da matrícula deve possuir exatamente 10 digitos!"
+    #        )
+    #    return matricula
+    #
 
     class Meta:
         model = Aluno
