@@ -12,7 +12,7 @@ from .views.evento_extraordinario_views import EventoExtraordinarioViewSet
 from .views.usuario_view_set import UsuarioViewSet
 from .views.coordenador_views_set import CoordenadorViewSet
 from services.views.auth_views import GoogleLoginView
-from accounts.views.registro_atendimento_views import RegistroAtendimentoListCreateView, RegistroAtendimentoRetrieveUpdateDestroyView
+from services.views.registro_atendimento_views_set import RegistroAtendimentoViewSet
 
 
 app_name = 'api'
@@ -28,6 +28,7 @@ router.register(r'eventos', EventoViewSet, basename='eventos')
 router.register(r'evento-ordinario', EventoOrdinarioViewSet, basename='evento-ordinario')   
 router.register(r'evento-extraordinario', EventoExtraordinarioViewSet, basename='evento-extraordinario')
 router.register(r'usuario', UsuarioViewSet, basename='usuario')
+router.register(r'registro-atendimento', RegistroAtendimentoViewSet, basename='registro-atendimento')
 
 
 urlpatterns = [

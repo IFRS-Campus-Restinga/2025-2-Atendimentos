@@ -4,7 +4,7 @@ import './RegistroAtendimento.css';
 import { useNavigate } from "react-router-dom";
 
 function ListarRegistro() {
-  const DB = axios.create({ baseURL: 'http://127.0.0.1:8000/services/registros' });
+  const DB = axios.create({ baseURL: 'http://127.0.0.1:8000/services/registro-atendimento' });
   const [registros, setRegistros] = useState([]);
   const [editId, setEditId] = useState(null);
   const [editData, setEditData] = useState({
@@ -68,7 +68,7 @@ function ListarRegistro() {
 
   return (
     <div className="registros-container">
-      <h1 className="registros-title">Lista de Registros de Atendimento</h1>
+      <h1 className="registros-title">Lista de Registros de Evento</h1>
       <div style={{ textAlign: "center", marginTop: "1.5rem" }}>
         <button className="btn-salvar" onClick={() => navigate("/registros/cadastrar")}>
           Cadastrar Novo Registro
@@ -79,8 +79,7 @@ function ListarRegistro() {
         <thead>
           <tr>
             <th>Turma</th>
-            <th>Tipo Atendimento</th>
-            <th>Data/Hora do Atendimento</th>
+            <th>Data/Hora do Evento</th>
             <th>Data do Registro</th>
             <th>Descrição</th>
             <th>Ações</th>
@@ -89,9 +88,8 @@ function ListarRegistro() {
         <tbody>
           {registros.map(registro => (
             <tr key={registro.id}>
-              <td>{registro.turma_nome || "-"}</td>
-              <td>{registro.tipo_atendimento || "-"}</td>
-              <td>{formataDataHora(registro.data_hora_atendimento)}</td>
+              <td>{registro.turma || "-"}</td>
+              <td>{formataDataHora(registro.data_evento)}</td>
               <td>
                 {editId === registro.id ? (
                   <input

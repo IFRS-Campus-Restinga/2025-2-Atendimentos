@@ -4,52 +4,52 @@ import { Link, useNavigate } from "react-router-dom";
 import './RegistroAtendimento.css';
 
 function CadastrarRegistroAtendimento() {
-  const DB_REGISTROS = axios.create({ baseURL: 'http://127.0.0.1:8000/services/registros' });
-  const DB_ATENDIMENTOS = axios.create({ baseURL: 'http://127.0.0.1:8000/services/atendimento' });
+  const DB_REGISTROS = axios.create({ baseURL: 'http://127.0.0.1:8000/services/registro-atendimento' });
+  const DB_EVENTOS = axios.create({ baseURL: 'http://127.0.0.1:8000/services/eventos' });
 
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    atendimento: "",
+    evento: "",
     data_atendimento: "",
     descricao: ""
   });
 
-  const [atendimentos, setAtendimentos] = useState([]);
+  const [eventos, setEventos] = useState([]);
   const [erros, setErros] = useState({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function recuperaAtendimentos() {
+    async function recuperaEventos() {
       try {
         setLoading(true);
 
-        // Busca todos os atendimentos
-        const atendResp = await DB_ATENDIMENTOS.get("/");
-        const atendimentosData = Array.isArray(atendResp.data) ? atendResp.data : atendResp.data.results;
+        // Busca todos os eventos
+        const eventosResp = await DB_EVENTOS.get("/");
+        const eventosData = Array.isArray(eventosResp.data) ? eventosResp.data : eventosResp.data.results;
 
         // Busca todos os registros
         const registrosResp = await DB_REGISTROS.get("/");
         const registrosData = Array.isArray(registrosResp.data) ? registrosResp.data : registrosResp.data.results;
 
-        // IDs dos atendimentos que já têm registro
-        const atendComRegistro = registrosData.map(r => r.atendimento_id);
+        // IDs dos eventos que já têm registro
+        const eventosComRegistro = registrosData.map(r => r.evento_id);
 
         // Filtra apenas os confirmados e que ainda não têm registro
-        const filtrados = atendimentosData.filter(a => 
-          a.status === "CONF" && !atendComRegistro.includes(a.id)
+        const filtrados = eventosData.filter(e => 
+          e.status_atendimento === "CONF" && !eventosComRegistro.includes(e.id)
         );
 
-        setAtendimentos(filtrados);
+        setEventos(filtrados);
       } catch (err) {
-        console.error("Erro ao buscar atendimentos ou registros: ", err);
-        alert("Falha ao carregar atendimentos.");
+        console.error("Erro ao buscar eventos ou registros: ", err);
+        alert("Falha ao carregar eventos.");
       } finally {
         setLoading(false);
       }
     }
 
-    recuperaAtendimentos();
+    recuperaEventos();
   }, []);
 
   function handleChange(e) {
@@ -60,14 +60,14 @@ function CadastrarRegistroAtendimento() {
   async function adicionaRegistro(event) {
     event.preventDefault();
 
-    if (!formData.atendimento || !formData.data_atendimento || !formData.descricao) {
+    if (!formData.evento || !formData.data_atendimento || !formData.descricao) {
       alert("Preencha todos os campos obrigatórios.");
       return;
     }
 
     try {
       await DB_REGISTROS.post("/", {
-        atendimento: parseInt(formData.atendimento, 10),
+        evento: parseInt(formData.evento, 10),
         data_atendimento: formData.data_atendimento,
         descricao: formData.descricao.trim()
       }, {
@@ -88,34 +88,34 @@ function CadastrarRegistroAtendimento() {
 
   return (
     <div className="registro-container">
-      <h1>Cadastrar Registro de Atendimento</h1>
+      <h1>Cadastrar Registro de Evento</h1>
 
       <form className="registro-form" onSubmit={adicionaRegistro}>
-        <label>Atendimento:</label>
+        <label>Evento:</label>
         {loading ? (
-          <p>Carregando atendimentos...</p>
+          <p>Carregando eventos...</p>
         ) : (
-          atendimentos.length > 0 ? (
+          eventos.length > 0 ? (
             <select
-              name="atendimento"
-              value={formData.atendimento}
+              name="evento"
+              value={formData.evento}
               onChange={handleChange}
               required
             >
               <option value="">Selecione</option>
-              {atendimentos.map(a => (
-                <option key={a.id} value={a.id}>
-                  {a.turma?.nome} - {a.tipo_atendimento} ({new Date(a.data_hora).toLocaleString()})
+              {eventos.map(e => (
+                <option key={e.id} value={e.id}>
+                  {e.turma} ({new Date(e.data_evento).toLocaleString()})
                 </option>
               ))}
             </select>
           ) : (
-            <p>Nenhum atendimento disponível para registro.</p>
+            <p>Nenhum evento disponível para registro.</p>
           )
         )}
-        {erros.atendimento && <p className="erro-campo">{erros.atendimento}</p>}
+        {erros.evento && <p className="erro-campo">{erros.evento}</p>}
 
-        <label>Data e Hora do Atendimento:</label>
+        <label>Data e Hora do Evento:</label>
         <input
           type="datetime-local"
           name="data_atendimento"
@@ -134,7 +134,7 @@ function CadastrarRegistroAtendimento() {
         />
         {erros.descricao && <p className="erro-campo">{erros.descricao}</p>}
 
-        <button type="submit" disabled={loading || atendimentos.length === 0}>
+        <button type="submit" disabled={loading || eventos.length === 0}>
           Cadastrar Registro
         </button>
       </form>

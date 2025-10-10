@@ -157,6 +157,8 @@ function App() {
           <Route path="/alunos/cadastrar" element={<RotaProtegida><CadastraAluno /></RotaProtegida>} />
           <Route path="/professores" element={<RotaProtegida><ListarProfessor /></RotaProtegida>} />
           <Route path="/professores/cadastrar" element={<RotaProtegida><CadastraProfessor /></RotaProtegida>} />
+          <Route path="/registros" element={<RotaProtegida><ListarRegistro /></RotaProtegida>} />
+          <Route path="/registros/cadastrar" element={<RotaProtegida><CadastrarRegistroAtendimento /></RotaProtegida>} />
           <Route path="/agenda" element={<RotaProtegida><Agenda /></RotaProtegida>} />
         </Routes>
       </div>
