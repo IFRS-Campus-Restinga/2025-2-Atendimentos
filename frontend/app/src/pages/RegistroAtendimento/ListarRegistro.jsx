@@ -132,7 +132,6 @@ function ListarRegistro() {
                         descricao: registro.descricao ?? ""
                       });
                     }}>Editar</button>
-                    <button className="btn-deletar" onClick={() => deletaRegistro(registro.id)}>Deletar</button>
                   </>
                 )}
               </td>
@@ -143,5 +142,6 @@ function ListarRegistro() {
     </div>
   );
 }
+//<button className="btn-deletar" onClick={() => deletaRegistro(registro.id)}>Deletar</button>
 
 export default ListarRegistro;
