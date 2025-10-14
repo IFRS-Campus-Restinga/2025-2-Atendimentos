@@ -83,8 +83,8 @@ function App() {
       }
       try {
         window.history.replaceState({}, '', '/selecionar-perfil');
-      } catch (_) {
-        // noop
+      } catch (error) {
+        console.error("Resposta inesperada:", error);
       }
     } catch (erro) {
       console.error("Erro ao decodificar token do Google:", erro);

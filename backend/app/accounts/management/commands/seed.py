@@ -92,7 +92,6 @@ class Command(BaseCommand):
                     nome=nome_disciplina,
                     codigo=codigo_disciplina,
                 )
-                disciplina.cursos.add(curso)  
                 self.stdout.write(self.style.SUCCESS(f'Disciplina: {disciplina.nome}'))
 
         self.stdout.write(self.style.SUCCESS('Banco populado com sucesso!'))
