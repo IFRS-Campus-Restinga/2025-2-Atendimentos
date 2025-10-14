@@ -74,7 +74,9 @@ function Header({ onLogout }) {
               style={{ width: "36px", height: "36px", objectFit: "cover" }}
             />
             <span className="text-white fw-semibold">
-              {usuario.nome?.split(" ")[0] || "Usuário"}
+              {role && role === 'Administrador' &&(
+                "Olá, " + role + " " + usuario.nome?.split(" ")[0] || "Usuário"
+              )}
             </span>
             <button onClick={handleLogout} className="btn btn-outline-light btn-sm fw-semibold">
               Sair
