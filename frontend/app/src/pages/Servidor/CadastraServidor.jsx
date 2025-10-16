@@ -12,6 +12,7 @@ function CadastraServidor() {
     email: "",
     registro: "",
     servidor: "",
+    tipoPerfil: "SERV"
   });
 
   function handleChange(e) {
@@ -22,23 +23,33 @@ function CadastraServidor() {
   async function adicionaServidor(event) {
     event.preventDefault();
 
-    if (!formData.nome || !formData.email || !formData.registro || !formData.servidor) {
-      alert("Preencha todos os campos obrigatórios: Nome, Email, Registro e Servidor/Disciplina.");
+    const { nome, email, registro, servidor } = formData;
+
+    if (!nome || !email || !registro || !servidor) {
+      alert("Preencha todos os campos obrigatórios: Nome, Email, Registro e Servidor/Detalhe.");
       return;
     }
-    
-    const payload = {
-        ...formData,
-    };
 
     try {
-      await DB.post("/", payload);
+      await DB.post("/", formData);
       alert("Servidor cadastrado com sucesso!");
-      setFormData({ nome: "", email: "", registro: "", servidor: "" });
+      setFormData({ nome: "", email: "", registro: "", servidor: "", tipoPerfil: "SERV" });
       navigate("/servidores");
     } catch (err) {
-      console.error("Erro ao cadastrar servidor:", err.response ? err.response.data : err.message);
-      alert("Falha ao cadastrar servidor! Verifique os dados, como registro duplicado ou formato de email.");
+      const errorData = err.response?.data;
+      let errorMessage = "Falha ao cadastrar servidor! Verifique os dados.";
+
+      if (errorData) {
+        errorMessage += "\n\nDetalhes do Erro do Backend:\n";
+        for (const [key, value] of Object.entries(errorData)) {
+          errorMessage += `Campo ${key}: ${Array.isArray(value) ? value.join(', ') : value}\n`;
+        }
+      } else {
+        errorMessage += `\n\nErro de Conexão: ${err.message}`;
+      }
+
+      console.error("Erro ao cadastrar servidor:", errorData || err.message);
+      alert(errorMessage);
     }
   }
 
@@ -46,7 +57,6 @@ function CadastraServidor() {
     <div className="servidor-container">
       <h1>Cadastrar Servidor</h1>
       <form className="servidor-form" onSubmit={adicionaServidor}>
-
         <label>Nome:</label>
         <input
           name="nome"
@@ -55,16 +65,14 @@ function CadastraServidor() {
           maxLength={100}
           required
         />
-        
         <label>Email:</label>
         <input
-          type="email" 
+          type="email"
           name="email"
           value={formData.email}
           onChange={handleChange}
           required
         />
-
         <label>Registro:</label>
         <input
           name="registro"
@@ -73,8 +81,7 @@ function CadastraServidor() {
           maxLength={20}
           required
         />
-
-        <label>Servidor/Disciplina:</label>
+        <label>Servidor (Detalhe):</label>
         <input
           name="servidor"
           value={formData.servidor}
@@ -82,7 +89,6 @@ function CadastraServidor() {
           maxLength={30}
           required
         />
-
         <button type="submit">Cadastrar Servidor</button>
       </form>
       <Link to="/servidores" className="voltar-btn">Voltar</Link>

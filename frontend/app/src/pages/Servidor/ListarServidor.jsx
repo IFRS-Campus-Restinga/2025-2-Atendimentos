@@ -8,11 +8,12 @@ function ListarServidor() {
 
   const [servidores, setServidores] = useState([]);
   const [editId, setEditId] = useState(null);
-  const [editData, setEditData] = useState({ 
-    nome: "", 
-    email: "", 
-    registro: "", 
-    servidor: ""
+  const [editData, setEditData] = useState({
+    nome: "",
+    email: "",
+    registro: "",
+    servidor: "",
+    tipoPerfil: "SERV"
   });
   const navigate = useNavigate();
 
@@ -46,19 +47,22 @@ function ListarServidor() {
 
   async function salvaEdicao(id) {
     if (!editData.nome || !editData.email || !editData.registro || !editData.servidor) {
-        alert("Todos os campos devem ser preenchidos.");
-        return;
+      alert("Todos os campos devem ser preenchidos.");
+      return;
     }
 
+    const payload = {
+      nome: editData.nome,
+      email: editData.email,
+      registro: editData.registro,
+      servidor: editData.servidor,
+      tipoPerfil: "SERV"
+    };
+
     try {
-      await DB.patch(`/${id}/`, {
-        nome: editData.nome,
-        email: editData.email,
-        registro: editData.registro,
-        servidor: editData.servidor,
-      });
+      await DB.put(`/${id}/`, payload);
       setEditId(null);
-      setEditData({ nome: "", email: "", registro: "", servidor: "" });
+      setEditData({ nome: "", email: "", registro: "", servidor: "", tipoPerfil: "SERV" });
       await recuperaServidores();
       alert("Servidor atualizado com sucesso!");
     } catch (err) {
@@ -86,7 +90,7 @@ function ListarServidor() {
             <th>Nome</th>
             <th>Email</th>
             <th>Registro</th>
-            <th>Servidor/Disciplina</th>
+            <th>Servidor/Detalhe</th>
             <th>Ações</th>
           </tr>
         </thead>
@@ -94,55 +98,54 @@ function ListarServidor() {
           {servidores.map(servidor => (
             <tr key={servidor.id}>
               <td>{servidor.id}</td>
-              
               <td>
-                {editId === servidor.id ?
+                {editId === servidor.id ? (
                   <input
                     name="nome"
                     value={editData.nome}
                     onChange={handleEditChange}
                     maxLength={100}
-                  /> :
+                  />
+                ) : (
                   servidor.nome
-                }
+                )}
               </td>
-
               <td>
-                {editId === servidor.id ?
+                {editId === servidor.id ? (
                   <input
                     type="email"
                     name="email"
                     value={editData.email}
                     onChange={handleEditChange}
-                  /> :
+                  />
+                ) : (
                   servidor.email
-                }
+                )}
               </td>
-
               <td>
-                {editId === servidor.id ?
+                {editId === servidor.id ? (
                   <input
                     name="registro"
                     value={editData.registro}
                     onChange={handleEditChange}
                     maxLength={20}
-                  /> :
+                  />
+                ) : (
                   servidor.registro
-                }
+                )}
               </td>
-              
               <td>
-                {editId === servidor.id ?
+                {editId === servidor.id ? (
                   <input
                     name="servidor"
                     value={editData.servidor}
                     onChange={handleEditChange}
                     maxLength={30}
-                  /> :
+                  />
+                ) : (
                   servidor.servidor
-                }
+                )}
               </td>
-
               <td className="btn-group">
                 {editId === servidor.id ? (
                   <>
@@ -158,6 +161,7 @@ function ListarServidor() {
                         email: servidor.email,
                         registro: servidor.registro,
                         servidor: servidor.servidor,
+                        tipoPerfil: servidor.tipoPerfil
                       });
                     }}>Editar</button>
                     <button className="btn-deletar" onClick={() => deletaServidor(servidor.id)}>Deletar</button>
