@@ -4,7 +4,7 @@ from django.core.validators import MinLengthValidator, MaxLengthValidator
 
 
 class Servidor(Usuario):
-    servidor = models.CharField(max_length=30,validators=[MinLengthValidator(10), MaxLengthValidator(30)])
+    #servidor = models.CharField(max_length=30,validators=[MinLengthValidator(10), MaxLengthValidator(30)])
 
 
     class Meta:
@@ -21,4 +21,4 @@ class Servidor(Usuario):
         pass
 
     def __str__(self):
-        return f"{self.servidor}"
+        return f"{self.nome}"

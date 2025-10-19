@@ -7,9 +7,13 @@ import {
   useLocation
 } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import { getApiUrl } from "./services/api.js";
 // App.jsx
 import Header from "./components/Header.jsx";
 import Login from "./pages/Login.jsx";
+import RoleSelection from './pages/RoleSelection.jsx';
+import NotAvailable from './pages/NotAvailable.jsx';
+import AdminDashboard from './pages/AdminDashboard.jsx';
 import './index.css';
 
 import CadastrarCurso from './pages/Curso/CadastrarCurso.jsx';
@@ -22,6 +26,8 @@ import ListarAluno from './pages/Aluno/ListarAluno.jsx';
 import CadastraAluno from './pages/Aluno/CadastraAluno';
 import ListarServidor from './pages/Servidor/ListarServidor.jsx';
 import CadastraServidor from './pages/Servidor/CadastraServidor';
+import ListarRegistro from './pages/RegistroAtendimento/ListarRegistro.jsx';
+import CadastrarRegistroAtendimento from './pages/RegistroAtendimento/CadastrarRegistro.jsx';
 import ListarDisciplina from './pages/Disciplina/ListarDisciplina.jsx';
 import CadastrarDisciplina from './pages/Disciplina/CadastrarDisciplina.jsx';
 import Agenda from './pages/Agenda/Agenda.jsx';
@@ -53,8 +59,9 @@ function App() {
       setLogado(true);
       localStorage.setItem("usuario", JSON.stringify(userData));
       localStorage.setItem("token", credentialResponse.credential);
+      localStorage.removeItem('selectedRole');
 
-      const response = await fetch("http://127.0.0.1:8000/api/google-login/", {
+      const response = await fetch(getApiUrl('googleLogin'), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: dados.email }) // envia email, não token
@@ -73,6 +80,11 @@ function App() {
         const text = await response.text();
         console.error("Resposta inesperada do backend:", text);
         //alert("Erro inesperado ao autenticar.");
+      }
+      try {
+        window.history.replaceState({}, '', '/selecionar-perfil');
+      } catch (error) {
+        console.error("Resposta inesperada:", error);
       }
     } catch (erro) {
       console.error("Erro ao decodificar token do Google:", erro);
@@ -107,7 +119,6 @@ function App() {
         {logado && (
           <>
             <Header usuario={usuario} onLogout={logout} />
-            <hr />
           </>
         )}
         <Routes>
@@ -115,7 +126,11 @@ function App() {
             path="/"
             element={
               logado ? (
-                <Navigate to="/appointments" />
+                (() => {
+                  const role = localStorage.getItem('selectedRole');
+                  if (role === 'Administrador') return <Navigate to="/dashboard" />;
+                  return <Navigate to="/selecionar-perfil" />;
+                })()
               ) : (
                 <Login
                   onLoginSuccess={sucessoLoginGoogle}
@@ -126,6 +141,9 @@ function App() {
               )
             }
           />
+          <Route path="/selecionar-perfil" element={<RotaProtegida><RoleSelection /></RotaProtegida>} />
+          <Route path="/nao-disponivel" element={<RotaProtegida><NotAvailable /></RotaProtegida>} />
+          <Route path="/dashboard" element={<RotaProtegida><AdminDashboard /></RotaProtegida>} />
           <Route path="/appointments" element={<RotaProtegida><h1>Página de Atendimentos</h1></RotaProtegida>} />
           <Route path="/disciplina" element={<RotaProtegida><ListarDisciplina /></RotaProtegida>} />
           <Route path="/disciplina/cadastrar" element={<RotaProtegida><CadastrarDisciplina /></RotaProtegida>} />
@@ -139,6 +157,8 @@ function App() {
           <Route path="/alunos/cadastrar" element={<RotaProtegida><CadastraAluno /></RotaProtegida>} />
           <Route path="/servidores" element={<RotaProtegida><ListarServidor /></RotaProtegida>} />
           <Route path="/servidores/cadastrar" element={<RotaProtegida><CadastraServidor /></RotaProtegida>} />
+          <Route path="/registros" element={<RotaProtegida><ListarRegistro /></RotaProtegida>} />
+          <Route path="/registros/cadastrar" element={<RotaProtegida><CadastrarRegistroAtendimento /></RotaProtegida>} />
           <Route path="/agenda" element={<RotaProtegida><Agenda /></RotaProtegida>} />
         </Routes>
       </div>
