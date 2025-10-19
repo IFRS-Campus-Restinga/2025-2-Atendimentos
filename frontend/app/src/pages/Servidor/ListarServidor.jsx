@@ -90,7 +90,6 @@ function ListarServidor() {
             <th>Nome</th>
             <th>Email</th>
             <th>Registro</th>
-            <th>Servidor/Detalhe</th>
             <th>Ações</th>
           </tr>
         </thead>
@@ -134,18 +133,7 @@ function ListarServidor() {
                   servidor.registro
                 )}
               </td>
-              <td>
-                {editId === servidor.id ? (
-                  <input
-                    name="servidor"
-                    value={editData.servidor}
-                    onChange={handleEditChange}
-                    maxLength={30}
-                  />
-                ) : (
-                  servidor.servidor
-                )}
-              </td>
+            
               <td className="btn-group">
                 {editId === servidor.id ? (
                   <>
