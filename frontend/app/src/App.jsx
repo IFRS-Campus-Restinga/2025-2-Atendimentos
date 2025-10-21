@@ -54,7 +54,7 @@ function App() {
       const response = await fetch("http://127.0.0.1:8000/api/google-login/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: dados.email }) // envia email, não token
+        body: JSON.stringify({ email: dados.email })
       });
 
       const contentType = response.headers.get("content-type");
@@ -64,12 +64,10 @@ function App() {
           localStorage.setItem("authToken", data.token);
         } else {
           console.error("Erro ao validar token no backend:", data);
-          //alert("Falha na autenticação com o servidor.");
         }
       } else {
         const text = await response.text();
         console.error("Resposta inesperada do backend:", text);
-        //alert("Erro inesperado ao autenticar.");
       }
     } catch (erro) {
       console.error("Erro ao decodificar token do Google:", erro);
@@ -103,7 +101,12 @@ function App() {
       <div>
         {logado && (
           <>
-            <Header usuario={usuario} onLogout={logout} />
+            <Header
+              usuario={usuario}
+              onLogout={logout}
+              setUsuario={setUsuario}
+              setLogado={setLogado}
+            />
             <hr />
           </>
         )}
