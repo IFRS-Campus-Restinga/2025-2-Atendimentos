@@ -2,10 +2,6 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import logo from "../assets/ifrs-logo.svg";
 import { useEffect, useState } from "react";
 
-<<<<<<< HEAD
-function Header({ usuario, onLogout, setUsuario, setLogado }) {
-  const navigate = useNavigate();
-=======
 function Header({ onLogout }) {
   const navigate = useNavigate();
   const location = useLocation();
@@ -26,7 +22,6 @@ function Header({ onLogout }) {
       window.removeEventListener("storage", carregarUsuario);
     };
   }, []);
->>>>>>> fd98c015ad831a7988ae0acf2304c41fb5641a49
 
   useEffect(() => {
     const usuarioSalvo = localStorage.getItem("usuario");
@@ -45,9 +40,6 @@ function Header({ onLogout }) {
       localStorage.removeItem("selectedRole");
     }
     setUsuario(null);
-    setLogado(false);
-    onLogout(); // opcional, se quiser manter lógica externa
-    navigate("/"); // redireciona para tela de login
     setRole(null);
     navigate("/");
   };

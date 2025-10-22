@@ -13,7 +13,7 @@ from .views.usuario_view_set import UsuarioViewSet
 from .views.coordenador_views_set import CoordenadorViewSet
 from services.views.auth_views import GoogleLoginView
 from services.views.registro_atendimento_views_set import RegistroAtendimentoViewSet
-
+from services.views.complemento_views import ComplementoCadastroView
 
 app_name = 'api'
 router = DefaultRouter()
@@ -34,4 +34,5 @@ router.register(r'registro-atendimento', RegistroAtendimentoViewSet, basename='r
 urlpatterns = [
     path('api/google-login/', GoogleLoginView.as_view(), name='google-login'),
     path('', include(router.urls)),
+    path('api/complemento-cadastro/', ComplementoCadastroView.as_view(), name='complemento-cadastro'),
 ]

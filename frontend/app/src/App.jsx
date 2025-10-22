@@ -116,13 +116,6 @@ function App() {
       <div>
         {logado && (
           <>
-            <Header
-              usuario={usuario}
-              onLogout={logout}
-              setUsuario={setUsuario}
-              setLogado={setLogado}
-            />
-            <hr />
             <Header usuario={usuario} onLogout={logout} />
           </>
         )}
