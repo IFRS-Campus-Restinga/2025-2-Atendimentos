@@ -91,9 +91,7 @@ class Command(BaseCommand):
                 disciplina, _ = Disciplina.objects.get_or_create(
                     nome=nome_disciplina,
                     codigo=codigo_disciplina,
-                    descricao=f"Descrição da disciplina {nome_disciplina}",
                 )
-                disciplina.cursos.add(curso)  
                 self.stdout.write(self.style.SUCCESS(f'Disciplina: {disciplina.nome}'))
 
         self.stdout.write(self.style.SUCCESS('Banco populado com sucesso!'))

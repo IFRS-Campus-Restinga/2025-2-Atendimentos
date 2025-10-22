@@ -3,15 +3,20 @@ from accounts.models.base_model import BaseModel
 from accounts.enumerations.tipo_usuario import TipoUsuario
 
 class Usuario(BaseModel):
-    """
-    Model abstrato que representa um usuario.
-    """
-    class Meta:
-        abstract = True
 
-    nome = models.CharField(max_length=100, verbose_name="Nome")
-    email = models.EmailField(unique=True,  verbose_name="Email")
-    registro = models.CharField(max_length=20, unique=True, verbose_name="Registro")
+    nome = models.CharField(
+        max_length=100, 
+        verbose_name="Nome")
+
+    email = models.EmailField(
+        unique=True,  
+        verbose_name="Email")
+    
+    registro = models.CharField(
+        max_length=20, 
+        unique=True, 
+        verbose_name="Registro")
+
     tipoPerfil = models.CharField(
         max_length=20,
         choices=TipoUsuario.choices,
@@ -25,5 +30,6 @@ class Usuario(BaseModel):
         try:
             self.save()
             return True
+        
         except Exception as e:
             return False
