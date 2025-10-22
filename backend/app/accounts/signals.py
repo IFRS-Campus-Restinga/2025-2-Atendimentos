@@ -33,7 +33,7 @@ def initial_profile_setup(sender, request, user, sociallogin=None, **kwargs):
             aluno_group = Group.objects.get(name='Alunos')
             user.groups.add(aluno_group)
         except ObjectDoesNotExist:
-            print("🚨 ATENÇÃO: O grupo 'Alunos' não existe. Crie-o no Admin.")
+            print("ATENÇÃO: O grupo 'Alunos' não existe. Crie-o no Admin.")
 
         Usuario.objects.create(
             user=user,
