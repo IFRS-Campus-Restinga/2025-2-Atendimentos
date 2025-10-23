@@ -13,33 +13,64 @@ function CadastrarDisciplina() {
     ativo: "true"
   });
 
+  const [erros, setErros] = useState({
+    nome: "",
+    codigo: ""
+  });
+
+  // ==================== VALIDAÇÕES ====================
+  function validateNome(value) {
+    if (!value.trim()) return "O nome da disciplina é obrigatório.";
+    if (value.trim().length > 50) return "O nome não pode ter mais de 50 caracteres.";
+    if (value.trim() === "Teste") return "Não é possível salvar testes!";
+    return "";
+  }
+
+  function validateCodigo(value) {
+    if (!value.trim()) return "O código da disciplina é obrigatório.";
+    if (value.trim().length < 3) return "O código deve ter pelo menos 3 caracteres.";
+    if (value.trim().length > 10) return "O código não pode ter mais de 10 caracteres.";
+    return "";
+  }
+
+  // ==================== HANDLE CHANGE ====================
   function handleChange(e) {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+
+    // Validação em tempo real
+    switch (name) {
+      case "nome":
+        setErros(prev => ({ ...prev, nome: validateNome(value) }));
+        break;
+      case "codigo":
+        setErros(prev => ({ ...prev, codigo: validateCodigo(value) }));
+        break;
+      default:
+        break;
+    }
   }
 
+  // ==================== SUBMIT ====================
   async function adicionaDisciplina(event) {
     event.preventDefault();
 
-    const nome = formData.nome.trim();
-    const codigo = formData.codigo.trim();
+    const nomeErro = validateNome(formData.nome);
+    const codigoErro = validateCodigo(formData.codigo);
 
-    if (!nome || nome.length > 50 || !codigo || codigo.length < 3 || codigo.length > 10) {
-      alert("Preencha corretamente:\n- Nome até 50 caracteres\n- Código entre 3 e 10 caracteres.");
+    if (nomeErro || codigoErro) {
+      setErros({ nome: nomeErro, codigo: codigoErro });
       return;
     }
 
-    const payload = {
-      nome,
-      codigo,
-      ativo: formData.ativo === "true"
-    };
-
     try {
-      await DB.post("/", payload, {
-        headers: { "Content-Type": "application/json" }
+      await DB.post("/", {
+        nome: formData.nome.trim(),
+        codigo: formData.codigo.trim(),
+        ativo: formData.ativo === "true"
       });
       alert("Disciplina cadastrada com sucesso!");
+      setFormData({ nome: "", codigo: "", ativo: "true" });
       navigate("/disciplina");
     } catch (err) {
       console.error("Erro ao criar disciplina:", err);
@@ -47,6 +78,7 @@ function CadastrarDisciplina() {
     }
   }
 
+  // ==================== RENDER ====================
   return (
     <div className="disciplina-container">
       <h1>Cadastrar Disciplina</h1>
@@ -60,6 +92,7 @@ function CadastrarDisciplina() {
           maxLength={50}
           required
         />
+        {erros.nome && <p className="erro-campo">{erros.nome}</p>}
 
         <label>Código:</label>
         <input
@@ -70,6 +103,7 @@ function CadastrarDisciplina() {
           maxLength={10}
           required
         />
+        {erros.codigo && <p className="erro-campo">{erros.codigo}</p>}
 
         <label>Ativo:</label>
         <select name="ativo" value={formData.ativo} onChange={handleChange}>
