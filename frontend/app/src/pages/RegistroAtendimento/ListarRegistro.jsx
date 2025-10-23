@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import './RegistroAtendimento.css';
+import "./RegistroAtendimento.css";
 import { useNavigate } from "react-router-dom";
+import Paginacao from "../../components/Paginacao.jsx"; // importar componente de paginação
 
 function ListarRegistro() {
-  const DB = axios.create({ baseURL: 'http://127.0.0.1:8000/services/registro-atendimento' });
+  const DB = axios.create({ baseURL: "http://127.0.0.1:8000/services/registro-atendimento" });
   const [registros, setRegistros] = useState([]);
   const [editId, setEditId] = useState(null);
   const [editData, setEditData] = useState({
@@ -75,73 +76,90 @@ function ListarRegistro() {
         </button>
       </div>
 
-      <table className="registros-table">
-        <thead>
-          <tr>
-            <th>Turma</th>
-            <th>Data/Hora do Evento</th>
-            <th>Data do Registro</th>
-            <th>Descrição</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody>
-          {registros.map(registro => (
-            <tr key={registro.id}>
-              <td>{registro.turma || "-"}</td>
-              <td>{formataDataHora(registro.data_evento)}</td>
-              <td>
-                {editId === registro.id ? (
-                  <input
-                    type="datetime-local"
-                    name="data_atendimento"
-                    value={editData.data_atendimento}
-                    onChange={handleEditChange}
-                  />
-                ) : (
-                  formataDataHora(registro.data_atendimento)
-                )}
-              </td>
-              <td>
-                {editId === registro.id ? (
-                  <input
-                    type="text"
-                    name="descricao"
-                    value={editData.descricao}
-                    onChange={handleEditChange}
-                  />
-                ) : (
-                  registro.descricao
-                )}
-              </td>
-              <td className="btn-group">
-                {editId === registro.id ? (
-                  <>
-                    <button className="btn-salvar" onClick={() => salvaEdicao(registro.id)}>Salvar</button>
-                    <button className="btn-cancelar" onClick={() => {
-                      setEditId(null);
-                      setEditData({ data_atendimento: "", descricao: "" });
-                    }}>Cancelar</button>
-                  </>
-                ) : (
-                  <>
-                    <button className="btn-editar" onClick={() => {
-                      setEditId(registro.id);
-                      setEditData({
-                        data_atendimento: registro.data_atendimento ?? "",
-                        descricao: registro.descricao ?? ""
-                      });
-                    }}>Editar</button>
-                  </>
-                )}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {/* ✅ Adicionando paginação igual às outras listas */}
+      <Paginacao itens={registros} itensPorPagina={10}>
+        {(itensPaginaAtual) => (
+          <table className="registros-table">
+            <thead>
+              <tr>
+                <th>Turma</th>
+                <th>Data/Hora do Evento</th>
+                <th>Data do Registro</th>
+                <th>Descrição</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              {itensPaginaAtual.map((registro) => (
+                <tr key={registro.id}>
+                  <td>{registro.turma || "-"}</td>
+                  <td>{formataDataHora(registro.data_evento)}</td>
+                  <td>
+                    {editId === registro.id ? (
+                      <input
+                        type="datetime-local"
+                        name="data_atendimento"
+                        value={editData.data_atendimento}
+                        onChange={handleEditChange}
+                      />
+                    ) : (
+                      formataDataHora(registro.data_atendimento)
+                    )}
+                  </td>
+                  <td>
+                    {editId === registro.id ? (
+                      <input
+                        type="text"
+                        name="descricao"
+                        value={editData.descricao}
+                        onChange={handleEditChange}
+                      />
+                    ) : (
+                      registro.descricao
+                    )}
+                  </td>
+                  <td className="btn-group">
+                    {editId === registro.id ? (
+                      <>
+                        <button className="btn-salvar" onClick={() => salvaEdicao(registro.id)}>
+                          Salvar
+                        </button>
+                        <button
+                          className="btn-cancelar"
+                          onClick={() => {
+                            setEditId(null);
+                            setEditData({ data_atendimento: "", descricao: "" });
+                          }}
+                        >
+                          Cancelar
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <button
+                          className="btn-editar"
+                          onClick={() => {
+                            setEditId(registro.id);
+                            setEditData({
+                              data_atendimento: registro.data_atendimento ?? "",
+                              descricao: registro.descricao ?? ""
+                            });
+                          }}
+                        >
+                          Editar
+                        </button>
+                        {/* <button className="btn-deletar" onClick={() => deletaRegistro(registro.id)}>Deletar</button> */}
+                      </>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </Paginacao>
     </div>
   );
 }
-//<button className="btn-deletar" onClick={() => deletaRegistro(registro.id)}>Deletar</button>
 
 export default ListarRegistro;
