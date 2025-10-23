@@ -42,11 +42,11 @@ INSTALLED_APPS = [
     "corsheaders",
     'accounts',
     'services',
-    'django.contrib.sites',  # Necessário para allauth
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.google', # provedor do Google
+    #'django.contrib.sites',  # Necessário para allauth
+    #'allauth',
+    #'allauth.account',
+    #'allauth.socialaccount',
+    #'allauth.socialaccount.providers.google', # provedor do Google
 ]
 
 MIDDLEWARE = [
@@ -55,7 +55,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'allauth.account.middleware.AccountMiddleware',
+    #'allauth.account.middleware.AccountMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
@@ -107,6 +107,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'app.wsgi.application'
 
+GOOGLE_CLIENT_ID ="854138693145-hlgec9e2pnoc4cj2tkcknl5rp1bei7m2.apps.googleusercontent.com"
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
