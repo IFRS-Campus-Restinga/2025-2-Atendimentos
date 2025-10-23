@@ -14,12 +14,12 @@ class EventoOrdinario(Evento):
     # )
 
 
-    def clean(self):
-        super().clean()
-        for usuario in self.usuarios.all():
-            if usuario.tipoPerfil != TipoUsuario.ALUNO:
-                from django.core.exceptions import ValidationError
-                raise ValidationError(f"Usuário {usuario} não é do tipo ALUNO.")
+    # def clean(self):
+    #     super().clean()
+    #     for usuario in self.usuarios.all():
+    #         if usuario.tipoPerfil != TipoUsuario.ALUNO:
+    #             from django.core.exceptions import ValidationError
+    #             raise ValidationError(f"Usuário {usuario} não é do tipo ALUNO.")
 
     class Meta:
         verbose_name = 'Evento Ordinário'

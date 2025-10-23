@@ -7,6 +7,7 @@ from .views.professor_views_set import ProfessorViewSet
 from .views.curso_views_set import CursoViewSet
 from .views.turma_views_set import TurmaViewSet
 from .views.evento_view_set import EventoViewSet
+from .views.evento_status_views import EventoStatusSet
 from .views.evento_ordinario_views import EventoOrdinarioViewSet
 from .views.evento_extraordinario_views import EventoExtraordinarioViewSet
 from .views.usuario_view_set import UsuarioViewSet
@@ -35,4 +36,6 @@ urlpatterns = [
     path('api/google-login/', GoogleLoginView.as_view(), name='google-login'),
     path('', include(router.urls)),
     path('api/complemento-cadastro/', ComplementoCadastroView.as_view(), name='complemento-cadastro'),
+    path('api/eventos-ordinarios/status-choices/', EventoStatusSet.as_view(), name="evento-status-choices"),
+
 ]

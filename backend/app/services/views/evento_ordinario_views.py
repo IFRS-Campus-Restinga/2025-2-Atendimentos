@@ -4,6 +4,6 @@ from accounts.models.evento_ordinario import EventoOrdinario
 from ..serializers.evento_ordinario_serializer import EventoOrdinarioSerializer
 
 class EventoOrdinarioViewSet(viewsets.ModelViewSet):
-    queryset = EventoOrdinario.objects.all()
+    queryset = EventoOrdinario.objects.all().order_by('-data_hora')
     serializer_class = EventoOrdinarioSerializer
     permission_classes = [AllowAny]
