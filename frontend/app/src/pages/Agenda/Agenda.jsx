@@ -1,94 +1,98 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './Agenda.css';
 import EventoOrdinarioModal from './EventoOrdinarioModal';
 
 const Agenda = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [atendimentos] = useState([]);
+  const [eventos, setEventos] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const getDaysInMonth = (date) => {
-    const year = date.getFullYear();
-    const month = date.getMonth();
-    const firstDay = new Date(year, month, 1);
-    const lastDay = new Date(year, month + 1, 0);
-    const daysInMonth = lastDay.getDate();
-    const startDayOfWeek = firstDay.getDay();
+  const dayNames = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
 
+  useEffect(() => {
+    fetch('http://localhost:8000/services/evento-ordinario/')
+      .then(res => res.json())
+      .then(data => setEventos(data))
+      .catch(err => console.error(err));
+  }, []);
+
+  const getWeekDays = (date) => {
+    const startOfWeek = new Date(date);
+    const day = startOfWeek.getDay();
+    const offset = day === 0 ? -6 : 1 - day; // segunda-feira como início
+    startOfWeek.setDate(startOfWeek.getDate() + offset);
     const days = [];
-    for (let i = 0; i < startDayOfWeek; i++) days.push(null);
-    for (let day = 1; day <= daysInMonth; day++) days.push(day);
+    for (let i = 0; i < 6; i++) {
+      const d = new Date(startOfWeek);
+      d.setDate(startOfWeek.getDate() + i);
+      days.push(d);
+    }
     return days;
   };
 
-  const monthNames = [
-    'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
-    'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
-  ];
-
-  const dayNames = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
-
-  const navigateMonth = (direction) => {
+  const navigateWeek = (direction) => {
     const newDate = new Date(currentDate);
-    newDate.setMonth(currentDate.getMonth() + direction);
+    newDate.setDate(currentDate.getDate() + direction * 7);
     setCurrentDate(newDate);
   };
 
-  const getAtendimentosForDate = (day) => {
-    if (!day) return [];
-    const dateStr = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-    return atendimentos.filter(a => a.dia_semana === dateStr);
+  const getEventosForDateAndHour = (date, hour) => {
+    const dateStr = date.toISOString().split('T')[0];
+    return eventos.filter(e => {
+      if (e.dia_semana !== dateStr) return false;
+      const eventHour = new Date(e.data_hora).getHours();
+      return eventHour === hour;
+    });
   };
 
-  const days = getDaysInMonth(currentDate);
+  const weekDays = getWeekDays(currentDate);
+  const hours = Array.from({ length: 12 }, (_, i) => i + 8); // 08h às 19h
 
   return (
-    <div className="agenda-container">
-      <div className="agenda-header">
-        <h2>Agenda de Atendimentos</h2>
-        <p className="text-muted">Visualize os atendimentos no calendário</p>
-      </div>
-
-      <button className="btn btn-success mb-3" onClick={() => setIsModalOpen(true)}>
-        + Novo Evento Ordinário
-      </button>
-
-      <div className="calendar-container">
-        <div className="calendar-header">
-          <button className="btn btn-outline-secondary" onClick={() => navigateMonth(-1)}>← Anterior</button>
-          <h3 className="month-year">
-            {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
-          </h3>
-          <button className="btn btn-outline-secondary" onClick={() => navigateMonth(1)}>Próximo →</button>
+    <div className="agenda-wrapper">
+      <div className="agenda-container">
+        <div className="agenda-header">
+          <h2>Agenda Semanal</h2>
+          <p className="text-muted">Eventos ordinários da semana</p>
         </div>
 
-        <div className="calendar-grid">
-          {dayNames.map(dayName => (
-            <div key={dayName} className="calendar-day-header">{dayName}</div>
-          ))}
+        <button className="btn btn-success mb-3" onClick={() => setIsModalOpen(true)}>
+          + Novo Evento Ordinário
+        </button>
 
-          {days.map((day, index) => {
-            const atendimentosNaData = getAtendimentosForDate(day);
-            const hasAtendimentos = atendimentosNaData.length > 0;
+        <div className="weekly-calendar">
+          <div className="calendar-header">
+            <button className="btn btn-outline-secondary" onClick={() => navigateWeek(-1)}>← Semana Anterior</button>
+            <h3 className="month-year">
+              {weekDays[0].toLocaleDateString()} - {weekDays[5].toLocaleDateString()}
+            </h3>
+            <button className="btn btn-outline-secondary" onClick={() => navigateWeek(1)}>Próxima Semana →</button>
+          </div>
 
-            return (
-              <div
-                key={index}
-                className={`calendar-day ${day ? '' : 'empty'} ${hasAtendimentos ? 'has-appointments' : ''}`}
-              >
-                {day && (
-                  <>
-                    <span className="day-number">{day}</span>
-                    {hasAtendimentos && (
-                      <div className="appointment-indicator">
-                        <small>{atendimentosNaData.length} agendamento(s)</small>
-                      </div>
-                    )}
-                  </>
-                )}
+          <div className="calendar-grid">
+            <div className="time-column-header"></div>
+            {weekDays.map((day, i) => (
+              <div key={i} className="day-column-header">
+                <div className="day-name">{dayNames[i]}</div>
+                <div className="day-date">{day.getDate()}</div>
               </div>
-            );
-          })}
+            ))}
+
+            {hours.map(hour => (
+              <div key={hour} className="hour-row">
+                <div className="time-label">{hour}:00</div>
+                {weekDays.map((day, idx) => (
+                  <div key={idx} className="day-cell">
+                    {getEventosForDateAndHour(day, hour).map(evento => (
+                      <div key={evento.id} className="appointment-indicator">
+                        {evento.turma || 'Evento'} - {new Date(evento.data_hora).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
