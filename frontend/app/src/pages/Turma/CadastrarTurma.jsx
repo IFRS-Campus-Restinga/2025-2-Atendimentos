@@ -19,6 +19,7 @@ function CadastrarTurma() {
 
   const [cursos, setCursos] = useState([]);
   const [cursoSelecionado, setCursoSelecionado] = useState(null);
+  const [erros, setErros] = useState({ nome: "" }); // 👈 novo estado para mensagens de erro
 
   useEffect(() => {
     async function recuperaCursos() {
@@ -34,9 +35,23 @@ function CadastrarTurma() {
     recuperaCursos();
   }, []);
 
+  function validateNome(value) {
+    if (value.trim().length < 3) {
+      return "O nome da turma deve ter pelo menos 3 caracteres.";
+    }
+    if (value.trim().length > 255) {
+      return "O nome da turma não pode ultrapassar 255 caracteres.";
+    }
+    return "";
+  }
+
   function handleChange(e) {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+
+    if (name === "nome") {
+      setErros(prev => ({ ...prev, nome: validateNome(value) }));
+    }
 
     if (name === "curso") {
       const curso = cursos.find(c => String(c.id) === value);
@@ -46,6 +61,13 @@ function CadastrarTurma() {
 
   async function adicionaTurma(event) {
     event.preventDefault();
+
+    // Validação antes do envio
+    const nomeErro = validateNome(formData.nome);
+    if (nomeErro) {
+      setErros(prev => ({ ...prev, nome: nomeErro }));
+      return;
+    }
 
     const payload = {
       nome: formData.nome.trim(),
@@ -98,8 +120,10 @@ function CadastrarTurma() {
           name="nome"
           value={formData.nome}
           onChange={handleChange}
+          onBlur={(e) => setErros(prev => ({ ...prev, nome: validateNome(e.target.value) }))} // 👈 valida ao sair do campo
           required
         />
+        {erros.nome && <p className="erro-campo">{erros.nome}</p>} {/* 👈 mensagem vermelha */}
 
         <label>Turno:</label>
         <select

@@ -21,19 +21,12 @@ function Header({ onLogout }) {
     return () => {
       window.removeEventListener("storage", carregarUsuario);
     };
-  }, []);
-
-  useEffect(() => {
-    const usuarioSalvo = localStorage.getItem("usuario");
-    setUsuario(usuarioSalvo ? JSON.parse(usuarioSalvo) : null);
-    setRole(localStorage.getItem("selectedRole"));
   }, [location]);
 
   const handleLogout = () => {
     if (onLogout) {
       onLogout();
     } else {
-      // fallback
       localStorage.removeItem("usuario");
       localStorage.removeItem("token");
       localStorage.removeItem("authToken");
@@ -56,12 +49,19 @@ function Header({ onLogout }) {
     <header className="navbar navbar-dark bg-success px-3 shadow">
       <div className="container-fluid d-flex justify-content-between align-items-center">
         <div className="d-flex align-items-center gap-2">
-          <button className="btn btn-outline-light btn-sm" onClick={goBack} aria-label="Voltar">
+          <button
+            className="btn btn-outline-light btn-sm"
+            onClick={goBack}
+            aria-label="Voltar para página anterior"
+            title="Voltar"
+          >
             ←
           </button>
           <img src={logo} alt="IFRS Logo" style={{ height: "48px" }} />
-          {role === 'Administrador' && (
-            <Link to={"/dashboard"} className="btn btn-light btn-sm">Home</Link>
+          {role === "Administrador" && (
+            <Link to="/dashboard" className="btn btn-light btn-sm">
+              Home
+            </Link>
           )}
         </div>
 
@@ -74,9 +74,12 @@ function Header({ onLogout }) {
               style={{ width: "36px", height: "36px", objectFit: "cover" }}
             />
             <span className="text-white fw-semibold">
-              {usuario.nome?.split(" ")[0] || "Usuário"}
+              {`Olá, ${role || "Usuário"} ${usuario.nome?.split(" ")[0] || ""}`}
             </span>
-            <button onClick={handleLogout} className="btn btn-outline-light btn-sm fw-semibold">
+            <button
+              onClick={handleLogout}
+              className="btn btn-outline-light btn-sm fw-semibold"
+            >
               Sair
             </button>
           </div>

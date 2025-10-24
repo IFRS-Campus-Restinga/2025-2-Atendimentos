@@ -13,7 +13,7 @@ import Header from "./components/Header.jsx";
 import Login from "./pages/Login.jsx";
 import RoleSelection from './pages/RoleSelection.jsx';
 import NotAvailable from './pages/NotAvailable.jsx';
-import AdminDashboard from './pages/CoordinatorDashboard.jsx';
+import AdminDashboard from './pages/AdminDashboard.jsx';
 import './index.css';
 
 import CadastrarCurso from './pages/Curso/CadastrarCurso.jsx';
@@ -26,6 +26,8 @@ import ListarAluno from './pages/Aluno/ListarAluno.jsx';
 import CadastraAluno from './pages/Aluno/CadastraAluno';
 import ListarProfessor from './pages/Professor/ListarProfessor.jsx';
 import CadastraProfessor from './pages/Professor/CadastraProfessor';
+import ListarRegistro from './pages/RegistroAtendimento/ListarRegistro.jsx';
+import CadastrarRegistroAtendimento from './pages/RegistroAtendimento/CadastrarRegistro.jsx';
 import ListarDisciplina from './pages/Disciplina/ListarDisciplina.jsx';
 import CadastrarDisciplina from './pages/Disciplina/CadastrarDisciplina.jsx';
 import Agenda from './pages/Agenda/Agenda.jsx';
@@ -62,7 +64,7 @@ function App() {
       const response = await fetch(getApiUrl('googleLogin'), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: dados.email }) // envia email, não token
+        body: JSON.stringify({ email: dados.email })
       });
 
       const contentType = response.headers.get("content-type");
@@ -72,17 +74,15 @@ function App() {
           localStorage.setItem("authToken", data.token);
         } else {
           console.error("Erro ao validar token no backend:", data);
-          //alert("Falha na autenticação com o servidor.");
         }
       } else {
         const text = await response.text();
         console.error("Resposta inesperada do backend:", text);
-        //alert("Erro inesperado ao autenticar.");
       }
       try {
         window.history.replaceState({}, '', '/selecionar-perfil');
-      } catch (_) {
-        // noop
+      } catch (error) {
+        console.error("Resposta inesperada:", error);
       }
     } catch (erro) {
       console.error("Erro ao decodificar token do Google:", erro);
@@ -155,6 +155,8 @@ function App() {
           <Route path="/alunos/cadastrar" element={<RotaProtegida><CadastraAluno /></RotaProtegida>} />
           <Route path="/professores" element={<RotaProtegida><ListarProfessor /></RotaProtegida>} />
           <Route path="/professores/cadastrar" element={<RotaProtegida><CadastraProfessor /></RotaProtegida>} />
+          <Route path="/registros" element={<RotaProtegida><ListarRegistro /></RotaProtegida>} />
+          <Route path="/registros/cadastrar" element={<RotaProtegida><CadastrarRegistroAtendimento /></RotaProtegida>} />
           <Route path="/agenda" element={<RotaProtegida><Agenda /></RotaProtegida>} />
         </Routes>
       </div>

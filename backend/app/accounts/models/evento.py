@@ -40,8 +40,8 @@ class Evento(BaseModel):
     related_name='eventos_criados'
 )
 
-    usuarios = models.ManyToManyField(
-        Usuario,
-        related_name='eventos_participando',
-        blank=True
-    )
+    # usuarios = models.ManyToManyField(
+    #     Usuario,
+    #     related_name='eventos_participando',
+    #     blank=True
+    # )

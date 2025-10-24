@@ -8,6 +8,7 @@ const cards = [
   { title: 'Alunos', listPath: '/alunos', createPath: '/alunos/cadastrar', description: 'Gerencie os alunos' },
   { title: 'Professores', listPath: '/professores', createPath: '/professores/cadastrar', description: 'Gerencie os professores' },
   { title: 'Disciplinas', listPath: '/disciplina', createPath: '/disciplina/cadastrar', description: 'Gerencie as disciplinas' },
+  { title: 'Registros', listPath: '/registros', createPath: '/registros/cadastrar', description: 'Gerencie os registros' },
   { title: 'Agenda', listPath: '/agenda', description: 'Consulte a agenda' },
 ];
 

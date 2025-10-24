@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import "./Aluno.css";
 import { useNavigate } from "react-router-dom";
+import Paginacao from "../../components/Paginacao.jsx";
 
 function ListarAluno() {
   const DB = axios.create({
@@ -83,116 +84,120 @@ function ListarAluno() {
         </button>
       </div>
 
-      <table className="alunos-table">
-        <thead>
-          <tr>
-            <th>Nome Completo</th>
-            <th>Matrícula</th>
-            <th>Curso</th>
-            <th>Turma</th>
-            <th>PEI</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody>
-          {alunos.map((aluno) => (
-            <tr key={aluno.id}>
-              <td>
-                {editId === aluno.id ? (
-                  <input
-                    name="nome_completo"
-                    value={editData.nome_completo}
-                    onChange={handleEditChange}
-                  />
-                ) : (
-                  aluno.nome_completo
-                )}
-              </td>
-              <td>
-                {editId === aluno.id ? (
-                  <input
-                    name="matricula"
-                    type="text"
-                    value={editData.matricula}
-                    onChange={handleEditChange}
-                  />
-                ) : (
-                  aluno.matricula
-                )}
-              </td>
-              <td>
-                {editId === aluno.id ? (
-                  <input
-                    name="curso"
-                    value={editData.curso}
-                    onChange={handleEditChange}
-                  />
-                ) : (
-                  aluno.curso
-                )}
-              </td>
-              <td>
-                {editId === aluno.id ? (
-                  <input
-                    name="turma"
-                    value={editData.turma}
-                    onChange={handleEditChange}
-                  />
-                ) : (
-                  aluno.turma
-                )}
-              </td>
-              <td>
-                {editId === aluno.id ? (
-                  <input
-                    name="alunoPEI"
-                    type="checkbox"
-                    checked={editData.alunoPEI}
-                    onChange={handleEditChange}
-                  />
-                ) : aluno.alunoPEI ? (
-                  <span className="status-ativo">Sim</span>
-                ) : (
-                  <span className="status-inativo">Não</span>
-                )}
-              </td>
-              <td className="btn-group">
-                {editId === aluno.id ? (
-                  <>
-                    <button className="btn-salvar" onClick={() => salvaEdicaoAluno(aluno.id)}>
-                      Salvar
-                    </button>
-                    <button className="btn-cancelar" onClick={() => setEditId(null)}>
-                      Cancelar
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <button
-                      className="btn-editar"
-                      onClick={() => {
-                        setEditId(aluno.id);
-                        setEditData({
-                          nome_completo: aluno.nome_completo,
-                          matricula: aluno.matricula.toString(),
-                          curso: aluno.curso,
-                          turma: aluno.turma,
-                          alunoPEI: aluno.alunoPEI,
-                        });
-                      }}
-                    >
-                      Editar
-                    </button>
-                  </>
-                )}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {/* Paginação */}
+      <Paginacao itens={alunos} itensPorPagina={10}>
+        {(alunosPaginaAtual) => (
+          <table className="alunos-table">
+            <thead>
+              <tr>
+                <th>Nome Completo</th>
+                <th>Matrícula</th>
+                <th>Curso</th>
+                <th>Turma</th>
+                <th>PEI</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              {alunosPaginaAtual.map((aluno) => (
+                <tr key={aluno.id}>
+                  <td>
+                    {editId === aluno.id ? (
+                      <input
+                        name="nome_completo"
+                        value={editData.nome_completo}
+                        onChange={handleEditChange}
+                      />
+                    ) : (
+                      aluno.nome_completo
+                    )}
+                  </td>
+                  <td>
+                    {editId === aluno.id ? (
+                      <input
+                        name="matricula"
+                        type="text"
+                        value={editData.matricula}
+                        onChange={handleEditChange}
+                      />
+                    ) : (
+                      aluno.matricula
+                    )}
+                  </td>
+                  <td>
+                    {editId === aluno.id ? (
+                      <input
+                        name="curso"
+                        value={editData.curso}
+                        onChange={handleEditChange}
+                      />
+                    ) : (
+                      aluno.curso
+                    )}
+                  </td>
+                  <td>
+                    {editId === aluno.id ? (
+                      <input
+                        name="turma"
+                        value={editData.turma}
+                        onChange={handleEditChange}
+                      />
+                    ) : (
+                      aluno.turma
+                    )}
+                  </td>
+                  <td>
+                    {editId === aluno.id ? (
+                      <input
+                        name="alunoPEI"
+                        type="checkbox"
+                        checked={editData.alunoPEI}
+                        onChange={handleEditChange}
+                      />
+                    ) : aluno.alunoPEI ? (
+                      <span className="status-ativo">Sim</span>
+                    ) : (
+                      <span className="status-inativo">Não</span>
+                    )}
+                  </td>
+                  <td className="btn-group">
+                    {editId === aluno.id ? (
+                      <>
+                        <button className="btn-salvar" onClick={() => salvaEdicaoAluno(aluno.id)}>
+                          Salvar
+                        </button>
+                        <button className="btn-cancelar" onClick={() => setEditId(null)}>
+                          Cancelar
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <button
+                          className="btn-editar"
+                          onClick={() => {
+                            setEditId(aluno.id);
+                            setEditData({
+                              nome_completo: aluno.nome_completo,
+                              matricula: aluno.matricula.toString(),
+                              curso: aluno.curso,
+                              turma: aluno.turma,
+                              alunoPEI: aluno.alunoPEI,
+                            });
+                          }}
+                        >
+                          Editar
+                        </button>
+                      </>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </Paginacao>
     </div>
   );
 }
 
-//<button className="btn-deletar" onClick={() => deletaAluno(aluno.id)}> Deletar </button>
 export default ListarAluno;
