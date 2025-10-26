@@ -1,113 +1,99 @@
-.turma-container {
-  max-width: 500px;
+.turmas-container {
+  max-width: 1100px; /* aumentei um pouco o limite para dar mais folga */
   margin: 2rem auto;
   padding: 1.5rem;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  background-color: #f9f9f9;
 }
 
-.turma-form label {
-  display: block;
-  margin-top: 1rem;
-  font-weight: bold;
-}
-
-.turma-form input,
-.turma-form select,
-.turma-form textarea {
-  width: 100%;
-  padding: 0.5rem;
-  margin-top: 0.25rem;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-}
-
-.turma-form button {
-  margin-top: 1.5rem;
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 5px;
-  background-color: #007bff;
-  color: white;
-  cursor: pointer;
-}
-
-.turma-form button:hover {
-  background-color: #0056b3;
-}
-
-/* Reaproveita estilos da listagem */
-.turmas-container {
-  max-width: 900px;
-  margin: 2rem auto;
-  padding: 1rem;
-}
-
+/* ---------- Estilos para a tabela ---------- */
 .turmas-table {
-  width: 100%;
+  width: 80%; /* aumentei de 50% para 80% para ocupar mais espaço horizontal */
   border-collapse: collapse;
-  margin-top: 1rem;
+  margin: 30px auto;
+  font-size: 16px;
   text-align: left;
+  background-color: #ffffff;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
 }
 
-.turmas-table th, .turmas-table td {
-  border: 1px solid #ccc;
-  padding: 0.5rem;
+/* Cabeçalho */
+.turmas-table thead {
+  background-color: var(--laranja-lista);
+  color: black;
 }
 
-.turmas-table th {
-  background-color: #f0f0f0;
+.turmas-table th,
+.turmas-table td {
+  padding: 16px 18px; /* antes era 12px — ampliado para deixar o conteúdo respirar */
+  border-bottom: 1px solid #ddd;
 }
 
-.turmas-table input, .turmas-table select {
+/* Linhas alternadas */
+.turmas-table tbody tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+/* Efeito hover */
+.turmas-table tbody tr:hover {
+  background-color: #d1ecf1;
+  transition: background 0.3s ease-in-out;
+}
+
+/* Inputs e selects dentro da tabela */
+.turmas-table input,
+.turmas-table select {
   width: 100%;
-  padding: 0.3rem;
+  padding: 0.45rem; /* levemente maior */
+  border-radius: 4px;
+  border: 1px solid #ccc;
   box-sizing: border-box;
 }
 
-.btn-group {
+/* ---------- Botões ---------- */
+/* Impede comportamento estranho de display:flex em td */
+.turmas-table td.btn-group {
   display: flex;
-  gap: 0.5rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  border-bottom: none; /* remove linha extra que pode parecer uma “tabela” */
 }
 
-.btn-salvar {
-  background-color: #28a745 !important;
-  color: white;
-  border: none;
-  padding: 0.3rem 0.6rem;
-  cursor: pointer;
-  margin-right: 0.3rem;
+.turmas-table td.btn-group button {
+  margin: 0;
 }
 
-.btn-cancelar {
-  background-color: #6c757d !important;
-  color: white;
-  border: none;
-  padding: 0.3rem 0.6rem;
-  cursor: pointer;
-  margin-right: 0.3rem;
-}
 
-.btn-editar {
-  border: none;
-  padding: 0.3rem 0.6rem;
-  cursor: pointer;
-  margin-right: 0.3rem;
-  background-color: #ffc107;
-}
-
+.btn-salvar,
+.btn-cancelar,
+.btn-editar,
 .btn-deletar {
-  background-color: #dc3545 !important;
   color: white;
   border: none;
-  padding: 0.3rem 0.6rem;
+  padding: 0.4rem 0.8rem; /* mais confortável */
   cursor: pointer;
+  border-radius: 4px;
+  transition: transform 0.2s ease, opacity 0.2s ease;
 }
 
+.btn-salvar { background-color: #28a745 !important; }
+.btn-cancelar { background-color: #6c757d !important; }
+.btn-editar { background-color: #28a745 !important; }
+.btn-deletar { background-color: #dc3545 !important; }
+
+.btn-salvar:hover,
+.btn-cancelar:hover,
+.btn-editar:hover,
+.btn-deletar:hover {
+  opacity: 0.9;
+  transform: scale(1.03);
+}
+
+/* ---------- Outros ---------- */
 .turmas-title {
   text-align: center;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .erro-campo {
@@ -116,17 +102,18 @@
   margin-top: 4px;
 }
 
+/* Paginação */
 .paginacao {
-  margin-top: 1rem;
+  margin-top: 1.5rem;
   text-align: center;
 }
 
 .paginacao button {
-  background-color: #007bff;
+  background-color: #28a745;
   color: white;
   border: none;
-  padding: 0.4rem 0.8rem;
-  margin: 0 0.3rem;
+  padding: 0.5rem 0.9rem;
+  margin: 0 0.4rem;
   border-radius: 5px;
   cursor: pointer;
 }
@@ -134,4 +121,17 @@
 .paginacao button:disabled {
   background-color: #ccc;
   cursor: not-allowed;
+}
+
+/* ---------- Responsividade ---------- */
+@media (max-width: 768px) {
+  .turmas-table {
+    font-size: 14px;
+    width: 100%;
+  }
+
+  .turmas-table th,
+  .turmas-table td {
+    padding: 12px;
+  }
 }
