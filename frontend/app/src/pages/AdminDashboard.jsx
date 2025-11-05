@@ -22,127 +22,135 @@ function AdminDashboard() {
         <div className="col-12 col-lg-4">
           <h5 className="mb-2 dashboard-section-title">Pessoas</h5>
 
-          <div className="app-card is-alunos position-relative mb-3">
-            <div className="app-card-body">
-              <div className="app-card-icon">AL</div>
-              <div className="app-card-content">
-                <h6 className="mb-1">Alunos</h6>
-                <p className="text-muted small mb-2">Veja a lista, edite dados básicos e cadastre novos alunos.</p>
-                <div className="app-card-actions">
-                  <span className="app-card-hover-label">Acessar</span>
-                  <Link to="/alunos" className="stretched-link" aria-label="Abrir lista de Alunos"></Link>
+          <Link to="/alunos" className="text-decoration-none">
+            <div className="app-card is-alunos position-relative mb-3">
+              <div className="app-card-body">
+                <div className="app-card-icon">ALU</div>
+                <div className="app-card-content">
+                  <h6 className="mb-1">Alunos</h6>
+                  <p className="text-muted small mb-2">Veja a lista, edite dados básicos e cadastre novos alunos.</p>
+                  <div className="app-card-actions">
+                    <span className="app-card-hover-label">Acessar</span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          </Link>
 
-          <div className="app-card is-prof position-relative mb-3">
-            <div className="app-card-body">
-              <div className="app-card-icon">PR</div>
-              <div className="app-card-content">
-                <h6 className="mb-1">Professores</h6>
-                <p className="text-muted small mb-2">Acompanhe a lista, ajuste informações e inclua novos professores.</p>
-                <div className="app-card-actions">
-                  <span className="app-card-hover-label">Acessar</span>
-                  <Link to="/professores" className="stretched-link" aria-label="Abrir lista de Professores"></Link>
+          <Link to="/professores" className="text-decoration-none">
+            <div className="app-card is-prof position-relative mb-3">
+              <div className="app-card-body">
+                <div className="app-card-icon">PROF</div>
+                <div className="app-card-content">
+                  <h6 className="mb-1">Professores</h6>
+                  <p className="text-muted small mb-2">Acompanhe a lista, ajuste informações e inclua novos professores.</p>
+                  <div className="app-card-actions">
+                    <span className="app-card-hover-label">Acessar</span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          </Link>
 
-          <div className="app-card is-coord position-relative mb-3">
-            <div className="app-card-body">
-              <div className="app-card-icon">CO</div>
-              <div className="app-card-content">
-                <h6 className="mb-1">Coordenadores</h6>
-                <p className="text-muted small mb-2">Gerencie a equipe de coordenação e suas permissões de acesso.</p>
-                <div className="app-card-actions">
-                  <span className="app-card-hover-label">Acessar</span>
-                  <Link to="/coord" className="stretched-link" aria-label="Abrir lista de Coordenadores"></Link>
+          <Link to="/coord" className="text-decoration-none">
+            <div className="app-card is-coord position-relative mb-3">
+              <div className="app-card-body">
+                <div className="app-card-icon">COORD</div>
+                <div className="app-card-content">
+                  <h6 className="mb-1">Coordenadores</h6>
+                  <p className="text-muted small mb-2">Gerencie a equipe de coordenação e suas permissões de acesso.</p>
+                  <div className="app-card-actions">
+                    <span className="app-card-hover-label">Acessar</span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          </Link>
         </div>
 
         {/* Coluna 2: Acadêmico */}
         <div className="col-12 col-lg-4">
           <h5 className="mb-2 dashboard-section-title">Acadêmico</h5>
 
-          <div className="app-card is-curso position-relative mb-3">
-            <div className="app-card-body">
-              <div className="app-card-icon">CU</div>
-              <div className="app-card-content">
-                <h6 className="mb-1">Cursos</h6>
-                <p className="text-muted small mb-2">Crie e atualize cursos; defina código, tipo e coordenação.</p>
-                <div className="app-card-actions">
-                  <span className="app-card-hover-label">Acessar</span>
-                  <Link to="/curso" className="stretched-link" aria-label="Abrir lista de Cursos"></Link>
+          <Link to="/curso" className="text-decoration-none">
+            <div className="app-card is-curso position-relative mb-3">
+              <div className="app-card-body">
+                <div className="app-card-icon">CUR</div>
+                <div className="app-card-content">
+                  <h6 className="mb-1">Cursos</h6>
+                  <p className="text-muted small mb-2">Crie e atualize cursos; defina código, tipo e coordenação.</p>
+                  <div className="app-card-actions">
+                    <span className="app-card-hover-label">Acessar</span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          </Link>
 
-          <div className="app-card is-turma position-relative mb-3">
-            <div className="app-card-body">
-              <div className="app-card-icon">TU</div>
-              <div className="app-card-content">
-                <h6 className="mb-1">Turmas</h6>
-                <p className="text-muted small mb-2">Crie turmas e ajuste semestre/ano, turno e curso.</p>
-                <div className="app-card-actions">
-                  <span className="app-card-hover-label">Acessar</span>
-                  <Link to="/turma" className="stretched-link" aria-label="Abrir lista de Turmas"></Link>
+          <Link to="/turma" className="text-decoration-none">
+            <div className="app-card is-turma position-relative mb-3">
+              <div className="app-card-body">
+                <div className="app-card-icon">TUR</div>
+                <div className="app-card-content">
+                  <h6 className="mb-1">Turmas</h6>
+                  <p className="text-muted small mb-2">Crie turmas e ajuste semestre/ano, turno e curso.</p>
+                  <div className="app-card-actions">
+                    <span className="app-card-hover-label">Acessar</span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          </Link>
 
-          <div className="app-card is-disc position-relative mb-3">
-            <div className="app-card-body">
-              <div className="app-card-icon">DI</div>
-              <div className="app-card-content">
-                <h6 className="mb-1">Disciplinas</h6>
-                <p className="text-muted small mb-2">Cadastre disciplinas e controle status e código de oferta.</p>
-                <div className="app-card-actions">
-                  <span className="app-card-hover-label">Acessar</span>
-                  <Link to="/disciplina" className="stretched-link" aria-label="Abrir lista de Disciplinas"></Link>
+          <Link to="/disciplina" className="text-decoration-none">
+            <div className="app-card is-disc position-relative mb-3">
+              <div className="app-card-body">
+                <div className="app-card-icon">DISC</div>
+                <div className="app-card-content">
+                  <h6 className="mb-1">Disciplinas</h6>
+                  <p className="text-muted small mb-2">Cadastre disciplinas e controle status e código de oferta.</p>
+                  <div className="app-card-actions">
+                    <span className="app-card-hover-label">Acessar</span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          </Link>
         </div>
 
         {/* Coluna 3: Agenda e Registros */}
         <div className="col-12 col-lg-4">
           <h5 className="mb-2 dashboard-section-title">Agenda e Registros</h5>
 
-          <div className="app-card is-agenda position-relative mb-3">
-            <div className="app-card-body">
-              <div className="app-card-icon">AG</div>
-              <div className="app-card-content">
-                <h6 className="mb-1">Agenda</h6>
-                <p className="text-muted small mb-2">Consulte eventos da semana e acesse detalhes e horários.</p>
-                <div className="app-card-actions">
-                  <span className="app-card-hover-label">Acessar</span>
-                  <Link to="/agenda" className="stretched-link" aria-label="Abrir Agenda"></Link>
+          <Link to="/agenda" className="text-decoration-none">
+            <div className="app-card is-agenda position-relative mb-3">
+              <div className="app-card-body">
+                <div className="app-card-icon">AG</div>
+                <div className="app-card-content">
+                  <h6 className="mb-1">Agenda</h6>
+                  <p className="text-muted small mb-2">Consulte eventos da semana e acesse detalhes e horários.</p>
+                  <div className="app-card-actions">
+                    <span className="app-card-hover-label">Acessar</span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          </Link>
 
-          <div className="app-card is-reg position-relative mb-3">
-            <div className="app-card-body">
-              <div className="app-card-icon">RG</div>
-              <div className="app-card-content">
-                <h6 className="mb-1">Registros</h6>
-                <p className="text-muted small mb-2">Registre atendimentos e consulte o histórico por data e turma.</p>
-                <div className="app-card-actions">
-                  <span className="app-card-hover-label">Acessar</span>
-                  <Link to="/registros" className="stretched-link" aria-label="Abrir lista de Registros de atendimento"></Link>
+          <Link to="/registros" className="text-decoration-none">
+            <div className="app-card is-reg position-relative mb-3">
+              <div className="app-card-body">
+                <div className="app-card-icon">RG</div>
+                <div className="app-card-content">
+                  <h6 className="mb-1">Registros</h6>
+                  <p className="text-muted small mb-2">Registre atendimentos e consulte o histórico por data e turma.</p>
+                  <div className="app-card-actions">
+                    <span className="app-card-hover-label">Acessar</span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          </Link>
         </div>
       </div>
     </main>

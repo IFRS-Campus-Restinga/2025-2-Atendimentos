@@ -1,14 +1,4 @@
 .dashboard {
-  --app-radius: 12px;
-  --app-border: 1px;
-  --app-shadow: 0 2px 12px rgba(0,0,0,.05);
-  --app-shadow-hover: 0 8px 22px rgba(0,0,0,.10);
-  --app-muted: #6c757d;
-  --g-1: #21897E;
-  --g-2: #3BA99C;
-  --g-3: #69D1C5;
-}
-.dashboard {
   --app-radius: 13px;
   --app-border: 1px;
   --app-shadow: 0 2px 12px rgba(0,0,0,.05);
@@ -29,16 +19,14 @@
 
 .app-card {
   border: var(--app-border) solid #e9ecef;
-  border-left-width: 4px;
-  border-left-color: #21897E33; 
+  border-left-width: 5px;
+  border-left-color: var(--success-alpha-20);
   border-radius: var(--app-radius);
   background: #fff;
   box-shadow: var(--app-shadow);
   cursor: pointer;
+  transition: transform .15s ease, box-shadow .15s ease, background-color .15s ease;
 }
-.app-card {
-  border-left-width: 5px;
-  border-left-color: var(--success-alpha-20); 
 
 .app-card:hover {
   transform: translateY(-2px);
@@ -48,41 +36,30 @@
 
 .app-card-body {
   display: grid;
-  grid-template-columns: 52px 1fr; 
-  gap: .9rem;
-  padding: 1rem 1rem;
+  grid-template-columns: 60px 1fr;
+  gap: 1rem;
+  padding: 1.1rem 1.1rem;
   align-items: center;
 }
-.app-card-body {
-  grid-template-columns: 60px 1fr; 
-  gap: 1rem;
-  padding: 1.1rem 1.1rem; 
 .app-card-icon {
   width: 60px;
   height: 60px;
-  font-size: .9rem;
-  background: linear-gradient(135deg, var(--success), var(--success-dark));
-
-.app-card-icon {
-  width: 52px;
-  height: 52px;
-  transform: scale(1.05);
   border-radius: 999px;
   display: grid;
   place-items: center;
   font-weight: 700;
-  font-size: .85rem;
+  font-size: .9rem;
   color: #fff;
   user-select: none;
-  background: linear-gradient(135deg, var(--g-3), var(--g-2) 60%, var(--g-1));
+  background: linear-gradient(135deg, var(--success), var(--success-dark));
   transition: transform .15s ease, filter .15s ease;
 }
-
 
 
 .app-card-content h6 {
   margin: 0;
   font-weight: 600;
+  color: var(--success);
 }
 
 .app-card-content p {
@@ -97,7 +74,6 @@
   position: relative;
 }
 
-/* Label “Acessar” no hover */
 .app-card-hover-label {
   position: relative;
   z-index: 2;
@@ -109,15 +85,13 @@
   font-size: .72rem;
   font-weight: 600;
   color: #fff;
-  background: var(--g-1);
+  background: var(--success);
   box-shadow: 0 1px 2px rgba(0,0,0,.06), inset 0 -1px 0 rgba(0,0,0,.06);
   opacity: 0;
   transform: translateY(4px);
   transition: opacity .15s ease, transform .15s ease;
-  pointer-events: none; /* clique vai para o link estendido */
+  pointer-events: none; 
 }
-.app-card-hover-label {
-  background: var(--success);
 
 .app-card:hover .app-card-hover-label,
 .app-card:focus-within .app-card-hover-label {
@@ -125,7 +99,6 @@
   transform: translateY(0);
 }
 
-/* Extra small button without changing Bootstrap setup */
 .btn-xxs {
   --bs-btn-padding-y: .15rem;
   --bs-btn-padding-x: .45rem;
@@ -137,23 +110,22 @@
   line-height: 1.2;
 }
 
-/* Ensure stretched-link works on custom cards */
 .app-card.position-relative .stretched-link::after {
   position: absolute;
   inset: 0;
   content: "";
+  z-index: 3; 
+  background: transparent;
 }
 
-/* Foco visível */
 .app-card:focus-within {
   outline: 2px solid rgba(33,137,126,.28);
   outline-offset: 2px;
 }
 
-/* Mobile ajustes */
 @media (max-width: 576px) {
   .app-card-body {
-    grid-template-columns: 52px 1fr; /* proporcional ao aumento */
+    grid-template-columns: 52px 1fr; 
     padding: .95rem 1rem;
   }
   .app-card-icon {
@@ -166,7 +138,7 @@
   }
 }
 
-/* Preferência por menos movimento */
+
 @media (prefers-reduced-motion: reduce) {
   .app-card, .app-card * {
     transition: none !important;
