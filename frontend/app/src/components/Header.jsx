@@ -60,7 +60,17 @@ function Header({ onLogout }) {
           </button>
           <div className="header__title">
             <Link
-              to={role === "Administrador" ? "/dashboard" : "/"}
+              to={
+                role === "Administrador"
+                  ? "/dashboard"
+                  : role === "Aluno"
+                  ? "/dashboard/aluno"
+                  : role === "Professor"
+                  ? "/dashboard/professor"
+                  : role === "Coordenador"
+                  ? "/dashboard/coordenador"
+                  : "/"
+              }
               className="title-link d-flex align-items-center text-decoration-none"
               aria-label="Ir para a página inicial"
               title="Início"
