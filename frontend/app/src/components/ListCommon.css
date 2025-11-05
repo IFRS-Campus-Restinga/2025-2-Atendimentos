@@ -1,32 +1,113 @@
-/* Estilos base compartilhados para listas (tabelas, cabeçalhos e containers) */
+/* Estilos base compartilhados para Listas (tabelas, botões e containers) */
+:root {
+  --brand-green: #198754; /* Bootstrap Green */
+  --brand-green-hover: #157347;
+  --brand-red: #dc3545;
+  --brand-red-hover: #bb2d3b;
+  --brand-gray: #6c757d;
+  --brand-gray-hover: #5c636a;
+  --border-color: #dee2e6;
+  --thead-bg: #f8f9fa;
+  --hover-bg: #f2f6f4;
+}
+
 .list-container {
-  padding: 1rem;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
 }
 
 .list-title {
   margin: 0 0 1rem 0;
-  font-size: 1.75rem;
+  font-size: 1.5rem;
   font-weight: 600;
 }
 
+/* Tabela padronizada + hover */
 .list-table {
   width: 100%;
   border-collapse: collapse;
   background: #fff;
+  border: 1px solid var(--border-color);
 }
 
-.list-table th,
-.list-table td {
-  padding: 0.5rem 0.75rem;
-  border-bottom: 1px solid #e5e7eb;
+.list-table thead th {
+  background: var(--thead-bg);
   text-align: left;
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--border-color);
 }
 
-.btn-group > .btn-salvar,
-.btn-group > .btn-editar,
-.btn-group > .btn-cancelar,
-.btn-group > .btn-deletar {
-  margin-right: 0.5rem;
+.list-table tbody td {
+  padding: 0.65rem 0.75rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.list-table tbody tr:hover {
+  background: var(--hover-bg);
+}
+
+/* Grupo de ações */
+.btn-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+/* Base de botões (aplicada também às classes específicas para retrocompatibilidade) */
+.list-container .btn,
+.list-container .btn-salvar,
+.list-container .btn-editar,
+.list-container .btn-cancelar,
+.list-container .btn-deletar,
+.list-container .btn-cadastrar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.45rem 0.8rem;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+/* Verde (editar/salvar/cadastrar) */
+.list-container .btn-editar,
+.list-container .btn-salvar,
+.list-container .btn-cadastrar {
+  background: var(--brand-green) !important;
+  color: #fff !important;
+  border-color: var(--brand-green) !important;
+}
+.list-container .btn-editar:hover,
+.list-container .btn-salvar:hover,
+.list-container .btn-cadastrar:hover {
+  background: var(--brand-green-hover) !important;
+  border-color: var(--brand-green-hover) !important;
+}
+
+/* Cinza (cancelar) */
+.list-container .btn-cancelar {
+  background: var(--brand-gray) !important;
+  color: #fff !important;
+  border-color: var(--brand-gray) !important;
+}
+.list-container .btn-cancelar:hover {
+  background: var(--brand-gray-hover) !important;
+  border-color: var(--brand-gray-hover) !important;
+}
+
+/* Vermelho (deletar) */
+.list-container .btn-deletar {
+  background: var(--brand-red) !important;
+  color: #fff !important;
+  border-color: var(--brand-red) !important;
+}
+.list-container .btn-deletar:hover {
+  background: var(--brand-red-hover) !important;
+  border-color: var(--brand-red-hover) !important;
 }
 
 .list-actions {
