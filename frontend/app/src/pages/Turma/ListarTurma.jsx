@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import './Turma.css';
+import '../../components/ListCommon.css';
 import { useNavigate } from "react-router-dom";
 import Paginacao from "../../components/Paginacao.jsx";
 
@@ -102,9 +103,9 @@ function ListarTurma() {
   }, []);
 
   return (
-    <div className="turmas-container">
-      <h1 className="turmas-title">Lista de Turmas</h1>
-      <div style={{ textAlign: "center", marginTop: "1.5rem" }}>
+    <div className="turmas-container list-container">
+      <h1 className="turmas-title list-title">Lista de Turmas</h1>
+      <div className="list-actions" style={{ textAlign: "center", marginTop: "1.5rem" }}>
         <button className="btn-salvar" onClick={() => navigate("/turma/cadastrar")}>
           Cadastrar Nova Turma
         </button>
@@ -113,7 +114,7 @@ function ListarTurma() {
       {/* Componente de Paginação */}
       <Paginacao itens={turmas} itensPorPagina={10}>
         {itensPaginaAtual => (
-          <table className="turmas-table">
+          <table className="turmas-table list-table">
             <thead>
               <tr>
                 <th>Nome</th>

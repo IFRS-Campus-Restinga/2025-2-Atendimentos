@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import "./Disciplina.css";
+import "../../components/ListCommon.css";
 import { useNavigate } from "react-router-dom";
 import Paginacao from "../../components/Paginacao.jsx"; // importar componente de paginação
 
@@ -70,8 +71,8 @@ function ListarDisciplina() {
   }, []);
 
   return (
-    <div className="disciplinas-container">
-      <h1 className="disciplinas-title">Lista de Disciplinas</h1>
+    <div className="disciplinas-container list-container">
+      <h1 className="disciplinas-title list-title">Lista de Disciplinas</h1>
 
       <div style={{ textAlign: "center", marginTop: "1.5rem" }}>
         <button className="btn-salvar" onClick={() => navigate("/disciplina/cadastrar")}>
@@ -82,7 +83,7 @@ function ListarDisciplina() {
       {/* ✅ Adicionando a paginação aqui */}
       <Paginacao itens={disciplinas} itensPorPagina={10}>
         {(itensPaginaAtual) => (
-          <table className="disciplinas-table">
+          <table className="disciplinas-table list-table">
             <thead>
               <tr>
                 <th>Nome</th>

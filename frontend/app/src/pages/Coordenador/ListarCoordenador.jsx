@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import './Coordenador.css';
+import '../../components/ListCommon.css';
 import { useNavigate } from "react-router-dom";
 import Paginacao from "../../components/Paginacao.jsx"; // import do componente
 
@@ -39,7 +40,7 @@ function ListarCoordenador() {
 
   async function salvaEdicao(id) {
     try {
-      await DB.put(`/${id}/`, {
+      await DB.patch(`/${id}/`, {
         nome: editData.nome,
         registro: editData.registro,
         email: editData.email,
@@ -59,9 +60,9 @@ function ListarCoordenador() {
   }, []);
 
   return (
-    <div className="coordenadores-container">
-      <h1 className="coordenadores-title">Lista de Coordenadores</h1>
-      <div style={{ textAlign: "center", marginTop: "1.5rem" }}>
+    <div className="coordenadores-container list-container">
+      <h1 className="coordenadores-title list-title">Lista de Coordenadores</h1>
+      <div className="list-actions" style={{ textAlign: "center", marginTop: "1.5rem" }}>
         <button className="btn-salvar" onClick={() => navigate("/coord/cadastrar")}>
           Cadastrar Novo Coordenador
         </button>
@@ -69,7 +70,7 @@ function ListarCoordenador() {
 
       <Paginacao itens={coordenadores} itensPorPagina={10}>
         {itensPaginaAtual => (
-          <table className="coordenadores-table">
+          <table className="coordenadores-table list-table">
             <thead>
               <tr>
                 <th>Nome</th>

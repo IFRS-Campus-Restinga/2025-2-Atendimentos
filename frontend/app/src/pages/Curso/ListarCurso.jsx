@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import './Curso.css';
+import '../../components/ListCommon.css';
 import { useNavigate } from "react-router-dom";
 import Paginacao from "../../components/Paginacao.jsx"; // importar componente de paginação
 
@@ -62,9 +63,9 @@ function ListarCurso() {
   }, []);
 
   return (
-    <div className="cursos-container">
-      <h1 className="cursos-title">Lista de Cursos</h1>
-      <div style={{ textAlign: "center", marginTop: "1.5rem" }}>
+    <div className="cursos-container list-container">
+      <h1 className="cursos-title list-title">Lista de Cursos</h1>
+      <div className="list-actions" style={{ textAlign: "center", marginTop: "1.5rem" }}>
         <button className="btn-salvar" onClick={() => navigate("/curso/cadastrar")}>
           Cadastrar Novo Curso
         </button>
@@ -72,7 +73,7 @@ function ListarCurso() {
 
       <Paginacao itens={cursos} itensPorPagina={10}>
         {itensPaginaAtual => (
-          <table className="cursos-table">
+          <table className="cursos-table list-table">
             <thead>
               <tr>
                 <th>Nome</th>

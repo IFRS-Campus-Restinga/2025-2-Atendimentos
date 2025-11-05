@@ -3,20 +3,35 @@ from accounts.models.aluno import Aluno
 
 
 class AlunoSerializer(serializers.ModelSerializer):
+    nome = serializers.SerializerMethodField(read_only=True)
+    email = serializers.SerializerMethodField(read_only=True)
 
-    def validate_nome_completo(self, nome_completo):
-        if len(nome_completo.split()) < 3:
-            raise serializers.ValidationError("Por favor, insira o nome completo.")
-        return nome_completo
+    def get_nome(self, obj: Aluno):
+        # Usa o nome do perfil (Usuario) se existir; caso contrário, full_name do User, depois username
+        try:
+            perfil = getattr(obj.user, 'perfil', None)
+            if perfil and getattr(perfil, 'nome', None):
+                return perfil.nome
+        except Exception:
+            pass
+        full_name = getattr(obj.user, 'get_full_name', lambda: '')()
+        if full_name:
+            return full_name
+        return getattr(obj.user, 'username', None)
 
-    #def validate_matricula(self, matricula):
-    #    if len(str(matricula)) != 10:
-    #        raise serializers.ValidationError(
-    #            "O número da matrícula deve possuir exatamente 10 digitos!"
-    #        )
-    #    return matricula
-    #
+    def get_email(self, obj: Aluno):
+        # Usa email do perfil (Usuario) se existir; senao, email do User
+        try:
+            perfil = getattr(obj.user, 'perfil', None)
+            if perfil and getattr(perfil, 'email', None):
+                return perfil.email
+        except Exception:
+            pass
+        return getattr(obj.user, 'email', None)
 
     class Meta:
         model = Aluno
-        fields = "__all__"
+        fields = (
+            'id', 'user', 'alunoPEI', 'matricula', 'curso', 'turma',
+            'created_at', 'updated_at', 'nome', 'email'
+        )

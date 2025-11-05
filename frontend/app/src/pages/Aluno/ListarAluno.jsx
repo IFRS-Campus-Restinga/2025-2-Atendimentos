@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import "./Aluno.css";
+import "../../components/ListCommon.css";
 import { useNavigate } from "react-router-dom";
 import Paginacao from "../../components/Paginacao.jsx";
 
@@ -12,7 +13,6 @@ function ListarAluno() {
   const [alunos, setAlunos] = useState([]);
   const [editId, setEditId] = useState(null);
   const [editData, setEditData] = useState({
-    nome_completo: "",
     matricula: "",
     curso: "",
     turma: "",
@@ -50,15 +50,9 @@ function ListarAluno() {
 
   async function salvaEdicaoAluno(id) {
     try {
-      const payload = {
-        ...editData,
-        matricula: Number(editData.matricula),
-      };
-
-      await DB.put(`/${id}/`, payload);
+      await DB.patch(`/${id}/`, editData);
       setEditId(null);
       setEditData({
-        nome_completo: "",
         matricula: "",
         curso: "",
         turma: "",
@@ -76,9 +70,9 @@ function ListarAluno() {
   }, []);
 
   return (
-    <div className="alunos-container">
-      <h1 className="alunos-title">Lista de Alunos</h1>
-      <div style={{ textAlign: "center", marginTop: "1.5rem" }}>
+    <div className="alunos-container list-container">
+      <h1 className="alunos-title list-title">Lista de Alunos</h1>
+      <div className="list-actions" style={{ textAlign: "center", marginTop: "1.5rem" }}>
         <button className="btn-salvar" onClick={() => navigate("/alunos/cadastrar")}>
           Cadastrar Novo Aluno
         </button>
@@ -87,10 +81,10 @@ function ListarAluno() {
       {/* Paginação */}
       <Paginacao itens={alunos} itensPorPagina={10}>
         {(alunosPaginaAtual) => (
-          <table className="alunos-table">
+          <table className="alunos-table list-table">
             <thead>
               <tr>
-                <th>Nome Completo</th>
+                <th>Nome</th>
                 <th>Matrícula</th>
                 <th>Curso</th>
                 <th>Turma</th>
@@ -101,17 +95,7 @@ function ListarAluno() {
             <tbody>
               {alunosPaginaAtual.map((aluno) => (
                 <tr key={aluno.id}>
-                  <td>
-                    {editId === aluno.id ? (
-                      <input
-                        name="nome_completo"
-                        value={editData.nome_completo}
-                        onChange={handleEditChange}
-                      />
-                    ) : (
-                      aluno.nome_completo
-                    )}
-                  </td>
+                  <td>{aluno.nome || '-'}</td>
                   <td>
                     {editId === aluno.id ? (
                       <input
@@ -177,8 +161,7 @@ function ListarAluno() {
                           onClick={() => {
                             setEditId(aluno.id);
                             setEditData({
-                              nome_completo: aluno.nome_completo,
-                              matricula: aluno.matricula.toString(),
+                              matricula: aluno.matricula ? aluno.matricula.toString() : "",
                               curso: aluno.curso,
                               turma: aluno.turma,
                               alunoPEI: aluno.alunoPEI,

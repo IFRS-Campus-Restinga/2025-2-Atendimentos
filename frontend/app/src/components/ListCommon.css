@@ -1,0 +1,35 @@
+/* Estilos base compartilhados para listas (tabelas, cabeçalhos e containers) */
+.list-container {
+  padding: 1rem;
+}
+
+.list-title {
+  margin: 0 0 1rem 0;
+  font-size: 1.75rem;
+  font-weight: 600;
+}
+
+.list-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+}
+
+.list-table th,
+.list-table td {
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid #e5e7eb;
+  text-align: left;
+}
+
+.btn-group > .btn-salvar,
+.btn-group > .btn-editar,
+.btn-group > .btn-cancelar,
+.btn-group > .btn-deletar {
+  margin-right: 0.5rem;
+}
+
+.list-actions {
+  text-align: center;
+  margin-top: 1.5rem;
+}
