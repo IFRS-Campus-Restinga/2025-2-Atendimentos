@@ -39,7 +39,7 @@ function App() {
 
   useEffect(() => {
     const usuarioSalvo = localStorage.getItem("usuario");
-    const tokenSalvo = localStorage.getItem("token");
+    const tokenSalvo = localStorage.getItem("authToken");
     if (usuarioSalvo && tokenSalvo) {
       setUsuario(JSON.parse(usuarioSalvo));
       setLogado(true);
@@ -58,26 +58,41 @@ function App() {
       setUsuario(userData);
       setLogado(true);
       localStorage.setItem("usuario", JSON.stringify(userData));
-      localStorage.setItem("token", credentialResponse.credential);
+      // Não armazene o idToken do Google; usaremos apenas o token do backend
       localStorage.removeItem('selectedRole');
 
       const response = await fetch(getApiUrl('googleLogin'), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: dados.email })
+        body: JSON.stringify({ token: credentialResponse.credential })
       });
 
       const contentType = response.headers.get("content-type");
       if (contentType && contentType.includes("application/json")) {
         const data = await response.json();
-        if (response.ok && data.token) {
-          localStorage.setItem("authToken", data.token);
-        } else {
+        if (!response.ok) {
           console.error("Erro ao validar token no backend:", data);
+          throw new Error(data?.error || 'Falha na autenticação no servidor');
+        }
+
+        // Se o backend retornar dados do usuário, preferimos os dele
+        if (data?.user) {
+          const srvUser = {
+            email: data.user.email || userData.email,
+            nome: data.user.name || userData.nome,
+            foto: data.user.picture || userData.foto,
+          };
+          setUsuario(srvUser);
+          localStorage.setItem("usuario", JSON.stringify(srvUser));
+        }
+
+        if (data?.token) {
+          localStorage.setItem("authToken", data.token);
         }
       } else {
         const text = await response.text();
         console.error("Resposta inesperada do backend:", text);
+        throw new Error('Resposta inesperada do backend');
       }
       try {
         window.history.replaceState({}, '', '/selecionar-perfil');
@@ -99,7 +114,6 @@ function App() {
     setUsuario(null);
     setLogado(false);
     localStorage.removeItem("usuario");
-    localStorage.removeItem("token");
     localStorage.removeItem("authToken");
   };
 
