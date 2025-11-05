@@ -1,20 +1,27 @@
 import { useState, useEffect } from 'react';
 import './Agenda.css';
 import EventoOrdinarioModal from './EventoOrdinarioModal';
+import EventoVisualizacaoModal from './EventoVisualizacaoModal';
 
 const Agenda = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [eventos, setEventos] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedEvento, setSelectedEvento] = useState(null);
+  const [isVisualModalOpen, setIsVisualModalOpen] = useState(false);
+  const [isFormModalOpen, setIsFormModalOpen] = useState(false);
 
   const dayNames = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
 
   useEffect(() => {
-    fetch('http://localhost:8000/services/evento-ordinario/')
+    fetchEventos();
+  }, [currentDate]);
+
+  const fetchEventos = () => {
+    fetch('http://localhost:8000/services/eventos/')
       .then(res => res.json())
       .then(data => setEventos(data))
       .catch(err => console.error(err));
-  }, []);
+  };
 
   const getWeekDays = (date) => {
     const startOfWeek = new Date(date);
@@ -36,28 +43,35 @@ const Agenda = () => {
     setCurrentDate(newDate);
   };
 
-  const getEventosForDateAndHour = (date, hour) => {
-    const dateStr = date.toISOString().split('T')[0];
-    return eventos.filter(e => {
-      if (e.dia_semana !== dateStr) return false;
-      const eventHour = new Date(e.data_hora).getHours();
-      return eventHour === hour;
-    });
+  const openEventoVisualModal = (evento) => {
+    setSelectedEvento(evento);
+    setIsVisualModalOpen(true);
+  };
+
+  const openEventoFormModal = (evento) => {
+    setSelectedEvento(evento || null);
+    setIsFormModalOpen(true);
+    setIsVisualModalOpen(false);
   };
 
   const weekDays = getWeekDays(currentDate);
   const hours = Array.from({ length: 12 }, (_, i) => i + 8); // 08h às 19h
+
+  const getEventosForDate = (day) => {
+    const dateStr = day.toISOString().split('T')[0];
+    return eventos.filter(e => e.data_evento === dateStr);
+  };
 
   return (
     <div className="agenda-wrapper">
       <div className="agenda-container">
         <div className="agenda-header">
           <h2>Agenda Semanal</h2>
-          <p className="text-muted">Eventos ordinários da semana</p>
+          <p className="text-muted">Eventos da semana</p>
         </div>
 
-        <button className="btn btn-success mb-3" onClick={() => setIsModalOpen(true)}>
-          + Novo Atendimento de Turma
+        <button className="btn btn-success mb-3" onClick={() => openEventoFormModal(null)}>
+          + Novo Evento Ordinário
         </button>
 
         <div className="weekly-calendar">
@@ -83,11 +97,17 @@ const Agenda = () => {
                 <div className="time-label">{hour}:00</div>
                 {weekDays.map((day, idx) => (
                   <div key={idx} className="day-cell">
-                    {getEventosForDateAndHour(day, hour).map(evento => (
-                      <div key={evento.id} className="appointment-indicator">
-                        {evento.turma || 'Evento'} - {new Date(evento.data_hora).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                      </div>
-                    ))}
+                    {getEventosForDate(day)
+                      .filter(e => parseInt(e.data_hora_evento.split(':')[0], 10) === hour)
+                      .map(evento => (
+                        <div
+                          key={evento.id}
+                          className={`appointment-indicator ${evento.tipo?.toLowerCase() || 'ord'}`}
+                          onClick={() => openEventoVisualModal(evento)}
+                        >
+                          {evento.turma} - {evento.data_hora_evento.slice(0, 5)}
+                        </div>
+                      ))}
                   </div>
                 ))}
               </div>
@@ -96,9 +116,20 @@ const Agenda = () => {
         </div>
       </div>
 
+      {/* Modal de visualização */}
+      <EventoVisualizacaoModal
+        evento={selectedEvento}
+        isOpen={isVisualModalOpen}
+        onClose={() => setIsVisualModalOpen(false)}
+        onEdit={openEventoFormModal}
+      />
+
+      {/* Modal de criação/edição */}
       <EventoOrdinarioModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        isOpen={isFormModalOpen}
+        onClose={() => setIsFormModalOpen(false)}
+        evento={selectedEvento}
+        onSuccess={fetchEventos}
       />
     </div>
   );

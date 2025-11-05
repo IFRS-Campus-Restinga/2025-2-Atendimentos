@@ -110,48 +110,59 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.45);
+  background-color: rgba(0, 0, 0, 0.4);
   display: flex;
   justify-content: center;
   align-items: center;
-  backdrop-filter: blur(4px);
   z-index: 1000;
-  cursor: pointer;
-  /* Permite detectar clique fora */
 }
 
 .modal-container {
-  background: #fff;
+  background-color: #fff;
+  border-radius: 12px;
   padding: 25px;
-  border-radius: 14px;
-  width: 650px;
-  max-width: 90vw;
-  max-height: 90vh;
-  overflow-y: auto;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
-  cursor: default;
-  /* Impede clique interno fechar */
+  width: 500px;
+  /* maior largura */
+  max-width: 95%;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
   position: relative;
 }
 
-/* Header com título + botão */
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.modal-title {
   margin-bottom: 15px;
+  font-weight: 600;
 }
 
-/* Botão X */
+.modal-title.ord {
+  color: #198754;
+  /* verde para ordinário */
+}
+
+.modal-title.extra {
+  color: #0d6efd;
+  /* azul para extraordinário */
+}
+
+.modal-title.convocado {
+  color: #ffc107;
+  /* amarelo para convocado */
+}
+
+.modal-body .mb-2 {
+  margin-bottom: 10px;
+}
+
+/* Botão X no canto superior */
 .modal-close-btn {
-  background: transparent;
+  position: absolute;
+  top: 10px;
+  right: 10px;
   border: none;
-  font-size: 26px;
-  line-height: 1;
+  background: transparent;
+  font-size: 20px;
   cursor: pointer;
-  color: #444;
   font-weight: bold;
-  transition: 0.2s;
+  color: #333;
 }
 
 .modal-close-btn:hover {
