@@ -12,6 +12,10 @@ import { getApiUrl } from "./services/api.js";
 import Header from "./components/Header.jsx";
 import Login from "./pages/Login.jsx";
 import RoleSelection from './pages/RoleSelection.jsx';
+import CompletarCadastro from './pages/Onboarding/CompletarCadastro.jsx';
+import DashboardAluno from './pages/Aluno/DashboardAluno.jsx';
+import DashboardProfessor from './pages/Professor/DashboardProfessor.jsx';
+import DashboardCoordenador from './pages/Coordenador/DashboardCoordenador.jsx';
 import NotAvailable from './pages/NotAvailable.jsx';
 import AdminDashboard from './pages/AdminDashboard.jsx';
 import './index.css';
@@ -141,6 +145,9 @@ function App() {
                 (() => {
                   const role = localStorage.getItem('selectedRole');
                   if (role === 'Administrador') return <Navigate to="/dashboard" />;
+                  if (role === 'Aluno') return <Navigate to="/dashboard/aluno" />;
+                  if (role === 'Professor') return <Navigate to="/dashboard/professor" />;
+                  if (role === 'Coordenador') return <Navigate to="/dashboard/coordenador" />;
                   return <Navigate to="/selecionar-perfil" />;
                 })()
               ) : (
@@ -154,8 +161,12 @@ function App() {
             }
           />
           <Route path="/selecionar-perfil" element={<RotaProtegida><RoleSelection /></RotaProtegida>} />
+          <Route path="/onboarding/:role" element={<RotaProtegida><CompletarCadastro /></RotaProtegida>} />
           <Route path="/nao-disponivel" element={<RotaProtegida><NotAvailable /></RotaProtegida>} />
           <Route path="/dashboard" element={<RotaProtegida><AdminDashboard /></RotaProtegida>} />
+          <Route path="/dashboard/aluno" element={<RotaProtegida><DashboardAluno /></RotaProtegida>} />
+          <Route path="/dashboard/professor" element={<RotaProtegida><DashboardProfessor /></RotaProtegida>} />
+          <Route path="/dashboard/coordenador" element={<RotaProtegida><DashboardCoordenador /></RotaProtegida>} />
           <Route path="/appointments" element={<RotaProtegida><h1>Página de Atendimentos</h1></RotaProtegida>} />
           <Route path="/disciplina" element={<RotaProtegida><ListarDisciplina /></RotaProtegida>} />
           <Route path="/disciplina/cadastrar" element={<RotaProtegida><CadastrarDisciplina /></RotaProtegida>} />
