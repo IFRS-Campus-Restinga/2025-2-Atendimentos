@@ -11,6 +11,7 @@ from accounts.models.professor import Professor
 from accounts.models.coordenador import Coordenador 
 from services.serializers import ComplementoCadastroSerializer
 from rest_framework.exceptions import ValidationError
+from django.db import IntegrityError
 import re
 
 
@@ -42,16 +43,14 @@ def create_professor_profile(user, validated_data):
     )
 
 def create_coordenador_profile(user, validated_data):
-    # Coordenador herda de Usuario; criamos vínculo básico
-    # Copiamos dados do Usuario (perfil) se existirem
-    usuario = Usuario.objects.filter(user=user).first()
-    Coordenador.objects.create(
-        user=user,
-        nome=getattr(usuario, 'nome', user.get_full_name() or user.username),
-        email=getattr(usuario, 'email', user.email),
-        tipoPerfil='COORD',
-        needs_complemento=False,
-    )
+    """
+    Coordenador herda de Usuario (multi-table inheritance).
+    Para criar o Coordenador corretamente, não devemos criar um novo Usuario.
+    Em vez disso, criamos a linha filha usando a mesma PK do Usuario existente.
+    """
+    usuario = Usuario.objects.get(user=user)
+    # Cria o registro filho sem duplicar o pai
+    Coordenador.objects.get_or_create(pk=usuario.pk)
 
 # Para complemento de cadastro pós-login
 class ComplementoCadastroView(APIView):
@@ -66,24 +65,37 @@ class ComplementoCadastroView(APIView):
             user.groups.clear()
             user.groups.add(grupo_final)
 
-            usuario = Usuario.objects.get(user=user)
+            # Garante que exista um Usuario vinculado ao user autenticado
+            try:
+                usuario = Usuario.objects.get(user=user)
+            except Usuario.DoesNotExist:
+                usuario = Usuario.objects.create(
+                    user=user,
+                    nome=(user.get_full_name() or user.username or user.email or "Usuário"),
+                    email=(user.email or ""),
+                    needs_complemento=True,
+                    tipoPerfil=tipo_final_code,
+                )
             usuario.needs_complemento = False
             usuario.tipoPerfil = tipo_final_code # Armazena o código 'PROF'/'ALU'/'COORD'/'ADM'
             usuario.save()
 
-            if tipo_final_code == 'ALU':
-                create_aluno_profile(user, validated_data)
-            elif tipo_final_code == 'PROF':
-                create_professor_profile(user, validated_data)
-            elif tipo_final_code == 'COORD':
+            try:
+                if tipo_final_code == 'ALU':
+                    create_aluno_profile(user, validated_data)
+                elif tipo_final_code == 'PROF':
+                    create_professor_profile(user, validated_data)
+                elif tipo_final_code == 'COORD':
                 # Validação de e-mail institucional: <matricula>@<complemento>.restinga.ifrs.edu.br
                 # Regras: local-part numérico (matrícula) e um ou mais subdomínios antes de restinga.ifrs.edu.br
                 # Exemplos válidos: 2023009726@aluno.restinga.ifrs.edu.br
-                email = (getattr(user, 'email', '') or '').strip()
-                pattern = r"^\d+@([a-z0-9-]+\.)*restinga\.ifrs\.edu\.br$"
-                if not re.match(pattern, email, flags=re.IGNORECASE):
-                    raise ValidationError({"email": "E-mail institucional inválido para Coordenador. Use o padrão '<matricula>@<complemento>.restinga.ifrs.edu.br'."})
-                create_coordenador_profile(user, validated_data)
+                    email = (getattr(user, 'email', '') or '').strip()
+                    pattern = r"^\d+@([a-z0-9-]+\.)*restinga\.ifrs\.edu\.br$"
+                    if not re.match(pattern, email, flags=re.IGNORECASE):
+                        raise ValidationError({"email": "E-mail institucional inválido para Coordenador. Use o padrão '<matricula>@<complemento>.restinga.ifrs.edu.br'."})
+                    create_coordenador_profile(user, validated_data)
+            except IntegrityError as e:
+                raise ValidationError({"detail": "Conflito de dados ao criar o perfil. Verifique se já existe um perfil para este usuário ou se os campos únicos não foram reutilizados (ex.: matrícula)."})
 
     def post(self, request, *args, **kwargs):
         serializer = ComplementoCadastroSerializer(data=request.data, context={'request': request})
@@ -97,14 +109,7 @@ class ComplementoCadastroView(APIView):
         if not nome_do_grupo:
              return Response({"detail": "Código de perfil não mapeado."}, status=status.HTTP_400_BAD_REQUEST)
 
-        try:
-            grupo_final = Group.objects.get(name=nome_do_grupo)
-
-        except Group.DoesNotExist:
-            return Response(
-                {"detail": f"Grupo '{nome_do_grupo}' não encontrado no banco de dados. Execute 'py manage.py migrate'."}, 
-                status=status.HTTP_400_BAD_REQUEST
-            )
+        grupo_final, _created = Group.objects.get_or_create(name=nome_do_grupo)
 
         self.handle_complemento(user, serializer.validated_data, grupo_final)
 
