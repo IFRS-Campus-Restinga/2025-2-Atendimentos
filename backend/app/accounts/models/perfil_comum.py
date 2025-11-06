@@ -1,7 +1,12 @@
 from django.db import models
 
 
-class PerfilComum(models.Model):
+class Perfil(models.Model):
+
+    nome_completo = models.CharField(
+        max_length=100, 
+        verbose_name="Nome"
+    )
 
     cpf = models.CharField(
         max_length=14,

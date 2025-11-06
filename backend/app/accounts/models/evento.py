@@ -38,7 +38,21 @@ class Evento(BaseModel):
     null=True,
     blank=True,
     related_name='eventos_criados'
-)
+    )
+    
+    class Meta:
+        permissions = [
+            # ... (Permissões de Ordinário)
+            ("can_create_ordinary", "Pode criar um Evento Ordinário"), 
+            ("can_participate_ordinary", "Pode participar de um Evento Ordinário"), 
+            
+            # PERMISSÕES DE EXTRAORDINÁRIO:
+            ("can_create_extraordinary", "Pode criar um Evento Extraordinário"), # Professor/Coordenador
+            ("can_participate_extraordinary", "Pode participar de um Evento Extraordinário"), # Professor
+            
+            # Permissão de Admin Geral
+            ("can_administer_all_events", "Pode visualizar e gerenciar todos os tipos de eventos"), 
+        ]
 
     # usuarios = models.ManyToManyField(
     #     Usuario,
