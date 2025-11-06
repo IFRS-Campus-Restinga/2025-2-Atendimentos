@@ -7,18 +7,16 @@ from django.db import transaction
 from django.shortcuts import get_object_or_404
 from services.permissions import CanApproveRequests
 
-User = get_user_model() # Pega o modelo de User padrão do Django
+User = get_user_model() 
 
 class AprovarUsuarioView(APIView):
-    # APENAS quem tem essa permissão pode usar essa API
+
     permission_classes = [CanApproveRequests]
 
     def post(self, request, user_id):
-        # Busca o usuário que será aprovado
         user_a_aprovar = get_object_or_404(User, pk=user_id)
         
-        # Obtém o nome do grupo final do corpo da requisição
-        grupo_final_nome = request.data.get('grupo_final') # Ex: 'Professores' ou 'Coordenadores'
+        grupo_final_nome = request.data.get('grupo_final') 
 
         if not grupo_final_nome:
             return Response(
@@ -43,7 +41,6 @@ class AprovarUsuarioView(APIView):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
             
-        # Executa a transação de aprovação
         try:
             with transaction.atomic():
                 # Remove do grupo Pendentes (se estiver)
@@ -56,7 +53,7 @@ class AprovarUsuarioView(APIView):
                 # Adiciona ao grupo final de privilégio
                 user_a_aprovar.groups.add(grupo_final)
                 
-                # Opcional: Aqui você pode adicionar lógica para enviar um email de aprovação, etc.
+                # ENVIAR UM EMAIL DE APROVAÇÃO AQUI (ou algo parecido).
 
             return Response(
                 {"detail": f"Usuário {user_a_aprovar.username} aprovado e movido para o grupo '{grupo_final_nome}'."}, 

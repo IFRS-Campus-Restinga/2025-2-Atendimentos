@@ -6,7 +6,7 @@ from ..serializers.evento_serializer import EventoSerializer
 from rest_framework.viewsets import ModelViewSet
 
 class EventoViewSet(ModelViewSet):
-    
+
     queryset = Evento.objects.all()
     serializer_class = EventoSerializer
-    #permission_classes = [AllowAny]
+    permission_classes = [AllowAny]

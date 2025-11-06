@@ -12,7 +12,7 @@ from services.permissions import (
 class EventoExtraordinarioViewSet(viewsets.ModelViewSet):
     queryset = EventoExtraordinario.objects.all()
     serializer_class = EventoExtraordinarioSerializer
-    #permission_classes = [AllowAny]
+    permission_classes = [AllowAny]
 
     def get_queryset(self):
         user = self.request.user

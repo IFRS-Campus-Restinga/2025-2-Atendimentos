@@ -104,18 +104,15 @@ class ComplementoCadastroView(APIView):
         if tipo_final_code not in GRUPO_MAP:
             return Response({"detail": "Código de perfil não mapeado."}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Agora, grupo_final sempre será um objeto Group (Alunos ou Pendentes)
         try:
             grupo_final = determine_final_group(tipo_final_code)
         except ObjectDoesNotExist as e:
             return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
         
-        # Garante que o grupo foi encontrado
         if not grupo_final:
              return Response({"detail": "Falha ao determinar o grupo de destino."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-        # Executa a lógica de criação e atribuição 
         status_msg = self.handle_complemento(user, serializer.validated_data, grupo_final)
 
         return Response({
