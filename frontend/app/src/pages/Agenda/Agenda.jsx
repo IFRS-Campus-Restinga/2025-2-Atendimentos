@@ -57,7 +57,7 @@ const Agenda = () => {
         </div>
 
         <button className="btn btn-success mb-3" onClick={() => setIsModalOpen(true)}>
-          + Novo Evento Ordinário
+          + Novo Atendimento de Turma
         </button>
 
         <div className="weekly-calendar">

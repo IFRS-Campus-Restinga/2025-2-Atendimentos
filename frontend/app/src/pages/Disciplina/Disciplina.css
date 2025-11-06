@@ -1,4 +1,6 @@
-/* Disciplinas.css */
+/* ===========================
+   FORMULÁRIO DE DISCIPLINA
+=========================== */
 .disciplina-container {
   max-width: 500px;
   margin: 2rem auto;
@@ -15,13 +17,13 @@
 }
 
 .disciplina-form input,
-.disciplina-form select,
-.disciplina-form textarea {
+.disciplina-form select {
   width: 100%;
   padding: 0.5rem;
   margin-top: 0.25rem;
   border-radius: 5px;
   border: 1px solid #ccc;
+  box-sizing: border-box;
 }
 
 .disciplina-form button {
@@ -38,77 +40,148 @@
   background-color: #0056b3;
 }
 
-/* Tabela de disciplinas */
+.voltar-btn {
+  display: block;
+  text-align: center;
+  margin-top: 1rem;
+  color: #007bff;
+  text-decoration: none;
+}
+
+.voltar-btn:hover {
+  text-decoration: underline;
+}
+
+/* Mensagem de erro */
+.erro-campo {
+  color: red;
+  font-size: 0.9rem;
+  margin-top: 4px;
+}
+
+/* ===========================
+   TABELA DE DISCIPLINAS
+=========================== */
 .disciplinas-container {
-  max-width: 900px;
+  max-width: 1100px;
   margin: 2rem auto;
-  padding: 1rem;
+  padding: 1.5rem;
 }
 
 .disciplinas-title {
   text-align: center;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  font-weight: bold;
 }
 
 .disciplinas-table {
-  width: 100%;
+  width: 80%;
   border-collapse: collapse;
-  margin-top: 1rem;
+  margin: 30px auto;
+  font-size: 16px;
   text-align: left;
+  background-color: #ffffff;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.disciplinas-table thead {
+  background-color: var(--laranja-lista);
+  color: black;
 }
 
 .disciplinas-table th,
 .disciplinas-table td {
-  border: 1px solid #ccc;
-  padding: 0.75rem;
+  padding: 16px 18px;
+  border-bottom: 1px solid #ddd;
 }
 
-.disciplinas-table th {
-  background-color: #f0f0f0;
+.disciplinas-table tbody tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.disciplinas-table tbody tr:hover {
+  background-color: #d1ecf1;
+  transition: background 0.3s ease-in-out;
 }
 
 .disciplinas-table input,
 .disciplinas-table select {
   width: 100%;
-  padding: 0.3rem;
+  padding: 0.45rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
   box-sizing: border-box;
 }
 
-/* Botões de ação */
-.btn-group {
+.disciplinas-table td.btn-group {
   display: flex;
-  gap: 0.5rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  border-bottom: none;
 }
 
-.disciplinas-container .btn-editar {
-  background-color: #ffc107;
-  color: #212529;
-  border: none;
-  padding: 0.3rem 0.6rem;
-  cursor: pointer;
-  border-radius: 4px;
+.disciplinas-table td.btn-group button {
+  margin: 0;
 }
 
-.disciplinas-container .btn-editar:hover {
-  background-color: #e0a800;
-}
-
-.disciplinas-container .btn-deletar {
-  background-color: #dc3545;
+.btn-salvar,
+.btn-cancelar,
+.btn-editar,
+.btn-deletar {
   color: white;
   border: none;
-  padding: 0.3rem 0.6rem;
+  padding: 0.4rem 0.8rem;
   cursor: pointer;
   border-radius: 4px;
+  transition: transform 0.2s ease, opacity 0.2s ease;
 }
 
-/* Status visual */
-.status-ativo {
-  color: #28a745;
-  font-weight: bold;
+.btn-salvar { background-color: #28a745 !important; }
+.btn-cancelar { background-color: #6c757d !important; }
+.btn-editar { background-color: #28a745 !important; }
+.btn-deletar { background-color: #dc3545 !important; }
+
+.btn-salvar:hover,
+.btn-cancelar:hover,
+.btn-editar:hover,
+.btn-deletar:hover {
+  opacity: 0.9;
+  transform: scale(1.03);
 }
 
-.status-inativo {
-  color: #dc3545;
-  font-weight: bold;
+/* Paginação */
+.paginacao {
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+.paginacao button {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 0.5rem 0.9rem;
+  margin: 0 0.4rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.paginacao button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .disciplinas-table {
+    font-size: 14px;
+    width: 100%;
+  }
+
+  .disciplinas-table th,
+  .disciplinas-table td {
+    padding: 12px;
+  }
 }

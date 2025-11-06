@@ -1,0 +1,30 @@
+/* Hover reveal for role descriptions */
+.role-card {
+  position: relative;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.06s ease;
+}
+
+.role-card:hover,
+.role-card:focus-visible {
+  border-color: rgba(25, 135, 84, 0.65); /* bootstrap success with alpha */
+  box-shadow: 0 0.25rem 0.75rem rgba(25, 135, 84, 0.15);
+}
+
+.role-card .role-desc {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.25s ease, opacity 0.2s ease;
+}
+
+.role-card:hover .role-desc,
+.role-card:focus-visible .role-desc {
+  max-height: 120px; /* enough for 2 lines */
+  opacity: 1;
+}
+
+/* Improve focus ring visibility on keyboard nav */
+.role-card:focus-visible {
+  outline: 3px solid rgba(25, 135, 84, 0.35);
+  outline-offset: 2px;
+}

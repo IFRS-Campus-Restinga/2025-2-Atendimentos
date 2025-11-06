@@ -1,117 +1,168 @@
-.professor-container {
-  max-width: 500px;
-  margin: 2rem auto;
-  padding: 1.5rem;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  background-color: #f9f9f9;
+/* ====== CONTAINER PRINCIPAL ====== */
+.tabela-container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
-.professor-form label {
-  display: block;
-  margin-top: 1rem;
+/* ====== TÍTULO ====== */
+.tabela-title {
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #222;
+  margin-bottom: 25px;
+}
+
+/* ====== FORMULÁRIO ====== */
+.tabela-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.tabela-form label {
+  font-weight: 600;
+  color: #333;
+}
+
+.tabela-form input,
+.tabela-form select {
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  transition: border-color 0.3s ease;
+}
+
+.tabela-form input:focus,
+.tabela-form select:focus {
+  border-color: #000;
+  outline: none;
+}
+
+.tabela-form button {
+  align-self: center;
+  margin-top: 15px;
+  padding: 10px 20px;
+  background-color: #000;
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.tabela-form button:hover {
+  background-color: #333;
+}
+
+/* ====== BOTÃO VOLTAR ====== */
+.voltar-btn {
+  display: inline-block;
+  margin-top: 20px;
+  text-decoration: none;
+  color: #000;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.voltar-btn:hover {
+  color: #555;
+}
+
+/* ====== TABELA ====== */
+.tabela-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 25px;
+  text-align: center;
+}
+
+.tabela-table th,
+.tabela-table td {
+  border: 1px solid #ccc;
+  padding: 12px;
+  font-size: 1rem;
+}
+
+.tabela-table th {
+  background-color: #f2f2f2;
   font-weight: bold;
 }
 
-.professor-form input,
-.professor-form select,
-.professor-form textarea {
-  width: 100%;
-  padding: 0.5rem;
-  margin-top: 0.25rem;
-  border-radius: 5px;
-  border: 1px solid #ccc;
+/* ====== BOTÕES ====== */
+.btn-group {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
 }
 
-.professor-form button {
-  margin-top: 1.5rem;
-  padding: 0.75rem 1.5rem;
+.btn-editar,
+.btn-salvar,
+.btn-cancelar,
+.btn-deletar {
+  padding: 8px 16px;
   border: none;
-  border-radius: 5px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-editar {
   background-color: #007bff;
   color: white;
-  cursor: pointer;
 }
 
-.professor-form button:hover {
+.btn-editar:hover {
   background-color: #0056b3;
 }
 
-.professores-container {
-  max-width: 900px;
-  margin: 2rem auto;
-  padding: 1rem;
-}
-
-.professores-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 1rem;
-  text-align: left;
-}
-
-.professores-table th, .professores-table td {
-  border: 1px solid #ccc;
-  padding: 0.5rem;
-}
-
-.professores-table th {
-  background-color: #f0f0f0;
-}
-
-.professores-table input {
-  width: 100%;
-  padding: 0.3rem;
-  box-sizing: border-box;
-}
-
-.btn-group {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.professores-container .btn-salvar {
-  background-color: #28a745 !important;
+.btn-salvar {
+  background-color: #28a745;
   color: white;
-  border: none;
-  padding: 0.3rem 0.6rem;
-  cursor: pointer;
-  margin-right: 0.3rem;
 }
 
-.professores-container .btn-cancelar {
-  background-color: #6c757d !important;
+.btn-salvar:hover {
+  background-color: #1e7e34;
+}
+
+.btn-cancelar {
+  background-color: #ffc107;
+  color: black;
+}
+
+.btn-cancelar:hover {
+  background-color: #e0a800;
+}
+
+.btn-deletar {
+  background-color: #dc3545;
   color: white;
-  border: none;
-  padding: 0.3rem 0.6rem;
-  cursor: pointer;
-  margin-right: 0.3rem;
 }
 
-.professores-container .btn-editar {
-  border: none;
-  padding: 0.3rem 0.6rem;
-  cursor: pointer;
-  margin-right: 0.3rem;
+.btn-deletar:hover {
+  background-color: #a71d2a;
 }
 
-.professores-container .btn-deletar {
-  background-color: #dc3545 !important;
-  color: white;
-  border: none;
-  padding: 0.3rem 0.6rem;
-  cursor: pointer;
-}
+/* ====== RESPONSIVIDADE ====== */
+@media (max-width: 768px) {
+  .tabela-container {
+    padding: 15px;
+  }
 
-.professores-title {
-  text-align: center;
-  margin-bottom: 1rem;
-}
+  .tabela-table th,
+  .tabela-table td {
+    font-size: 0.9rem;
+    padding: 8px;
+  }
 
-.voltar-btn {
-  display: inline-block;
-  margin-top: 1rem;
-  color: #007bff;
-  text-decoration: none;
-  font-weight: bold;
+  .btn-group {
+    flex-direction: column;
+  }
 }
