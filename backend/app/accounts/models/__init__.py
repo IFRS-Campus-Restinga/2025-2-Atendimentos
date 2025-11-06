@@ -10,4 +10,7 @@ from .registro_atendimento import *
 from .evento import *
 from .evento_ordinario import *
 from .evento_extraordinario import *
+<<<<<<< HEAD
 from .historico_atendimento import *
+=======
+>>>>>>> e39fcd202771616e32a44f21da34288b24b418b0

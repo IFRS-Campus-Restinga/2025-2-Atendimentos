@@ -14,4 +14,7 @@ admin.site.register(Evento)
 admin.site.register(EventoOrdinario)
 admin.site.register(EventoExtraordinario)
 admin.site.register(RegistroAtendimento)
+<<<<<<< HEAD
 admin.site.register(HistoricoAtendimento)
+=======
+>>>>>>> e39fcd202771616e32a44f21da34288b24b418b0

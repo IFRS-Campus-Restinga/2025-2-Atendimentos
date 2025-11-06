@@ -16,7 +16,10 @@ from services.views.auth_views import GoogleLoginView
 from services.views.registro_atendimento_views_set import RegistroAtendimentoViewSet
 from services.views.complemento_views import ComplementoCadastroView
 from services.views.profile_views import ProfileStatusView, ProfileMeView
+<<<<<<< HEAD
 from .views.historico_atendimento_views import HistoricoAtendimentoViewSet
+=======
+>>>>>>> e39fcd202771616e32a44f21da34288b24b418b0
 
 app_name = 'api'
 router = DefaultRouter()
@@ -32,7 +35,10 @@ router.register(r'evento-ordinario', EventoOrdinarioViewSet, basename='evento-or
 router.register(r'evento-extraordinario', EventoExtraordinarioViewSet, basename='evento-extraordinario')
 router.register(r'usuario', UsuarioViewSet, basename='usuario')
 router.register(r'registro-atendimento', RegistroAtendimentoViewSet, basename='registro-atendimento')
+<<<<<<< HEAD
 router.register(r'historico-atendimento', HistoricoAtendimentoViewSet, basename='historico-atendimento')
+=======
+>>>>>>> e39fcd202771616e32a44f21da34288b24b418b0
 
 
 urlpatterns = [
@@ -44,9 +50,12 @@ urlpatterns = [
     path('api/eventos-ordinarios/status-choices/', EventoStatusSet.as_view(), name="evento-status-choices"),
 
 ]
+<<<<<<< HEAD
 
 
 
 
 
 
+=======
+>>>>>>> e39fcd202771616e32a44f21da34288b24b418b0

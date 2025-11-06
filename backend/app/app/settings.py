@@ -117,17 +117,25 @@ GOOGLE_CLIENT_ID ="854138693145-hlgec9e2pnoc4cj2tkcknl5rp1bei7m2.apps.googleuser
 
 DATABASES = {
     'default': {
+<<<<<<< HEAD
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'atendimento_ifrs',
         'USER': 'root',
         'PASSWORD': '16122012',
         'HOST': 'localhost',
         'PORT': '3306',
+=======
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+>>>>>>> e39fcd202771616e32a44f21da34288b24b418b0
     }
 }
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> e39fcd202771616e32a44f21da34288b24b418b0
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
