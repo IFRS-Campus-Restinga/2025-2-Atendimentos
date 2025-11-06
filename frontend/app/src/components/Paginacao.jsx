@@ -1,20 +1,30 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import './Paginacao.css';
 
 function Paginacao({ itens, itensPorPagina = 10, children }) {
   const [paginaAtual, setPaginaAtual] = useState(1);
-  const [itensPaginaAtual, setItensPaginaAtual] = useState([]);
 
-  const totalPaginas = Math.ceil(itens.length / itensPorPagina);
+  // Calcula o total de páginas apenas quando itens ou itensPorPagina mudarem
+  const totalPaginas = useMemo(() => Math.ceil(itens.length / itensPorPagina), [itens, itensPorPagina]);
 
+  // Reseta a página atual se a lista de itens mudar e a página atual ficar fora do intervalo
   useEffect(() => {
+    if (paginaAtual > totalPaginas) setPaginaAtual(1);
+  }, [itens, totalPaginas, paginaAtual]);
+
+  // Calcula os itens da página atual
+  const itensPaginaAtual = useMemo(() => {
     const start = (paginaAtual - 1) * itensPorPagina;
     const end = start + itensPorPagina;
-    setItensPaginaAtual(itens.slice(start, end));
+    return itens.slice(start, end);
   }, [itens, paginaAtual, itensPorPagina]);
 
-  const proximaPagina = () => { if (paginaAtual < totalPaginas) setPaginaAtual(paginaAtual + 1); };
-  const paginaAnterior = () => { if (paginaAtual > 1) setPaginaAtual(paginaAtual - 1); };
+  const proximaPagina = () => { 
+    if (paginaAtual < totalPaginas) setPaginaAtual(prev => prev + 1); 
+  };
+  const paginaAnterior = () => { 
+    if (paginaAtual > 1) setPaginaAtual(prev => prev - 1); 
+  };
 
   return (
     <div>

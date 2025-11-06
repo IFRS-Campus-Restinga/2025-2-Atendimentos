@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import './Coordenador.css';
 import { useNavigate } from "react-router-dom";
+import Paginacao from "../../components/Paginacao.jsx"; // import do componente
 
 function ListarCoordenador() {
   const DB = axios.create({ baseURL: 'http://127.0.0.1:8000/services/coord' });
@@ -65,57 +66,61 @@ function ListarCoordenador() {
           Cadastrar Novo Coordenador
         </button>
       </div>
-      <table className="coordenadores-table">
-        <thead>
-          <tr>
-            <th>Nome</th>
-            <th>Email</th>
-            <th>Registro</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody>
-          {coordenadores.map(coord => (
-            <tr key={coord.id}>
-              <td>
-                {editId === coord.id ?
-                  <input name="nome" value={editData.nome} onChange={handleEditChange} /> :
-                  coord.nome
-                }
-              </td>
-              <td>{coord.email}</td>
-              <td>
-                {editId === coord.id ?
-                  <input name="registro" value={editData.registro} onChange={handleEditChange} /> :
-                  coord.registro
-                }
-              </td>
-              <td className="btn-group">
-                {editId === coord.id ? (
-                  <>
-                    <button className="btn-salvar" onClick={() => salvaEdicao(coord.id)}>Salvar</button>
-                    <button className="btn-cancelar" onClick={() => setEditId(null)}>Cancelar</button>
-                  </>
-                ) : (
-                  <>
-                    <button className="btn-editar" onClick={() => {
-                      setEditId(coord.id);
-                      setEditData({
-                        nome: coord.nome,
-                        registro: coord.registro,
-                        email: coord.email
-                      });
-                    }}>Editar</button>
-                   
-                  </>
-                )}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+
+      <Paginacao itens={coordenadores} itensPorPagina={10}>
+        {itensPaginaAtual => (
+          <table className="coordenadores-table">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>Registro</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              {itensPaginaAtual.map(coord => (
+                <tr key={coord.id}>
+                  <td>
+                    {editId === coord.id ?
+                      <input name="nome" value={editData.nome} onChange={handleEditChange} /> :
+                      coord.nome
+                    }
+                  </td>
+                  <td>{coord.email}</td>
+                  <td>
+                    {editId === coord.id ?
+                      <input name="registro" value={editData.registro} onChange={handleEditChange} /> :
+                      coord.registro
+                    }
+                  </td>
+                  <td className="btn-group">
+                    {editId === coord.id ? (
+                      <>
+                        <button className="btn-salvar" onClick={() => salvaEdicao(coord.id)}>Salvar</button>
+                        <button className="btn-cancelar" onClick={() => setEditId(null)}>Cancelar</button>
+                      </>
+                    ) : (
+                      <>
+                        <button className="btn-editar" onClick={() => {
+                          setEditId(coord.id);
+                          setEditData({
+                            nome: coord.nome,
+                            registro: coord.registro,
+                            email: coord.email
+                          });
+                        }}>Editar</button>
+                      </>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </Paginacao>
     </div>
   );
 }
-// <button className="btn-deletar" onClick={() => deletaCoordenador(coord.id)}>Deletar</button>
+
 export default ListarCoordenador;

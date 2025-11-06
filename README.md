@@ -93,6 +93,9 @@ cd app
 ### Instale as dependências
 ```
 npm install
+npm install axios
+npm install jwt-decode
+npm install @react-oauth/google
 ```
 
 ### Inicie o servidor de desenvolvimento

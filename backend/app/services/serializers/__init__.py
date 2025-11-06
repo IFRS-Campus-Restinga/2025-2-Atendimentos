@@ -11,3 +11,4 @@ from .servidor_serializer import *
 from .curso_coordenador_resumido_serializer import *
 from .evento_extraordinario_serializer import *
 from .registro_atendimento_serializer import *
+from .complemento_cadastro_serializer import *

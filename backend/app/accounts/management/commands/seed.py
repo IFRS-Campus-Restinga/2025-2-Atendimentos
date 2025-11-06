@@ -2,6 +2,7 @@ from django.core.management.base import BaseCommand
 from accounts.models import Coordenador, Curso, Turma, Disciplina
 from accounts.enumerations.tipo_curso import TipoCurso
 from accounts.enumerations.turnos import Turno
+from django.contrib.auth.models import User
 
 class Command(BaseCommand):
     help = 'Popula o banco de dados com dados fictícios'
@@ -43,7 +44,7 @@ class Command(BaseCommand):
             coordenador, _ = Coordenador.objects.get_or_create(
                 nome=f"Coordenador {nome}",
                 email=coordenador_email,
-                registro=f"REG{codigo}",
+                #registro=f"REG{codigo}",
                 tipoPerfil="Coordenador"
             )
             self.stdout.write(self.style.SUCCESS(f'Coordenador: {coordenador.nome} - {coordenador.email}'))
@@ -95,3 +96,16 @@ class Command(BaseCommand):
                 self.stdout.write(self.style.SUCCESS(f'Disciplina: {disciplina.nome}'))
 
         self.stdout.write(self.style.SUCCESS('Banco populado com sucesso!'))
+
+        print("\n🔄 Verificando existência do superusuário 'admin'...")
+        if not User.objects.filter(username="admin").exists():
+            User.objects.create_superuser(
+                username="admin",
+                email="admin@example.com",
+                password="admin"
+            )
+            print("✅ Superusuário 'admin' criado com sucesso! (login: admin / senha: admin)")
+        else:
+            print("⚠️ Superusuário 'admin' já existe.")
+
+        print("\n✅ Seed executado com sucesso!")
