@@ -18,6 +18,7 @@ from services.views.complemento_views import ComplementoCadastroView
 from services.views.aprovacao_views import AprovarUsuarioView
 from services.views.listar_pendentes_views import UsuarioPendenteViewSet
 from services.views.profile_views import ProfileStatusView, ProfileMeView
+from services.views.usuario_extra_views import UsuarioExtraMeView
 
 
 app_name = 'api'
@@ -42,6 +43,7 @@ urlpatterns = [
     path('api/complemento-cadastro/', ComplementoCadastroView.as_view(), name='complemento-cadastro'),
     path('api/profile/status', ProfileStatusView.as_view(), name='profile-status'),
     path('api/profile/me', ProfileMeView.as_view(), name='profile-me'),
+    path('api/profile-extra/me', UsuarioExtraMeView.as_view(), name='profile-extra-me'),
     path('api/eventos-ordinarios/status-choices/', EventoStatusSet.as_view(), name="evento-status-choices"),
     path('api/usuarios/aprovar/<int:user_id>/', AprovarUsuarioView.as_view(), name='aprovar-usuario'),
 ]
