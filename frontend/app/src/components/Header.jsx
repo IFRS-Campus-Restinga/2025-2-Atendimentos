@@ -1,6 +1,7 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import logo from "../assets/ifrs-logo.svg";
+import logo from "../assets/ifrs_logo_branca.png";
 import { useEffect, useState } from "react";
+import "./Header.css";
 
 function Header({ onLogout }) {
   const navigate = useNavigate();
@@ -48,21 +49,41 @@ function Header({ onLogout }) {
   return (
     <header className="navbar navbar-dark bg-success px-3 shadow">
       <div className="container-fluid d-flex justify-content-between align-items-center">
-        <div className="d-flex align-items-center gap-2">
+        <div className="d-flex align-items-center gap-4">
           <button
             className="btn btn-outline-light btn-sm"
             onClick={goBack}
             aria-label="Voltar para página anterior"
             title="Voltar"
           >
-            ←
+            Voltar
           </button>
-          <img src={logo} alt="IFRS Logo" style={{ height: "48px" }} />
-          {role === "Administrador" && (
-            <Link to="/dashboard" className="btn btn-light btn-sm">
-              Home
+          <div className="header__title">
+            <Link
+              to={
+                role === "Administrador"
+                  ? "/dashboard"
+                  : role === "Aluno"
+                  ? "/dashboard/aluno"
+                  : role === "Professor"
+                  ? "/dashboard/professor"
+                  : role === "Coordenador"
+                  ? "/dashboard/coordenador"
+                  : "/"
+              }
+              className="title-link d-flex align-items-center text-decoration-none"
+              aria-label="Ir para a página inicial"
+              title="Início"
+            >
+              <img src={logo} alt="IFRS" className="title-img me-2" />
+              <h1 className="title-campus m-0 text-white">
+                <small className="d-block fw-normal">
+                  Instituto Federal de Educação, Ciência e Tecnologia do Rio Grande do Sul
+                </small>
+                <span className="fw-semibold">Campus Restinga</span>
+              </h1>
             </Link>
-          )}
+          </div>
         </div>
 
         {usuario && (

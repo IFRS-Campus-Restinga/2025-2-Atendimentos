@@ -2,13 +2,16 @@
 export const API_CONFIG = {
   baseURL: import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000',
   endpoints: {
-    googleLogin: '/api/google-login/',
+    googleLogin: '/services/api/google-login/',
     alunos: '/services/alunos/',
     coordenadores: '/services/coord/',
     cursos: '/services/cursos/',
     disciplinas: '/services/disciplinas/',
     professores: '/services/professores/',
     turmas: '/services/turmas/',
+    complementoCadastro: '/services/api/complemento-cadastro/',
+    profileStatus: '/services/api/profile/status',
+    profileMe: '/services/api/profile/me',
   }
 };
 
@@ -55,3 +58,53 @@ export const dateUtils = {
 };
 
 export default dateUtils;
+
+export const getAuthHeaders = () => {
+  const token = localStorage.getItem('authToken');
+  return token ? { Authorization: `Bearer ${token}` } : {};
+};
+
+export async function checkProfileStatus(role) {
+  const url = `${API_CONFIG.baseURL}${API_CONFIG.endpoints.profileStatus}?role=${encodeURIComponent(role)}`;
+  const res = await fetch(url, {
+    method: 'GET',
+    headers: {
+      'Accept': 'application/json',
+      ...getAuthHeaders(),
+    },
+    credentials: 'include',
+  });
+  if (!res.ok) throw new Error('Falha ao verificar status do perfil');
+  return res.json();
+}
+
+export async function postComplementoCadastro(payload) {
+  const url = `${API_CONFIG.baseURL}${API_CONFIG.endpoints.complementoCadastro}`;
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getAuthHeaders(),
+    },
+    credentials: 'include',
+    body: JSON.stringify(payload),
+  });
+  const contentType = res.headers.get('content-type');
+  const data = contentType && contentType.includes('application/json') ? await res.json() : null;
+  if (!res.ok) throw new Error(data?.detail || 'Falha ao completar cadastro');
+  return data;
+}
+
+export async function getMyProfile(role) {
+  const url = `${API_CONFIG.baseURL}${API_CONFIG.endpoints.profileMe}?role=${encodeURIComponent(role)}`;
+  const res = await fetch(url, {
+    method: 'GET',
+    headers: {
+      'Accept': 'application/json',
+      ...getAuthHeaders(),
+    },
+    credentials: 'include',
+  });
+  if (!res.ok) throw new Error('Falha ao obter dados do perfil');
+  return res.json();
+}

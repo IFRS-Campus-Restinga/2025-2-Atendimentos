@@ -1,70 +1,68 @@
-.aluno-container {
-  max-width: 500px;
-  margin: 2rem auto;
-  padding: 1.5rem;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  background-color: #f9f9f9;
-}
-
-.aluno-form label {
-  display: block;
-  margin-top: 1rem;
-  font-weight: bold;
-}
-
-.aluno-form input,
-.aluno-form select,
-.aluno-form textarea {
-  width: 100%;
-  padding: 0.5rem;
-  margin-top: 0.25rem;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-}
-
-.aluno-form button {
-  margin-top: 1.5rem;
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 5px;
-  background-color: #007bff;
-  color: white;
-  cursor: pointer;
-}
-
-.aluno-form button:hover {
-  background-color: #0056b3;
-}
-
 .alunos-container {
   max-width: 900px;
   margin: 2rem auto;
   padding: 1rem;
 }
 
+/* ---------- Estilos para a tabela ---------- */
 .alunos-table {
-  width: 100%;
+  width: 50%;
   border-collapse: collapse;
-  margin-top: 1rem;
+  margin: 20px auto;
+  font-size: 16px;
   text-align: left;
+  background-color: #ffffff;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
 }
 
-.alunos-table th, .alunos-table td {
-  border: 1px solid #ccc;
-  padding: 0.5rem;
+/* Cabeçalho */
+.alunos-table thead {
+  background-color: var(--laranja-lista);
+  color: black;
 }
 
-.alunos-table th {
-  background-color: #f0f0f0;
+.alunos-table th,
+.alunos-table td {
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
 }
 
+/* Linhas alternadas */
+.alunos-table tbody tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+/* Efeito hover */
+.alunos-table tbody tr:hover {
+  background-color: #d1ecf1;
+  transition: background 0.3s ease-in-out;
+}
+
+/* Inputs dentro da tabela */
 .alunos-table input {
   width: 100%;
   padding: 0.3rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
   box-sizing: border-box;
 }
 
+/* Responsividade */
+@media (max-width: 768px) {
+  .alunos-table {
+    font-size: 14px;
+    width: 100%;
+  }
+
+  .alunos-table th,
+  .alunos-table td {
+    padding: 10px;
+  }
+}
+
+/* ---------- Botões ---------- */
 .btn-group {
   display: flex;
   gap: 0.5rem;
@@ -76,7 +74,7 @@
   border: none;
   padding: 0.3rem 0.6rem;
   cursor: pointer;
-  margin-right: 0.3rem;
+  border-radius: 4px;
 }
 
 .alunos-container .btn-cancelar {
@@ -85,38 +83,36 @@
   border: none;
   padding: 0.3rem 0.6rem;
   cursor: pointer;
-  margin-right: 0.3rem;
+  border-radius: 4px;
 }
 
 .alunos-container .btn-editar {
-  border: none;
-  padding: 0.3rem 0.6rem;
-  cursor: pointer;
-  margin-right: 0.3rem;
-}
-
-.alunos-container .btn-deletar {
-  background-color: #dc3545 !important;
+  background-color: #007bff !important;
   color: white;
   border: none;
   padding: 0.3rem 0.6rem;
   cursor: pointer;
+  border-radius: 4px;
 }
 
+.alunos-container .btn-editar:hover,
+.alunos-container .btn-salvar:hover,
+.alunos-container .btn-cancelar:hover {
+  opacity: 0.9;
+}
+
+/* ---------- Outros ---------- */
 .alunos-title {
   text-align: center;
   margin-bottom: 1rem;
 }
 
-.voltar-btn {
-  display: inline-block;
-  margin-top: 1rem;
-  color: #007bff;
-  text-decoration: none;
+.status-ativo {
+  color: green;
   font-weight: bold;
 }
 
-
-
-
-
+.status-inativo {
+  color: red;
+  font-weight: bold;
+}

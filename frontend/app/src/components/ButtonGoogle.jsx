@@ -37,7 +37,6 @@ function ButtonGoogle({ onLoginSuccess }) {
         onSuccess={handleLoginSuccess}
         onError={handleLoginError}
         useOneTap={false}
-        auto_select={false}
       />
     </div>
   );
