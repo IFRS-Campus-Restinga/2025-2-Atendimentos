@@ -1,0 +1,118 @@
+.alunos-container {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 1rem;
+}
+
+/* ---------- Estilos para a tabela ---------- */
+.alunos-table {
+  width: 50%;
+  border-collapse: collapse;
+  margin: 20px auto;
+  font-size: 16px;
+  text-align: left;
+  background-color: #ffffff;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Cabeçalho */
+.alunos-table thead {
+  background-color: var(--laranja-lista);
+  color: black;
+}
+
+.alunos-table th,
+.alunos-table td {
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+}
+
+/* Linhas alternadas */
+.alunos-table tbody tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+/* Efeito hover */
+.alunos-table tbody tr:hover {
+  background-color: #d1ecf1;
+  transition: background 0.3s ease-in-out;
+}
+
+/* Inputs dentro da tabela */
+.alunos-table input {
+  width: 100%;
+  padding: 0.3rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .alunos-table {
+    font-size: 14px;
+    width: 100%;
+  }
+
+  .alunos-table th,
+  .alunos-table td {
+    padding: 10px;
+  }
+}
+
+/* ---------- Botões ---------- */
+.btn-group {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.alunos-container .btn-salvar {
+  background-color: #28a745 !important;
+  color: white;
+  border: none;
+  padding: 0.3rem 0.6rem;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.alunos-container .btn-cancelar {
+  background-color: #6c757d !important;
+  color: white;
+  border: none;
+  padding: 0.3rem 0.6rem;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.alunos-container .btn-editar {
+  background-color: #007bff !important;
+  color: white;
+  border: none;
+  padding: 0.3rem 0.6rem;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.alunos-container .btn-editar:hover,
+.alunos-container .btn-salvar:hover,
+.alunos-container .btn-cancelar:hover {
+  opacity: 0.9;
+}
+
+/* ---------- Outros ---------- */
+.alunos-title {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.status-ativo {
+  color: green;
+  font-weight: bold;
+}
+
+.status-inativo {
+  color: red;
+  font-weight: bold;
+}

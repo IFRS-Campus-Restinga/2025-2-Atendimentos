@@ -1,0 +1,187 @@
+/* ===========================
+   FORMULÁRIO DE TURMA
+=========================== */
+.turma-container {
+  max-width: 500px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+}
+
+.turma-form label {
+  display: block;
+  margin-top: 1rem;
+  font-weight: bold;
+}
+
+.turma-form input,
+.turma-form select {
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 0.25rem;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+.turma-form button {
+  margin-top: 1.5rem;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+}
+
+.turma-form button:hover {
+  background-color: #0056b3;
+}
+
+.voltar-btn {
+  display: block;
+  text-align: center;
+  margin-top: 1rem;
+  color: #007bff;
+  text-decoration: none;
+}
+
+.voltar-btn:hover {
+  text-decoration: underline;
+}
+
+/* Mensagem de erro */
+.erro-campo {
+  color: red;
+  font-size: 0.9rem;
+  margin-top: 4px;
+}
+
+/* ===========================
+   TABELA DE TURMAS
+=========================== */
+.turmas-container {
+  max-width: 1100px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+}
+
+.turmas-title {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-weight: bold;
+}
+
+.turmas-table {
+  width: 80%;
+  border-collapse: collapse;
+  margin: 30px auto;
+  font-size: 16px;
+  text-align: left;
+  background-color: #ffffff;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.turmas-table thead {
+  background-color: var(--laranja-lista);
+  color: black;
+}
+
+.turmas-table th,
+.turmas-table td {
+  padding: 16px 18px;
+  border-bottom: 1px solid #ddd;
+}
+
+.turmas-table tbody tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.turmas-table tbody tr:hover {
+  background-color: #d1ecf1;
+  transition: background 0.3s ease-in-out;
+}
+
+.turmas-table input,
+.turmas-table select {
+  width: 100%;
+  padding: 0.45rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+.turmas-table td.btn-group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  border-bottom: none;
+}
+
+.turmas-table td.btn-group button {
+  margin: 0;
+}
+
+.btn-salvar,
+.btn-cancelar,
+.btn-editar,
+.btn-deletar {
+  color: white;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.btn-salvar { background-color: #28a745 !important; }
+.btn-cancelar { background-color: #6c757d !important; }
+.btn-editar { background-color: #28a745 !important; }
+.btn-deletar { background-color: #dc3545 !important; }
+
+.btn-salvar:hover,
+.btn-cancelar:hover,
+.btn-editar:hover,
+.btn-deletar:hover {
+  opacity: 0.9;
+  transform: scale(1.03);
+}
+
+/* Paginação */
+.paginacao {
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+.paginacao button {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 0.5rem 0.9rem;
+  margin: 0 0.4rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.paginacao button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .turmas-table {
+    font-size: 14px;
+    width: 100%;
+  }
+
+  .turmas-table th,
+  .turmas-table td {
+    padding: 12px;
+  }
+}

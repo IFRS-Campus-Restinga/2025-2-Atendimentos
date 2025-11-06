@@ -1,0 +1,137 @@
+/* Container principal */
+.registro-container {
+  max-width: 500px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+}
+
+/* Formulário */
+.registro-form label {
+  display: block;
+  margin-top: 1rem;
+  font-weight: bold;
+}
+
+.registro-form input,
+.registro-form select,
+.registro-form textarea {
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 0.25rem;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+/* Botões do formulário */
+.registro-form button {
+  margin-top: 1.5rem;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+}
+
+.registro-form button:hover {
+  background-color: #0056b3;
+}
+
+/* Container da tabela */
+.registros-container {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 1rem;
+}
+
+/* Tabela de registros */
+.registros-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  table-layout: auto; /* permite largura dinâmica das colunas */
+}
+
+.registros-table th,
+.registros-table td {
+  border: 1px solid #ccc;
+  padding: 0.5rem;
+  vertical-align: middle; /* centraliza conteúdo verticalmente */
+  word-wrap: break-word;   /* quebra palavras longas */
+  white-space: normal;     /* permite quebra de linha */
+  text-align: left;
+  min-height: 40px;        /* evita desalinhamento de células */
+}
+
+.registros-table th {
+  background-color: #f0f0f0;
+  white-space: nowrap; /* cabeçalho mantém o texto em linha */
+}
+
+/* Inputs e selects dentro da tabela */
+.registros-table input,
+.registros-table select {
+  width: 100%;
+  padding: 0.3rem;
+  box-sizing: border-box;
+}
+
+/* Grupo de botões dentro da tabela */
+.registros-table td .btn-group,
+.btn-group {
+  display: flex;
+  gap: 0.3rem;
+  justify-content: flex-start; /* alinhamento à esquerda */
+  align-items: center;         /* centraliza verticalmente */
+  white-space: nowrap;          /* impede quebra de botão */
+  flex-wrap: nowrap;            /* força linha única */
+}
+
+/* Botões específicos */
+.btn-salvar {
+  background-color: #28a745 !important;
+  color: white;
+  border: none;
+  padding: 0.3rem 0.6rem;
+  cursor: pointer;
+}
+
+.btn-cancelar {
+  background-color: #6c757d !important;
+  color: white;
+  border: none;
+  padding: 0.3rem 0.6rem;
+  cursor: pointer;
+}
+
+.btn-editar {
+  background-color: #ffc107;
+  border: none;
+  padding: 0.3rem 0.6rem;
+  cursor: pointer;
+}
+
+.btn-deletar {
+  background-color: #dc3545 !important;
+  color: white;
+  border: none;
+  padding: 0.3rem 0.6rem;
+  cursor: pointer;
+}
+
+/* Título da tabela */
+.registros-title {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+/* Mensagem de erro */
+.erro-campo {
+  color: red;
+  font-size: 0.9rem;
+  margin-top: 4px;
+}
