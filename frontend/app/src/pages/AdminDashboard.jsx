@@ -6,7 +6,7 @@ const cards = [
   { title: 'Turmas', listPath: '/turma', createPath: '/turma/cadastrar', description: 'Gerencie as turmas' },
   { title: 'Coordenadores', listPath: '/coord', createPath: '/coord/cadastrar', description: 'Gerencie os coordenadores' },
   { title: 'Alunos', listPath: '/alunos', createPath: '/alunos/cadastrar', description: 'Gerencie os alunos' },
-  { title: 'Servidores', listPath: '/servidores', createPath: '/servidores/cadastrar', description: 'Gerencie os servidores' },
+  { title: 'Professores', listPath: '/professores', createPath: '/professores/cadastrar', description: 'Gerencie os professores' },
   { title: 'Disciplinas', listPath: '/disciplina', createPath: '/disciplina/cadastrar', description: 'Gerencie as disciplinas' },
   { title: 'Registros', listPath: '/registros', createPath: '/registros/cadastrar', description: 'Gerencie os registros' },
   { title: 'Agenda', listPath: '/agenda', description: 'Consulte a agenda' },

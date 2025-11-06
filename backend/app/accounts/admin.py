@@ -3,7 +3,7 @@ from accounts.models import *
 
 
 # Register your models here.
-admin.site.register(Servidor)
+admin.site.register(Professor)
 admin.site.register(Disciplina)
 admin.site.register(Turma)
 admin.site.register(Curso)
