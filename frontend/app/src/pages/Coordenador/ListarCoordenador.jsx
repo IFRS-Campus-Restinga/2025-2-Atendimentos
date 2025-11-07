@@ -41,13 +41,12 @@ function ListarCoordenador() {
   async function salvaEdicao(id) {
     try {
       await DB.patch(`/${id}/`, {
-        nome: editData.nome,
         registro: editData.registro,
         email: editData.email,
         tipoPerfil: "COORD"
       });
       setEditId(null);
-      setEditData({ nome: "", email: "", registro: "" });
+      setEditData({ email: "", registro: "" });
       await recuperaCoordenadores();
     } catch (err) {
       console.error("Erro ao atualizar coordenador:", err);
@@ -73,7 +72,6 @@ function ListarCoordenador() {
           <table className="coordenadores-table list-table">
             <thead>
               <tr>
-                <th>Nome</th>
                 <th>Email</th>
                 <th>Registro</th>
                 <th>Ações</th>
@@ -82,12 +80,6 @@ function ListarCoordenador() {
             <tbody>
               {itensPaginaAtual.map(coord => (
                 <tr key={coord.id}>
-                  <td>
-                    {editId === coord.id ?
-                      <input name="nome" value={editData.nome} onChange={handleEditChange} /> :
-                      coord.nome
-                    }
-                  </td>
                   <td>{coord.email}</td>
                   <td>
                     {editId === coord.id ?
@@ -106,7 +98,6 @@ function ListarCoordenador() {
                         <button className="btn-editar" onClick={() => {
                           setEditId(coord.id);
                           setEditData({
-                            nome: coord.nome,
                             registro: coord.registro,
                             email: coord.email
                           });

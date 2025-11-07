@@ -2,6 +2,7 @@ from rest_framework import serializers
 from accounts.models.professor import Professor
 
 class ProfessorSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(source='user_id', read_only=True)
     nome = serializers.SerializerMethodField(read_only=True)
     email = serializers.SerializerMethodField(read_only=True)
 
