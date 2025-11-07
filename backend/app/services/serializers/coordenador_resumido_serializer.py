@@ -2,6 +2,18 @@ from rest_framework import serializers
 from accounts.models import Coordenador
 
 class CoordenadorResumidoSerializer(serializers.ModelSerializer):
+    nome = serializers.SerializerMethodField(read_only=True)
+
+    def get_nome(self, obj: Coordenador):
+        # Usa nome calculado do Usuario (pai), ou username/email
+        try:
+            return getattr(obj, 'nome', None) or ''
+        except Exception:
+            pass
+        user = getattr(obj, 'user', None)
+        if user:
+            return getattr(user, 'get_full_name', lambda: None)() or getattr(user, 'username', None) or getattr(user, 'email', None)
+        return getattr(obj, 'email', None)
     class Meta:
         model = Coordenador
-        fields = ['id', 'email']
+        fields = ['id', 'email', 'nome']

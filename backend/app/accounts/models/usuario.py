@@ -38,6 +38,16 @@ class Usuario(BaseModel):
             display_name = self.email
         return f"{display_name} ({self.email})"
 
+    @property
+    def nome(self):
+        """
+        Compatibilidade com código legado: fornece um 'nome' calculado.
+        Não existe no banco e não deve ser usado em filtros ORM.
+        """
+        if self.user:
+            return getattr(self.user, 'get_full_name', lambda: None)() or getattr(self.user, 'username', None) or self.email
+        return self.email
+
     def EditarPerfil(self):
         try:
             self.save()

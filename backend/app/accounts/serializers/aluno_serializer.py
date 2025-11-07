@@ -3,11 +3,14 @@ from accounts.models.aluno import Aluno
 
 
 class AlunoSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(source='user_id', read_only=True)
     nome = serializers.SerializerMethodField(read_only=True)
     email = serializers.SerializerMethodField(read_only=True)
 
     def get_nome(self, obj: Aluno):
-        # Usa o nome do perfil (Usuario) se existir; caso contrário, full_name do User, depois username
+        # Prioriza o nome_completo do Aluno (Perfil). Se não houver, tenta o nome calculado do Usuario/perfil, depois auth.User
+        if getattr(obj, 'nome_completo', None):
+            return obj.nome_completo
         try:
             perfil = getattr(obj.user, 'perfil', None)
             if perfil and getattr(perfil, 'nome', None):

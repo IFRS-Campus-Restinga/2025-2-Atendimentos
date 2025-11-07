@@ -26,21 +26,56 @@ GRUPO_MAP = {
 }
 
 def create_aluno_profile(user, validated_data):
-    Aluno.objects.create(
+    # nome_completo é obrigatório via Perfil; usa fallback do auth.User se não for enviado
+    nome_completo = validated_data.get('nome_completo') or \
+        getattr(user, 'get_full_name', lambda: None)() or \
+        getattr(user, 'username', None) or \
+        (getattr(user, 'email', None) or 'Usuário')
+
+    matricula = validated_data['matricula']
+    # Idempotência e unicidade de matrícula
+    existing_for_user = Aluno.objects.filter(user=user).first()
+    if existing_for_user:
+        # Se a matrícula desejada pertence a outro usuário, rejeita
+        if matricula and Aluno.objects.filter(matricula=matricula).exclude(user=user).exists():
+            raise ValidationError({"matricula": "Já existe um aluno com esta matrícula."})
+        # Atualiza os campos do aluno existente
+        existing_for_user.nome_completo = nome_completo
+        existing_for_user.cpf = validated_data.get('cpf', '')
+        existing_for_user.telefone = validated_data.get('telefone', '')
+        existing_for_user.matricula = matricula
+        existing_for_user.curso = validated_data['curso']
+        existing_for_user.turma = validated_data['turma']
+        existing_for_user.alunoPEI = validated_data.get('alunoPEI', False)
+        existing_for_user.save()
+        return existing_for_user
+
+    # Criar novo: impede duplicidade de matrícula
+    if matricula and Aluno.objects.filter(matricula=matricula).exists():
+        raise ValidationError({"matricula": "Já existe um aluno com esta matrícula."})
+
+    return Aluno.objects.create(
         user=user,
+        nome_completo=nome_completo,
         cpf=validated_data.get('cpf', ''),
         telefone=validated_data.get('telefone', ''),
-        matricula=validated_data['matricula'],
+        matricula=matricula,
         curso=validated_data['curso'], 
         turma=validated_data['turma'],
         alunoPEI=validated_data.get('alunoPEI', False),
     )
 
 def create_professor_profile(user, validated_data):
+    # nome_completo é obrigatório via Perfil
+    nome_completo = validated_data.get('nome_completo') or \
+        getattr(user, 'get_full_name', lambda: None)() or \
+        getattr(user, 'username', None) or \
+        (getattr(user, 'email', None) or 'Usuário')
     Professor.objects.create(
         user=user,
-        nome_completo=validated_data['nome_completo'],
+        nome_completo=nome_completo,
         registro=validated_data['registro'],
+        disciplina=validated_data.get('disciplina', ''),
         cpf=validated_data['cpf'],
         telefone=validated_data['telefone'],
     )

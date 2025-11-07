@@ -26,15 +26,19 @@ class GoogleLoginView(APIView):
             )
             token, _ = Token.objects.get_or_create(user=user)
 
-            Usuario.objects.get_or_create(
-                user=user,
+            # Garante/associa o perfil base Usuario sem usar o campo removido 'nome'.
+            usuario, created = Usuario.objects.get_or_create(
+                email=email,
                 defaults={
-                    "nome": name or (user.get_full_name() or user.username or email.split('@')[0]),
-                    "email": email,
-                    "tipoPerfil": TipoUsuario.ALUNO,  
+                    "user": user,
+                    "tipoPerfil": TipoUsuario.ALUNO,
                     "needs_complemento": True,
                 },
             )
+            # Se já existia um Usuario com este e-mail mas sem vínculo ao auth.User, vincula agora.
+            if not created and not usuario.user:
+                usuario.user = user
+                usuario.save(update_fields=["user", "updated_at"])
 
             return Response({
                 "token": token.key,

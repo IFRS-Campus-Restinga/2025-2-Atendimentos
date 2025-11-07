@@ -32,7 +32,8 @@ class ComplementoCadastroSerializer(serializers.Serializer):
                 raise serializers.ValidationError({"aluno": f"Campos obrigatórios ausentes: {', '.join(missing)}."})
 
         elif tipo == TipoUsuario.PROFESSOR:
-            # Para professor, exigimos registro, disciplina, cpf e telefone
+            # Para professor, exigimos registro, disciplina, cpf e telefone.
+            # nome_completo é opcional (usamos fallback do auth.User quando ausente).
             missing = [
                 field for field in ['registro', 'disciplina', 'cpf', 'telefone']
                 if not data.get(field)

@@ -17,7 +17,8 @@ class AlunoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Aluno
         fields = "__all__"
-        read_only_fields = ['matricula', 'nome', 'email']
+        # 'nome' e 'email' não são campos de Aluno; evitar referências inválidas
+        read_only_fields = ['matricula']
 
     def update(self, instance, validated_data):
         extras_data = validated_data.pop('user', {}).get('extras', None)
