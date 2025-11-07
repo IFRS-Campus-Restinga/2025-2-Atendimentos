@@ -1,7 +1,8 @@
 from django.core.management.base import BaseCommand
-from accounts.models import Coordenador, Curso, Turma, Disciplina
+from accounts.models import Coordenador, Curso, Turma, Disciplina, Usuario
 from accounts.enumerations.tipo_curso import TipoCurso
 from accounts.enumerations.turnos import Turno
+from accounts.enumerations.tipo_usuario import TipoUsuario
 from django.contrib.auth.models import User
 
 class Command(BaseCommand):
@@ -41,13 +42,30 @@ class Command(BaseCommand):
         for nome, codigo, tipo in all_courses:
             # Criando Coordenador
             coordenador_email = f"coord{codigo}@ifrs.edu.br"
-            coordenador, _ = Coordenador.objects.get_or_create(
-                nome=f"Coordenador {nome}",
-                email=coordenador_email,
-                #registro=f"REG{codigo}",
-                tipoPerfil="Coordenador"
-            )
-            self.stdout.write(self.style.SUCCESS(f'Coordenador: {coordenador.nome} - {coordenador.email}'))
+
+            # Tenta encontrar um Coordenador já existente por e-mail (via herança/join)
+            coordenador = Coordenador.objects.filter(email=coordenador_email).first()
+            if not coordenador:
+                # Não existe Coordenador com este e-mail; verificar se já existe um Usuario
+                usuario = Usuario.objects.filter(email=coordenador_email).first()
+                if usuario:
+                    # Promove Usuario existente para Coordenador (cria apenas a linha filha)
+                    coordenador = Coordenador(id=usuario.pk)
+                    coordenador.save()
+                    # Garante que o tipoPerfil do pai esteja correto
+                    if usuario.tipoPerfil != TipoUsuario.COORDENADOR:
+                        usuario.tipoPerfil = TipoUsuario.COORDENADOR
+                        usuario.needs_complemento = False
+                        usuario.save(update_fields=["tipoPerfil", "needs_complemento", "updated_at"])
+                else:
+                    # Cria diretamente o Coordenador, deixando o Django criar o Usuario pai automaticamente
+                    coordenador = Coordenador.objects.create(
+                        email=coordenador_email,
+                        tipoPerfil=TipoUsuario.COORDENADOR,
+                        needs_complemento=False,
+                    )
+
+            self.stdout.write(self.style.SUCCESS(f'Coordenador: {coordenador}'))
 
             # Criando Curso
             curso, _ = Curso.objects.get_or_create(

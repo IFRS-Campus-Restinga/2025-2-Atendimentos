@@ -31,7 +31,12 @@ class Usuario(BaseModel):
     )
 
     def __str__(self):
-        return f"{self.nome} ({self.email})"
+        # Exibe um nome amigável baseado no usuário vinculado ou no e-mail
+        if self.user:
+            display_name = getattr(self.user, 'get_full_name', lambda: None)() or getattr(self.user, 'username', None) or self.email
+        else:
+            display_name = self.email
+        return f"{display_name} ({self.email})"
 
     def EditarPerfil(self):
         try:

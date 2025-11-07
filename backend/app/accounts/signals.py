@@ -39,7 +39,6 @@ def initial_profile_setup(sender, request, user, sociallogin=None, **kwargs):
         '''
         Usuario.objects.create(
             user=user,
-            nome=user.get_full_name() or user.username or user.email.split('@')[0],
             email=user.email,
             tipoPerfil=TipoUsuario.ALUNO,
             needs_complemento=True 
