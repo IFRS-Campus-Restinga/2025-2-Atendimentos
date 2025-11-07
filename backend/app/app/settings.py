@@ -81,6 +81,10 @@ CORS_ALLOW_HEADERS = [
 # configuracao para uso de token para autenticacao
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
+
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication', # está aqui só para testes
+        'rest_framework.authentication.TokenAuthentication',    # está aqui só para testes
         'services.authentication.TokenAuthentication',  
     ],
     'DEFAULT_PERMISSION_CLASSES': [
@@ -158,6 +162,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

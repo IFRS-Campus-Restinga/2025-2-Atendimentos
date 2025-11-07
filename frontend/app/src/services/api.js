@@ -12,6 +12,7 @@ export const API_CONFIG = {
     complementoCadastro: '/services/api/complemento-cadastro/',
     profileStatus: '/services/api/profile/status',
     profileMe: '/services/api/profile/me',
+    profileExtraMe: '/services/api/profile-extra/me',
   }
 };
 
@@ -107,4 +108,43 @@ export async function getMyProfile(role) {
   });
   if (!res.ok) throw new Error('Falha ao obter dados do perfil');
   return res.json();
+}
+
+export async function getMyProfileExtras() {
+  const url = `${API_CONFIG.baseURL}${API_CONFIG.endpoints.profileExtraMe}`;
+  const res = await fetch(url, {
+    method: 'GET',
+    headers: {
+      'Accept': 'application/json',
+      ...getAuthHeaders(),
+    },
+    credentials: 'include',
+  });
+  if (!res.ok) throw new Error('Falha ao obter dados extras do perfil');
+  return res.json();
+}
+
+export async function updateMyProfileExtras(payload) {
+  const url = `${API_CONFIG.baseURL}${API_CONFIG.endpoints.profileExtraMe}`;
+  let body;
+  let headers = { ...getAuthHeaders() };
+
+  if (payload instanceof FormData) {
+    body = payload;
+    // Não definir Content-Type para permitir boundary automático
+  } else {
+    body = JSON.stringify(payload);
+    headers['Content-Type'] = 'application/json';
+  }
+
+  const res = await fetch(url, {
+    method: 'PUT',
+    headers,
+    credentials: 'include',
+    body,
+  });
+  const contentType = res.headers.get('content-type');
+  const data = contentType && contentType.includes('application/json') ? await res.json() : null;
+  if (!res.ok) throw new Error(data?.detail || 'Falha ao atualizar dados extras do perfil');
+  return data;
 }

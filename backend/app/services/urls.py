@@ -15,7 +15,11 @@ from .views.coordenador_views_set import CoordenadorViewSet
 from services.views.auth_views import GoogleLoginView
 from services.views.registro_atendimento_views_set import RegistroAtendimentoViewSet
 from services.views.complemento_views import ComplementoCadastroView
+from services.views.aprovacao_views import AprovarUsuarioView
+from services.views.listar_pendentes_views import UsuarioPendenteViewSet
 from services.views.profile_views import ProfileStatusView, ProfileMeView
+from services.views.usuario_extra_views import UsuarioExtraMeView
+
 
 app_name = 'api'
 router = DefaultRouter()
@@ -31,7 +35,7 @@ router.register(r'evento-ordinario', EventoOrdinarioViewSet, basename='evento-or
 router.register(r'evento-extraordinario', EventoExtraordinarioViewSet, basename='evento-extraordinario')
 router.register(r'usuario', UsuarioViewSet, basename='usuario')
 router.register(r'registro-atendimento', RegistroAtendimentoViewSet, basename='registro-atendimento')
-
+router.register(r'usuarios-pendentes', UsuarioPendenteViewSet, basename='usuarios-pendentes')
 
 urlpatterns = [
     path('api/google-login/', GoogleLoginView.as_view(), name='google-login'),
@@ -39,6 +43,7 @@ urlpatterns = [
     path('api/complemento-cadastro/', ComplementoCadastroView.as_view(), name='complemento-cadastro'),
     path('api/profile/status', ProfileStatusView.as_view(), name='profile-status'),
     path('api/profile/me', ProfileMeView.as_view(), name='profile-me'),
+    path('api/profile-extra/me', UsuarioExtraMeView.as_view(), name='profile-extra-me'),
     path('api/eventos-ordinarios/status-choices/', EventoStatusSet.as_view(), name="evento-status-choices"),
-
+    path('api/usuarios/aprovar/<int:user_id>/', AprovarUsuarioView.as_view(), name='aprovar-usuario'),
 ]
