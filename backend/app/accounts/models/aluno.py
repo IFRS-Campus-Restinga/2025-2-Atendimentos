@@ -1,16 +1,15 @@
 from django.db import models
 from accounts.models.base_model import BaseModel
-from .perfil_comum import Perfil
+from .perfil_comum import PerfilComum
 from django.conf import settings
 
 
-class Aluno(BaseModel, Perfil):
+class Aluno(BaseModel, PerfilComum):
 
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL, 
         on_delete=models.CASCADE,
-        related_name='aluno',
-        primary_key=True
+        related_name='aluno'
     )
     #Aluno que precisa de mais tempo nos atendimentos
     alunoPEI = models.BooleanField(

@@ -13,6 +13,11 @@ class Usuario(BaseModel):
         blank=True,
     )
 
+    nome = models.CharField(
+        max_length=100, 
+        verbose_name="Nome"
+    )
+
     email = models.EmailField(
         unique=True,  
         verbose_name="Email"

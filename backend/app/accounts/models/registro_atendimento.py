@@ -31,10 +31,3 @@ class RegistroAtendimento(BaseModel):
 
     def __str__(self):
         return f"Registro do Atendimento {self.evento.turma} em {self.data_atendimento.strftime('%d/%m/%Y %H:%M')}"
-
-
-    class Meta:
-        # Define um nome mais amigável no Admin (opcional, mas recomendado)
-        verbose_name = "Registro de Atendimento"
-        verbose_name_plural = "Registros de Atendimento"
-        

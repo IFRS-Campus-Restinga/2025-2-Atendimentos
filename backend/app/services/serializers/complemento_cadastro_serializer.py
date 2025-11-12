@@ -3,7 +3,6 @@ from accounts.models.usuario import Usuario
 from accounts.enumerations.tipo_usuario import TipoUsuario
 
 class ComplementoCadastroSerializer(serializers.Serializer):
-    nome_completo = serializers.CharField(max_length=100, required=False, allow_blank=True)
     cpf = serializers.CharField(max_length=14, required=False, allow_blank=True)
     telefone = serializers.CharField(max_length=15, required=False, allow_blank=True)
     # Recebe o código da escolha (e.g., 'ALU', 'PROF', 'COORD', 'ADM')

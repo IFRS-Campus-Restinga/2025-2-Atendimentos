@@ -98,13 +98,6 @@ function Header({ onLogout }) {
               {`Olá, ${role || "Usuário"} ${usuario.nome?.split(" ")[0] || ""}`}
             </span>
             <button
-              onClick={() => navigate('/perfil/editar')}
-              className="btn btn-light btn-sm fw-semibold"
-              title="Editar perfil"
-            >
-              Editar Perfil
-            </button>
-            <button
               onClick={handleLogout}
               className="btn btn-outline-light btn-sm fw-semibold"
             >

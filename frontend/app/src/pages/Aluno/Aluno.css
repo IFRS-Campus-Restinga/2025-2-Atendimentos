@@ -1,94 +1,14 @@
-/* ===========================
-   FORMULÁRIO DE ALUNO
-=========================== */
-.aluno-container {
-  max-width: 500px;
-  margin: 2rem auto;
-  padding: 1.5rem;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  background-color: #f9f9f9;
-}
-
-.aluno-form label {
-  display: block;
-  margin-top: 1rem;
-  font-weight: bold;
-}
-
-.aluno-form input,
-.aluno-form select {
-  width: 100%;
-  padding: 0.5rem;
-  margin-top: 0.25rem;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  box-sizing: border-box;
-}
-
-.aluno-form button {
-  margin-top: 1.5rem;
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 5px;
-  background-color: #007bff;
-  color: white;
-  cursor: pointer;
-}
-
-.aluno-form button:hover {
-  background-color: #0056b3;
-}
-
-.voltar-btn {
-  display: block;
-  text-align: center;
-  margin-top: 1rem;
-  color: #007bff;
-  text-decoration: none;
-}
-
-.voltar-btn:hover {
-  text-decoration: underline;
-}
-
-/* Mensagem de erro */
-.erro-campo {
-  color: red;
-  font-size: 0.9rem;
-  margin-top: 4px;
-}
-
-/* Checkbox */
-.aluno-checkbox {
-  display: flex;
-  align-items: center;
-  margin-top: 1rem;
-}
-
-.aluno-checkbox input {
-  margin-right: 0.5rem;
-}
-
-/* ===========================
-   TABELA DE ALUNOS
-=========================== */
 .alunos-container {
-  max-width: 1100px;
+  max-width: 900px;
   margin: 2rem auto;
-  padding: 1.5rem;
+  padding: 1rem;
 }
 
-.alunos-title {
-  text-align: center;
-  margin-bottom: 1.5rem;
-  font-weight: bold;
-}
-
+/* ---------- Estilos para a tabela ---------- */
 .alunos-table {
-  width: 80%;
+  width: 50%;
   border-collapse: collapse;
-  margin: 30px auto;
+  margin: 20px auto;
   font-size: 16px;
   text-align: left;
   background-color: #ffffff;
@@ -97,6 +17,7 @@
   overflow: hidden;
 }
 
+/* Cabeçalho */
 .alunos-table thead {
   background-color: var(--laranja-lista);
   color: black;
@@ -104,96 +25,28 @@
 
 .alunos-table th,
 .alunos-table td {
-  padding: 16px 18px;
+  padding: 12px;
   border-bottom: 1px solid #ddd;
 }
 
+/* Linhas alternadas */
 .alunos-table tbody tr:nth-child(even) {
   background-color: #f2f2f2;
 }
 
+/* Efeito hover */
 .alunos-table tbody tr:hover {
   background-color: #d1ecf1;
   transition: background 0.3s ease-in-out;
 }
 
-.alunos-table input,
-.alunos-table select {
+/* Inputs dentro da tabela */
+.alunos-table input {
   width: 100%;
-  padding: 0.45rem;
+  padding: 0.3rem;
   border-radius: 4px;
   border: 1px solid #ccc;
   box-sizing: border-box;
-}
-
-.alunos-table td.btn-group {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.6rem;
-  border-bottom: none;
-}
-
-.alunos-table td.btn-group button {
-  margin: 0;
-}
-
-/* Botões padrão */
-.btn-salvar,
-.btn-cancelar,
-.btn-editar,
-.btn-deletar {
-  color: white;
-  border: none;
-  padding: 0.4rem 0.8rem;
-  cursor: pointer;
-  border-radius: 4px;
-  transition: transform 0.2s ease, opacity 0.2s ease;
-}
-
-.btn-salvar { background-color: #28a745 !important; }
-.btn-cancelar { background-color: #6c757d !important; }
-.btn-editar { background-color: #28a745 !important; }
-.btn-deletar { background-color: #dc3545 !important; }
-
-.btn-salvar:hover,
-.btn-cancelar:hover,
-.btn-editar:hover,
-.btn-deletar:hover {
-  opacity: 0.9;
-  transform: scale(1.03);
-}
-
-/* Paginação */
-.paginacao {
-  margin-top: 1.5rem;
-  text-align: center;
-}
-
-.paginacao button {
-  background-color: #28a745;
-  color: white;
-  border: none;
-  padding: 0.5rem 0.9rem;
-  margin: 0 0.4rem;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.paginacao button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-
-/* Status visual do PEI */
-.status-ativo {
-  color: #28a745;
-  font-weight: bold;
-}
-
-.status-inativo {
-  color: #dc3545;
-  font-weight: bold;
 }
 
 /* Responsividade */
@@ -205,6 +58,61 @@
 
   .alunos-table th,
   .alunos-table td {
-    padding: 12px;
+    padding: 10px;
   }
+}
+
+/* ---------- Botões ---------- */
+.btn-group {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.alunos-container .btn-salvar {
+  background-color: #28a745 !important;
+  color: white;
+  border: none;
+  padding: 0.3rem 0.6rem;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.alunos-container .btn-cancelar {
+  background-color: #6c757d !important;
+  color: white;
+  border: none;
+  padding: 0.3rem 0.6rem;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.alunos-container .btn-editar {
+  background-color: #007bff !important;
+  color: white;
+  border: none;
+  padding: 0.3rem 0.6rem;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.alunos-container .btn-editar:hover,
+.alunos-container .btn-salvar:hover,
+.alunos-container .btn-cancelar:hover {
+  opacity: 0.9;
+}
+
+/* ---------- Outros ---------- */
+.alunos-title {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.status-ativo {
+  color: green;
+  font-weight: bold;
+}
+
+.status-inativo {
+  color: red;
+  font-weight: bold;
 }

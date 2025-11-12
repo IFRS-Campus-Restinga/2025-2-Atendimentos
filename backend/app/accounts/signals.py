@@ -15,7 +15,7 @@ def create_default_groups(sender, **kwargs):
     if sender.name != 'accounts':
         return
 
-    group_names = ['Alunos', 'Professores', 'Coordenadores', 'Administradores', 'Pendentes']
+    group_names = ['Alunos', 'Professores', 'Coordenadores', 'Administradores']
     
     for name in group_names:
         Group.objects.get_or_create(name=name)
@@ -29,14 +29,12 @@ def create_default_groups(sender, **kwargs):
 def initial_profile_setup(sender, request, user, sociallogin=None, **kwargs):
 
     if sociallogin:
-        '''
         try:
             aluno_group = Group.objects.get(name='Alunos')
             user.groups.add(aluno_group)
         except ObjectDoesNotExist:
             print("ATENÇÃO: O grupo 'Alunos' não existe. Crie-o no Admin.")
 
-        '''
         Usuario.objects.create(
             user=user,
             nome=user.get_full_name() or user.username or user.email.split('@')[0],
