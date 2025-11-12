@@ -15,11 +15,9 @@ from .views.coordenador_views_set import CoordenadorViewSet
 from services.views.auth_views import GoogleLoginView
 from services.views.registro_atendimento_views_set import RegistroAtendimentoViewSet
 from services.views.complemento_views import ComplementoCadastroView
+from services.views.aprovacao_views import AprovarUsuarioView
+from services.views.listar_pendentes_views import UsuarioPendenteViewSet
 from services.views.profile_views import ProfileStatusView, ProfileMeView
-<<<<<<< HEAD
-from .views.historico_atendimento_views import HistoricoAtendimentoViewSet
-=======
->>>>>>> e39fcd202771616e32a44f21da34288b24b418b0
 
 app_name = 'api'
 router = DefaultRouter()
@@ -35,10 +33,6 @@ router.register(r'evento-ordinario', EventoOrdinarioViewSet, basename='evento-or
 router.register(r'evento-extraordinario', EventoExtraordinarioViewSet, basename='evento-extraordinario')
 router.register(r'usuario', UsuarioViewSet, basename='usuario')
 router.register(r'registro-atendimento', RegistroAtendimentoViewSet, basename='registro-atendimento')
-<<<<<<< HEAD
-router.register(r'historico-atendimento', HistoricoAtendimentoViewSet, basename='historico-atendimento')
-=======
->>>>>>> e39fcd202771616e32a44f21da34288b24b418b0
 
 
 urlpatterns = [
@@ -47,8 +41,9 @@ urlpatterns = [
     path('api/complemento-cadastro/', ComplementoCadastroView.as_view(), name='complemento-cadastro'),
     path('api/profile/status', ProfileStatusView.as_view(), name='profile-status'),
     path('api/profile/me', ProfileMeView.as_view(), name='profile-me'),
+    path('api/profile-extra/me', UsuarioExtraMeView.as_view(), name='profile-extra-me'),
     path('api/eventos-ordinarios/status-choices/', EventoStatusSet.as_view(), name="evento-status-choices"),
-
+    path('api/usuarios/aprovar/<int:user_id>/', AprovarUsuarioView.as_view(), name='aprovar-usuario'),
 ]
 <<<<<<< HEAD
 

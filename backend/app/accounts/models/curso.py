@@ -2,8 +2,7 @@ from django.db import models
 from django.core.validators import MinLengthValidator, MinValueValidator
 from .base_model import BaseModel
 from ..enumerations.tipo_curso import TipoCurso
-from .coordenador import Coordenador  # Certifique-se que o import está correto
-
+from .coordenador import Coordenador 
 class Curso(BaseModel):
     """
     Model que representa um curso ofertado pela instituição.

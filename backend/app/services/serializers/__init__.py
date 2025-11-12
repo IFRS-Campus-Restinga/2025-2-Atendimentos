@@ -16,4 +16,3 @@ from .complemento_cadastro_serializer import *
 from .historico_atendimento_serializer import * 
 =======
 from .complemento_cadastro_serializer import *
->>>>>>> e39fcd202771616e32a44f21da34288b24b418b0
