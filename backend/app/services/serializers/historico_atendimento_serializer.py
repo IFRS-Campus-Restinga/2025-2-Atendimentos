@@ -1,16 +1,16 @@
 from rest_framework import serializers
-from accounts.models import HistoricoAtendimento, Professor, Disciplina
+from accounts.models import HistoricoAtendimento, Usuario, Disciplina
 
 
 class HistoricoAtendimentoSerializer(serializers.ModelSerializer):
-    professor_nome = serializers.CharField(source='professor.registro', read_only=True)
+    usuario_nome = serializers.CharField(source='usuario.nome', read_only=True)
     disciplina_nome = serializers.CharField(source='disciplina.nome', read_only=True)
     percentual_cumprido = serializers.ReadOnlyField()
     status_cumprimento = serializers.ReadOnlyField()
 
-    professor_id = serializers.PrimaryKeyRelatedField(
-        queryset=Professor.objects.all(),
-        source='professor',
+    usuario_id = serializers.PrimaryKeyRelatedField(
+        queryset=Usuario.objects.filter(tipoPerfil='PROF'),
+        source='usuario',
         write_only=True
     )
     disciplina_id = serializers.PrimaryKeyRelatedField(
@@ -23,9 +23,9 @@ class HistoricoAtendimentoSerializer(serializers.ModelSerializer):
         model = HistoricoAtendimento
         fields = [
             'id',
-            'professor',
-            'professor_id',
-            'professor_nome',
+            'usuario',
+            'usuario_id', 
+            'usuario_nome',
             'disciplina',
             'disciplina_id',
             'disciplina_nome',

@@ -1,14 +1,16 @@
 from django.db import models
 from accounts.models.base_model import BaseModel
-from accounts.models.professor import Professor
+from accounts.models.usuario import Usuario
 from accounts.models.disciplina import Disciplina
 
 
 class HistoricoAtendimento(BaseModel):
-    professor = models.ForeignKey(
-        Professor,
+    usuario = models.ForeignKey(
+        Usuario,
         on_delete=models.CASCADE,
-        related_name='historico_atendimentos'
+        related_name='historico_atendimentos',
+        limit_choices_to={'tipoPerfil': 'PROF'},
+        help_text='Professor responsável'
     )
     disciplina = models.ForeignKey(
         Disciplina,
@@ -39,10 +41,10 @@ class HistoricoAtendimento(BaseModel):
     class Meta:
         verbose_name = "Histórico de Atendimento"
         verbose_name_plural = "Históricos de Atendimentos"
-        unique_together = ('professor', 'disciplina', 'mes_referencia')
+        unique_together = ('usuario', 'disciplina', 'mes_referencia')
 
     def __str__(self):
-        return f"{self.professor} - {self.disciplina} ({self.mes_referencia})"
+        return f"{self.usuario.nome} - {self.disciplina} ({self.mes_referencia})"
 
     @property
     def percentual_cumprido(self):

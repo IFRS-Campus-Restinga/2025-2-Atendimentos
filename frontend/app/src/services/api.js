@@ -9,9 +9,7 @@ export const API_CONFIG = {
     disciplinas: '/services/disciplinas/',
     professores: '/services/professores/',
     turmas: '/services/turmas/',
-    complementoCadastro: '/services/api/complemento-cadastro/',
-    profileStatus: '/services/api/profile/status',
-    profileMe: '/services/api/profile/me',
+    usuarioMe: '/services/api/usuario/me',
   }
 };
 
@@ -96,7 +94,8 @@ export async function postComplementoCadastro(payload) {
 }
 
 export async function getMyProfile(role) {
-  const url = `${API_CONFIG.baseURL}${API_CONFIG.endpoints.profileMe}?role=${encodeURIComponent(role)}`;
+  // Usar o novo endpoint usuarioMe que substitui profileMe
+  const url = `${API_CONFIG.baseURL}${API_CONFIG.endpoints.usuarioMe}`;
   const res = await fetch(url, {
     method: 'GET',
     headers: {
@@ -107,4 +106,20 @@ export async function getMyProfile(role) {
   });
   if (!res.ok) throw new Error('Falha ao obter dados do perfil');
   return res.json();
+}
+
+export async function saveUsuarioMe(payload) {
+  const url = `${API_CONFIG.baseURL}${API_CONFIG.endpoints.usuarioMe}`;
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getAuthHeaders(),
+    },
+    credentials: 'include',
+    body: JSON.stringify(payload),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data?.detail || 'Falha ao salvar usuário');
+  return data;
 }

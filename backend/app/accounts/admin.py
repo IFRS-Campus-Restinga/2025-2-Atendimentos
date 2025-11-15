@@ -3,12 +3,10 @@ from accounts.models import *
 
 
 # Register your models here.
-admin.site.register(Professor)
+# Removed Professor, Coordenador, Aluno models
 admin.site.register(Disciplina)
 admin.site.register(Turma)
 admin.site.register(Curso)
-admin.site.register(Coordenador)
-admin.site.register(Aluno)
 admin.site.register(Usuario)
 admin.site.register(Evento)
 admin.site.register(EventoOrdinario)
