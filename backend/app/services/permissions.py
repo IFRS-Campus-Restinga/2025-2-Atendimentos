@@ -10,3 +10,11 @@ class CustomPermissions(permissions.DjangoModelPermissions):
         'PATCH': ['%(app_label)s.change_%(model_name)s'],
         ##'DELETE': ['%(app_label)s.delete_%(model_name)s'],
     }
+
+
+
+class ProfessorPodeAprovar(permissions.BasePermission):
+    def has_permission(self, request, view):
+        if request.method in permissions.SAFE_METHODS:
+            return True # Permite a leitura para qualquer um
+        return request.user.has_perm('accounts.pode_aprovar_evento')
