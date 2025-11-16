@@ -1,5 +1,5 @@
 from accounts.models.professor import Professor
-from accounts.serializers.professor_serializer import ProfessorSerializer
+from backend.app.accounts.serializers.professor_serializer import ProfessorSerializer
 from rest_framework import viewsets
 from rest_framework.permissions import AllowAny
 

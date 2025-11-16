@@ -35,7 +35,7 @@ function CadastrarRegistroAtendimento() {
 
         const eventosComRegistro = registrosData.map(r => r.evento_id);
 
-        const filtrados = eventosData.filter(e => 
+        const filtrados = eventosData.filter(e =>
           e.status_atendimento === "CONF" && !eventosComRegistro.includes(e.id)
         );
 
@@ -51,7 +51,6 @@ function CadastrarRegistroAtendimento() {
     recuperaEventos();
   }, []);
 
-  // ==================== VALIDAÇÃO ====================
   function validateEvento(value) {
     if (!value) return "Selecione um evento.";
     return "";
@@ -75,7 +74,6 @@ function CadastrarRegistroAtendimento() {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
 
-    // Validação em tempo real
     switch (name) {
       case "evento":
         setErros(prev => ({ ...prev, evento: validateEvento(value) }));
@@ -94,7 +92,6 @@ function CadastrarRegistroAtendimento() {
   async function adicionaRegistro(event) {
     event.preventDefault();
 
-    // Valida antes de enviar
     const eventoErro = validateEvento(formData.evento);
     const dataErro = validateData(formData.data_atendimento);
     const descricaoErro = validateDescricao(formData.descricao);
@@ -123,7 +120,6 @@ function CadastrarRegistroAtendimento() {
     }
   }
 
-  // ==================== RENDER ====================
   return (
     <div className="registro-container">
       <h1>Cadastrar Registro de Evento</h1>

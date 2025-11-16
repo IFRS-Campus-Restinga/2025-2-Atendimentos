@@ -12,6 +12,11 @@ import { getApiUrl } from "./services/api.js";
 import Header from "./components/Header.jsx";
 import Login from "./pages/Login.jsx";
 import RoleSelection from './pages/RoleSelection.jsx';
+import CompletarCadastro from './pages/Onboarding/CompletarCadastro.jsx';
+import CadastroUsuario from './pages/Onboarding/CadastroUsuario.jsx';
+import DashboardAluno from './pages/Aluno/DashboardAluno.jsx';
+import DashboardProfessor from './pages/Professor/DashboardProfessor.jsx';
+import DashboardCoordenador from './pages/Coordenador/DashboardCoordenador.jsx';
 import NotAvailable from './pages/NotAvailable.jsx';
 import AdminDashboard from './pages/AdminDashboard.jsx';
 import './index.css';
@@ -31,7 +36,6 @@ import CadastrarRegistroAtendimento from './pages/RegistroAtendimento/CadastrarR
 import ListarDisciplina from './pages/Disciplina/ListarDisciplina.jsx';
 import CadastrarDisciplina from './pages/Disciplina/CadastrarDisciplina.jsx';
 import Agenda from './pages/Agenda/Agenda.jsx';
- 
 
 function App() {
   const [usuario, setUsuario] = useState(null);
@@ -39,7 +43,7 @@ function App() {
 
   useEffect(() => {
     const usuarioSalvo = localStorage.getItem("usuario");
-    const tokenSalvo = localStorage.getItem("token");
+    const tokenSalvo = localStorage.getItem("authToken");
     if (usuarioSalvo && tokenSalvo) {
       setUsuario(JSON.parse(usuarioSalvo));
       setLogado(true);
@@ -58,29 +62,44 @@ function App() {
       setUsuario(userData);
       setLogado(true);
       localStorage.setItem("usuario", JSON.stringify(userData));
-      localStorage.setItem("token", credentialResponse.credential);
+      // Não armazene o idToken do Google; usaremos apenas o token do backend
       localStorage.removeItem('selectedRole');
 
       const response = await fetch(getApiUrl('googleLogin'), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: dados.email })
+        body: JSON.stringify({ token: credentialResponse.credential })
       });
 
       const contentType = response.headers.get("content-type");
       if (contentType && contentType.includes("application/json")) {
         const data = await response.json();
-        if (response.ok && data.token) {
-          localStorage.setItem("authToken", data.token);
-        } else {
+        if (!response.ok) {
           console.error("Erro ao validar token no backend:", data);
+          throw new Error(data?.error || 'Falha na autenticação no servidor');
+        }
+
+        // Se o backend retornar dados do usuário, preferimos os dele
+        if (data?.user) {
+          const srvUser = {
+            email: data.user.email || userData.email,
+            nome: data.user.name || userData.nome,
+            foto: data.user.picture || userData.foto,
+          };
+          setUsuario(srvUser);
+          localStorage.setItem("usuario", JSON.stringify(srvUser));
+        }
+
+        if (data?.token) {
+          localStorage.setItem("authToken", data.token);
         }
       } else {
         const text = await response.text();
         console.error("Resposta inesperada do backend:", text);
+        throw new Error('Resposta inesperada do backend');
       }
       try {
-        window.history.replaceState({}, '', '/selecionar-perfil');
+        window.history.replaceState({}, '', '/onboarding/usuario');
       } catch (error) {
         console.error("Resposta inesperada:", error);
       }
@@ -99,7 +118,6 @@ function App() {
     setUsuario(null);
     setLogado(false);
     localStorage.removeItem("usuario");
-    localStorage.removeItem("token");
     localStorage.removeItem("authToken");
   };
 
@@ -127,7 +145,11 @@ function App() {
                 (() => {
                   const role = localStorage.getItem('selectedRole');
                   if (role === 'Administrador') return <Navigate to="/dashboard" />;
-                  return <Navigate to="/selecionar-perfil" />;
+                  if (role === 'Aluno') return <Navigate to="/dashboard/aluno" />;
+                  if (role === 'Professor') return <Navigate to="/dashboard/professor" />;
+                  if (role === 'Coordenador') return <Navigate to="/dashboard/coordenador" />;
+                  // Sem role selecionada ainda: primeiro completa o cadastro do Usuario
+                  return <Navigate to="/onboarding/usuario" />;
                 })()
               ) : (
                 <Login
@@ -140,8 +162,13 @@ function App() {
             }
           />
           <Route path="/selecionar-perfil" element={<RotaProtegida><RoleSelection /></RotaProtegida>} />
+          <Route path="/onboarding/usuario" element={<RotaProtegida><CadastroUsuario /></RotaProtegida>} />
+          <Route path="/onboarding/:role" element={<RotaProtegida><CompletarCadastro /></RotaProtegida>} />
           <Route path="/nao-disponivel" element={<RotaProtegida><NotAvailable /></RotaProtegida>} />
           <Route path="/dashboard" element={<RotaProtegida><AdminDashboard /></RotaProtegida>} />
+          <Route path="/dashboard/aluno" element={<RotaProtegida><DashboardAluno /></RotaProtegida>} />
+          <Route path="/dashboard/professor" element={<RotaProtegida><DashboardProfessor /></RotaProtegida>} />
+          <Route path="/dashboard/coordenador" element={<RotaProtegida><DashboardCoordenador /></RotaProtegida>} />
           <Route path="/appointments" element={<RotaProtegida><h1>Página de Atendimentos</h1></RotaProtegida>} />
           <Route path="/disciplina" element={<RotaProtegida><ListarDisciplina /></RotaProtegida>} />
           <Route path="/disciplina/cadastrar" element={<RotaProtegida><CadastrarDisciplina /></RotaProtegida>} />

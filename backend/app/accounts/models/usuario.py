@@ -2,6 +2,7 @@ from django.db import models
 from accounts.models.base_model import BaseModel
 from accounts.enumerations.tipo_usuario import TipoUsuario
 from django.conf import settings
+from accounts.models.curso import Curso
 
 class Usuario(BaseModel):
 
@@ -33,6 +34,30 @@ class Usuario(BaseModel):
         max_length=20,
         choices=TipoUsuario.choices,
         verbose_name="Tipo de Usuario"
+    )
+
+    # Campos opcionais conforme o papel
+    registro = models.CharField(
+        max_length=50,
+        blank=True,
+        null=True,
+        help_text="Registro do professor (quando aplicável)"
+    )
+
+    matricula = models.CharField(
+        max_length=30,
+        blank=True,
+        null=True,
+        help_text="Matrícula do aluno (quando aplicável)"
+    )
+
+    curso = models.ForeignKey(
+        Curso,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        related_name='usuarios',
+        help_text="Curso vinculado (quando aplicável ao aluno)"
     )
 
     def __str__(self):

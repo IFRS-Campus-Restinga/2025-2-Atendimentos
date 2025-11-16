@@ -9,6 +9,7 @@ export const API_CONFIG = {
     disciplinas: '/services/disciplinas/',
     professores: '/services/professores/',
     turmas: '/services/turmas/',
+    usuarioMe: '/services/api/usuario/me',
   }
 };
 
@@ -55,3 +56,70 @@ export const dateUtils = {
 };
 
 export default dateUtils;
+
+export const getAuthHeaders = () => {
+  const token = localStorage.getItem('authToken');
+  return token ? { Authorization: `Bearer ${token}` } : {};
+};
+
+export async function checkProfileStatus(role) {
+  const url = `${API_CONFIG.baseURL}${API_CONFIG.endpoints.profileStatus}?role=${encodeURIComponent(role)}`;
+  const res = await fetch(url, {
+    method: 'GET',
+    headers: {
+      'Accept': 'application/json',
+      ...getAuthHeaders(),
+    },
+    credentials: 'include',
+  });
+  if (!res.ok) throw new Error('Falha ao verificar status do perfil');
+  return res.json();
+}
+
+export async function postComplementoCadastro(payload) {
+  const url = `${API_CONFIG.baseURL}${API_CONFIG.endpoints.complementoCadastro}`;
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getAuthHeaders(),
+    },
+    credentials: 'include',
+    body: JSON.stringify(payload),
+  });
+  const contentType = res.headers.get('content-type');
+  const data = contentType && contentType.includes('application/json') ? await res.json() : null;
+  if (!res.ok) throw new Error(data?.detail || 'Falha ao completar cadastro');
+  return data;
+}
+
+export async function getMyProfile(role) {
+  // Usar o novo endpoint usuarioMe que substitui profileMe
+  const url = `${API_CONFIG.baseURL}${API_CONFIG.endpoints.usuarioMe}`;
+  const res = await fetch(url, {
+    method: 'GET',
+    headers: {
+      'Accept': 'application/json',
+      ...getAuthHeaders(),
+    },
+    credentials: 'include',
+  });
+  if (!res.ok) throw new Error('Falha ao obter dados do perfil');
+  return res.json();
+}
+
+export async function saveUsuarioMe(payload) {
+  const url = `${API_CONFIG.baseURL}${API_CONFIG.endpoints.usuarioMe}`;
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getAuthHeaders(),
+    },
+    credentials: 'include',
+    body: JSON.stringify(payload),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data?.detail || 'Falha ao salvar usuário');
+  return data;
+}

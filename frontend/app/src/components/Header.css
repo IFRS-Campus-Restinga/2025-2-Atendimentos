@@ -1,0 +1,52 @@
+/* Header title block (logo + institution + campus) */
+.header__title {
+  display: flex;
+  align-items: center;
+}
+
+.title-link {
+  color: #fff;
+}
+
+.title-link:hover,
+.title-link:focus {
+  color: #fff;
+  text-decoration: none;
+  opacity: 0.95;
+}
+
+.title-img {
+  height: 48px; /* Harmonizes with navbar height */
+  width: auto;
+  display: block;
+}
+
+.title-campus {
+  line-height: 1.1;
+  font-size: 1rem; /* Base for small viewports */
+}
+
+.title-campus small {
+  font-size: 0.72rem; /* Long institutional name */
+  opacity: 0.9;
+}
+
+.title-campus span {
+  font-size: 1rem;
+}
+
+/* Slightly larger on >= lg screens */
+@media (min-width: 992px) {
+  .title-img {
+    height: 56px;
+  }
+  .title-campus {
+    font-size: 1.125rem;
+  }
+  .title-campus small {
+    font-size: 0.8rem;
+  }
+  .title-campus span {
+    font-size: 1.125rem;
+  }
+}
