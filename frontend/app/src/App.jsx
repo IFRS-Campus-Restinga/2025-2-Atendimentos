@@ -13,6 +13,7 @@ import Header from "./components/Header.jsx";
 import Login from "./pages/Login.jsx";
 import RoleSelection from './pages/RoleSelection.jsx';
 import CompletarCadastro from './pages/Onboarding/CompletarCadastro.jsx';
+import CadastroUsuario from './pages/Onboarding/CadastroUsuario.jsx';
 import DashboardAluno from './pages/Aluno/DashboardAluno.jsx';
 import DashboardProfessor from './pages/Professor/DashboardProfessor.jsx';
 import DashboardCoordenador from './pages/Coordenador/DashboardCoordenador.jsx';
@@ -98,7 +99,7 @@ function App() {
         throw new Error('Resposta inesperada do backend');
       }
       try {
-        window.history.replaceState({}, '', '/selecionar-perfil');
+        window.history.replaceState({}, '', '/onboarding/usuario');
       } catch (error) {
         console.error("Resposta inesperada:", error);
       }
@@ -147,7 +148,8 @@ function App() {
                   if (role === 'Aluno') return <Navigate to="/dashboard/aluno" />;
                   if (role === 'Professor') return <Navigate to="/dashboard/professor" />;
                   if (role === 'Coordenador') return <Navigate to="/dashboard/coordenador" />;
-                  return <Navigate to="/selecionar-perfil" />;
+                  // Sem role selecionada ainda: primeiro completa o cadastro do Usuario
+                  return <Navigate to="/onboarding/usuario" />;
                 })()
               ) : (
                 <Login
@@ -160,6 +162,7 @@ function App() {
             }
           />
           <Route path="/selecionar-perfil" element={<RotaProtegida><RoleSelection /></RotaProtegida>} />
+          <Route path="/onboarding/usuario" element={<RotaProtegida><CadastroUsuario /></RotaProtegida>} />
           <Route path="/onboarding/:role" element={<RotaProtegida><CompletarCadastro /></RotaProtegida>} />
           <Route path="/nao-disponivel" element={<RotaProtegida><NotAvailable /></RotaProtegida>} />
           <Route path="/dashboard" element={<RotaProtegida><AdminDashboard /></RotaProtegida>} />

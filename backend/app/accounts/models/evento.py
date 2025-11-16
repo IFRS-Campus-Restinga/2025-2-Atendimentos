@@ -43,7 +43,12 @@ class Evento(BaseModel):
     null=True,
     blank=True,
     related_name='eventos_criados'
-)
+    )
+
+    class Meta:
+        permissions = [
+            ("pode_aprovar_evento", "Pode Aprovar/Confirmar Evento"),
+        ]
 
     # usuarios = models.ManyToManyField(
     #     Usuario,

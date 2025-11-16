@@ -2,7 +2,6 @@ from django.db import models
 from django.core.validators import MinLengthValidator, MinValueValidator
 from .base_model import BaseModel
 from ..enumerations.tipo_curso import TipoCurso
-from .coordenador import Coordenador
 
 class Curso(BaseModel):
     nome = models.CharField(
@@ -23,14 +22,7 @@ class Curso(BaseModel):
         help_text="Tipo do curso"
     )
 
-    coordenador = models.OneToOneField(
-        Coordenador,
-        on_delete=models.CASCADE,
-        null=True,
-        blank=True,
-        related_name="curso",
-        help_text="Coordenador responsável pelo curso"
-    )
+    # Campo de coordenador removido; coordenação poderá ser inferida por Usuario(tipo COORD)
 
     def __str__(self):
         return f"{self.nome} ({self.get_tipo_curso_display()})"
