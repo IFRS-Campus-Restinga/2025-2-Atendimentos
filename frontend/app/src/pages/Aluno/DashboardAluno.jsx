@@ -38,8 +38,8 @@ export default function DashboardAluno() {
                 <h5 className="card-title">Seus dados</h5>
                 <ul className="mb-0">
                   <li><strong>Matrícula:</strong> {data.matricula || '-'}</li>
-                  <li><strong>Curso:</strong> {data.curso}</li>
-                  <li><strong>Turma:</strong> {data.turma}</li>
+                  <li><strong>Curso:</strong> {data.curso +' - '}</li>
+
                   <li><strong>Aluno PEI:</strong> {String(data.alunoPEI)}</li>
                 </ul>
               </div>
