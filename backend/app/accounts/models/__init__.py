@@ -7,4 +7,4 @@ from .registro_atendimento import *
 from .evento import *
 from .evento_ordinario import *
 from .evento_extraordinario import *
-from .historico_atendimento import *
+

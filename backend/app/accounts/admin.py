@@ -12,4 +12,4 @@ admin.site.register(Evento)
 admin.site.register(EventoOrdinario)
 admin.site.register(EventoExtraordinario)
 admin.site.register(RegistroAtendimento)
-admin.site.register(HistoricoAtendimento)
+

@@ -15,7 +15,6 @@ from services.views.auth_views import GoogleLoginView
 from services.views.registro_atendimento_views_set import RegistroAtendimentoViewSet
 # Removed complemento/profile views
 from services.views.usuario_me_view import UsuarioMeView
-from .views.historico_atendimento_views import HistoricoAtendimentoViewSet
 
 app_name = 'api'
 router = DefaultRouter()
@@ -28,7 +27,6 @@ router.register(r'evento-ordinario', EventoOrdinarioViewSet, basename='evento-or
 router.register(r'evento-extraordinario', EventoExtraordinarioViewSet, basename='evento-extraordinario')
 router.register(r'usuario', UsuarioViewSet, basename='usuario')
 router.register(r'registro-atendimento', RegistroAtendimentoViewSet, basename='registro-atendimento')
-router.register(r'historico-atendimento', HistoricoAtendimentoViewSet, basename='historico-atendimento')
 
 
 urlpatterns = [

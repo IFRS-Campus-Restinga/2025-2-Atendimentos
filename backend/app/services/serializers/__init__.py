@@ -10,5 +10,6 @@ from .curso_serializer import *
 # Removed curso_coordenador_resumido_serializer
 from .evento_extraordinario_serializer import *
 from .registro_atendimento_serializer import *
+from .complemento_cadastro_serializer import *
+from .complemento_cadastro_serializer import *
 # Removed complemento_cadastro_serializer
-from .historico_atendimento_serializer import *
