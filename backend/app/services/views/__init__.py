@@ -9,4 +9,3 @@ from .professor_views_set import *
 from .turma_views_set import *
 from .usuario_view_set import *
 from .registro_atendimento_views_set import *
-from .historico_atendimento_views import *
