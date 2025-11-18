@@ -7,3 +7,10 @@ class EventoExtraordinarioViewSet(viewsets.ModelViewSet):
     queryset = EventoExtraordinario.objects.all()
     serializer_class = EventoExtraordinarioSerializer
     permission_classes = [AllowAny]
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        turma_id = self.request.query_params.get('turma')
+        if turma_id:
+            qs = qs.filter(turma_id=turma_id)
+        return qs

@@ -8,10 +8,16 @@ from rest_framework.decorators import action
 from services.permissions import ProfessorPodeAprovar
 
 class EventoViewSet(ModelViewSet):
-
     queryset = Evento.objects.all()
     serializer_class = EventoSerializer
     permission_classes = [AllowAny]
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        turma_id = self.request.query_params.get('turma')
+        if turma_id:
+            qs = qs.filter(turma_id=turma_id)
+        return qs
 
 
 

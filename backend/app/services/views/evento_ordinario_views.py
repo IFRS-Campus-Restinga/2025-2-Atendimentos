@@ -10,6 +10,13 @@ class EventoOrdinarioViewSet(viewsets.ModelViewSet):
     serializer_class = EventoOrdinarioSerializer
     permission_classes = [AllowAny]
 
+    def get_queryset(self):
+        qs = super().get_queryset()
+        turma_id = self.request.query_params.get('turma')
+        if turma_id:
+            qs = qs.filter(turma_id=turma_id)
+        return qs
+
     def create(self, request, *args, **kwargs):
         dia_semana = request.data.get('dia_semana')      
         data_fim = request.data.get('data_fim')          # 2025-10-31

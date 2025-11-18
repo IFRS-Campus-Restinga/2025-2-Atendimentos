@@ -31,18 +31,27 @@ function classifyPeriod(ev) {
 const Agenda = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [eventos, setEventos] = useState([]); // unified events
+  const [turmaFilter, setTurmaFilter] = useState(() => {
+    try {
+      return localStorage.getItem('agendaTurmaId') || '';
+    } catch {
+      return '';
+    }
+  });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [turmas, setTurmas] = useState([]);
   const [disciplinas, setDisciplinas] = useState([]);
 
   const dayNames = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
 
-  const reloadEventos = useCallback(async () => {
+  const reloadEventos = useCallback(async (overrideTurmaId) => {
     try {
+      const tId = overrideTurmaId ?? turmaFilter;
+      const q = tId ? `?turma=${encodeURIComponent(tId)}` : '';
       const [ordRes, extraRes, baseRes] = await Promise.all([
-        fetch(getApiUrl('/services/evento-ordinario/')),
-        fetch(getApiUrl('/services/evento-extraordinario/')),
-        fetch(getApiUrl('/services/eventos/'))
+        fetch(getApiUrl(`/services/evento-ordinario/${q}`)),
+        fetch(getApiUrl(`/services/evento-extraordinario/${q}`)),
+        fetch(getApiUrl(`/services/eventos/${q}`))
       ]);
       const ordJson = await ordRes.json().catch(() => []);
       const extraJson = await extraRes.json().catch(() => []);
@@ -57,15 +66,17 @@ const Agenda = () => {
       ];
       const unique = new Map();
       mergedRaw.forEach(ev => { if (!unique.has(ev.id)) unique.set(ev.id, ev); });
-      setEventos(Array.from(unique.values()));
+      const mergedUnique = Array.from(unique.values());
+      const clientFiltered = tId ? mergedUnique.filter(ev => String(ev.turma) === String(tId)) : mergedUnique;
+      setEventos(clientFiltered);
     } catch (e) {
       console.error('Erro eventos:', e);
     }
-  }, []);
+  }, [turmaFilter]);
 
   useEffect(() => {
-    // initial load
-    reloadEventos();
+    // initial load (only after turma selected if required)
+    if (turmaFilter) reloadEventos(turmaFilter);
     (async () => {
       try {
         const tRes = await fetch(getApiUrl('turmas'));
@@ -79,7 +90,7 @@ const Agenda = () => {
         setDisciplinas(Array.isArray(dJson) ? dJson : dJson?.results || []);
       } catch (e) { console.error('Erro disciplinas:', e); }
     })();
-  }, [reloadEventos]);
+  }, [reloadEventos, turmaFilter]);
 
   const turmaNameById = useMemo(() => {
     const m = new Map();
@@ -142,9 +153,34 @@ const Agenda = () => {
           <p className="text-muted">Eventos (ordinários, extraordinários e futuros tipos)</p>
         </div>
 
-        <button className="btn btn-success mb-3" onClick={() => setIsModalOpen(true)}>
-          + Novo Atendimento de Turma
-        </button>
+        <div style={{ display: 'flex', justifyContent: 'flex-start', marginBottom: 8 }}>
+          <button className="btn btn-success" onClick={() => setIsModalOpen(true)} disabled={!turmaFilter}>
+            + Novo Atendimento de Turma
+          </button>
+        </div>
+        <div className="mb-3" style={{ maxWidth: 360 }}>
+          <label className="form-label fw-semibold mb-1">Turma</label>
+          <select
+            className="form-select form-select-sm"
+            value={turmaFilter}
+            onChange={(e) => {
+              const v = e.target.value;
+              setTurmaFilter(v);
+              try { localStorage.setItem('agendaTurmaId', v); } catch {}
+              if (v) {
+                reloadEventos(v);
+              } else {
+                setEventos([]);
+              }
+            }}
+            required
+          >
+            <option value="" disabled>Selecione a turma</option>
+            {turmas.map(t => (
+              <option key={t.id} value={t.id}>{t.nome}</option>
+            ))}
+          </select>
+        </div>
 
         <div className="weekly-calendar">
           <div className="calendar-header">
@@ -155,41 +191,45 @@ const Agenda = () => {
             <button className="btn btn-outline-secondary" onClick={() => navigateWeek(1)}>Próxima Semana →</button>
           </div>
 
-          <div className="calendar-grid periods-grid">
-            <div className="period-column-header"></div>
-            {weekDays.map((day, i) => (
-              <div key={i} className="day-column-header">
-                <div className="day-name">{dayNames[i]}</div>
-                <div className="day-date">{day.getDate()}</div>
-              </div>
-            ))}
+          {!turmaFilter ? (
+            <div className="alert alert-warning" role="alert">Selecione uma turma para visualizar a agenda.</div>
+          ) : (
+            <div className="calendar-grid periods-grid">
+              <div className="period-column-header"></div>
+              {weekDays.map((day, i) => (
+                <div key={i} className="day-column-header">
+                  <div className="day-name">{dayNames[i]}</div>
+                  <div className="day-date">{day.getDate()}</div>
+                </div>
+              ))}
 
-            {PERIODS.map(period => (
-              <div key={period.key} className="period-row">
-                <div className="period-label">{period.label}</div>
-                {weekDays.map((day, idx) => {
-                  const evs = getEventosForDatePeriod(day, period.key);
-                  return (
-                    <div key={idx} className="day-cell">
-                      {evs.map(ev => {
-                        const turmaNome = turmaNameById.get(ev.turma) || 'Turma';
-                        const discNome = disciplinaNameById.get(ev.disciplina) || 'Disciplina';
-                        const inicio = (ev.hora_evento_inicio || '').slice(0,5);
-                        const fim = (ev.hora_evento_fim || '').slice(0,5);
-                        const horario = fim ? `${inicio}–${fim}` : `${inicio}`;
-                        return (
-                          <div key={ev.id} className="appointment-indicator">
-                            <div className="appt-line"><strong>{horario}</strong> • {turmaNome}</div>
-                            <div className="appt-line small text-muted">{discNome}</div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  );
-                })}
-              </div>
-            ))}
-          </div>
+              {PERIODS.map(period => (
+                <div key={period.key} className="period-row">
+                  <div className="period-label">{period.label}</div>
+                  {weekDays.map((day, idx) => {
+                    const evs = getEventosForDatePeriod(day, period.key);
+                    return (
+                      <div key={idx} className="day-cell">
+                        {evs.map(ev => {
+                          const turmaNome = turmaNameById.get(ev.turma) || 'Turma';
+                          const discNome = disciplinaNameById.get(ev.disciplina) || 'Disciplina';
+                          const inicio = (ev.hora_evento_inicio || '').slice(0, 5);
+                          const fim = (ev.hora_evento_fim || '').slice(0, 5);
+                          const horario = fim ? `${inicio}–${fim}` : `${inicio}`;
+                          return (
+                            <div key={ev.id} className="appointment-indicator">
+                              <div className="appt-line"><strong>{horario}</strong> • {turmaNome}</div>
+                              <div className="appt-line small text-muted">{discNome}</div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    );
+                  })}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
