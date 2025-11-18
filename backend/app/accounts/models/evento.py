@@ -17,9 +17,17 @@ class Evento(BaseModel):
         default=timezone.now,
         help_text="Data do evento" )
         
-    hora_evento = models.TimeField(
-        default=timezone.now,
-        help_text="Data e hora do evento")
+    hora_evento_inicio = models.TimeField(
+        null=False,
+        blank=False,
+        help_text="Horário de início do evento",
+    )
+
+    hora_evento_fim = models.TimeField(
+        null=False,
+        blank=False,
+        help_text="Horário de término do evento",
+    )
 
     
     # Impede que o registro  pai seja deletado se ainda existir registros filhos.  - Verificar se esta correto

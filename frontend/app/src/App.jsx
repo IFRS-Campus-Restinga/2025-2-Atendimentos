@@ -38,8 +38,20 @@ import CadastrarDisciplina from './pages/Disciplina/CadastrarDisciplina.jsx';
 import Agenda from './pages/Agenda/Agenda.jsx';
 
 function App() {
-  const [usuario, setUsuario] = useState(null);
-  const [logado, setLogado] = useState(false);
+  // Inicializa estado de autenticação de forma síncrona para evitar redirecionar ao recarregar rotas protegidas (ex.: /agenda)
+  const [usuario, setUsuario] = useState(() => {
+    try {
+      const u = localStorage.getItem("usuario");
+      return u ? JSON.parse(u) : null;
+    } catch {
+      return null;
+    }
+  });
+  const [logado, setLogado] = useState(() => {
+    const u = localStorage.getItem("usuario");
+    const t = localStorage.getItem("authToken");
+    return Boolean(u && t);
+  });
 
   useEffect(() => {
     const usuarioSalvo = localStorage.getItem("usuario");
@@ -47,6 +59,9 @@ function App() {
     if (usuarioSalvo && tokenSalvo) {
       setUsuario(JSON.parse(usuarioSalvo));
       setLogado(true);
+    } else {
+      setUsuario(null);
+      setLogado(false);
     }
   }, []);
 

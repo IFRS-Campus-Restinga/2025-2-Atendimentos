@@ -5,7 +5,7 @@
 }
 
 .agenda-container {
-  max-width: 1200px;
+  max-width: 1100px;
   margin: 0 auto;
   padding: 20px;
   background-color: #fff;
@@ -35,6 +35,7 @@
 
 .weekly-calendar {
   margin-top: 20px;
+  overflow-x: auto;
 }
 
 .calendar-header {
@@ -46,20 +47,87 @@
 
 .calendar-grid {
   display: grid;
-  grid-template-columns: 60px repeat(6, 1fr);
 }
 
-.time-column-header {
-  height: 40px;
+.periods-grid {
+  display: grid;
+  /* Alterar colunas turno. */
+  grid-template-columns: 90px repeat(6, 130px);
+  /* Alterar colunas dias. */
+  grid-auto-rows: minmax(60px, auto);
+
+  gap: 8px;
+  padding: 8px;
+  justify-content: center;
 }
 
+.period-column-header {
+  height: 44px;
+}
+
+.period-row {
+  display: contents;
+}
+
+.period-label {
+  padding: 6px 6px;
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: .3px;
+  background: linear-gradient(135deg, #198754, #157347);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  align-self: stretch;
+}
+
+.periods-grid .day-cell {
+  background: #ffffff;
+  border: 1px solid #e1e1e1;
+  border-radius: 8px;
+  padding: 6px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow: visible;
+  scrollbar-width: thin;
+}
+
+.periods-grid .day-cell:hover {
+  border-color: #198754;
+  box-shadow: 0 0 0 2px rgba(25, 135, 84, 0.15);
+}
+
+/* Evento */
+.appointment-indicator {
+  background-color: #198754;
+  color: #fff;
+  font-size: 0.72rem;
+  padding: 4px 6px;
+  border-radius: 6px;
+  margin: 2px 0;
+  line-height: 1.2;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.appointment-indicator .appt-line {
+  display: block;
+}
+
+/* Cabeçalhos de dia */
 .day-column-header {
+  width: 125px;
+  /* match day column width */
   text-align: center;
-  padding: 5px 0;
+  padding: 6px 0;
   border-radius: 8px;
   background-color: #198754;
   color: white;
-  margin: 0 5px;
+  margin: 0 4px;
 }
 
 .day-name {
@@ -67,43 +135,10 @@
 }
 
 .day-date {
-  font-size: 0.85rem;
+  font-size: 0.9rem;
 }
 
-.hour-row {
-  display: contents;
-}
-
-.time-label {
-  border-right: 1px solid #dee2e6;
-  padding: 5px;
-  text-align: right;
-  font-size: 0.85rem;
-  color: #495057;
-}
-
-.day-cell {
-  border-left: 1px solid #e1e1e1;
-  border-bottom: 1px solid #e1e1e1;
-  height: 60px;
-  padding: 2px;
-  position: relative;
-}
-
-/* Evento */
-.appointment-indicator {
-  background-color: #198754;
-  color: white;
-  font-size: 0.8rem;
-  padding: 4px 6px;
-  border-radius: 8px;
-  margin: 2px 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  width: 95%;
-}
-
+/* Modal */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -117,7 +152,6 @@
   backdrop-filter: blur(4px);
   z-index: 1000;
   cursor: pointer;
-  /* Permite detectar clique fora */
 }
 
 .modal-container {
@@ -130,11 +164,9 @@
   overflow-y: auto;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
   cursor: default;
-  /* Impede clique interno fechar */
   position: relative;
 }
 
-/* Header com título + botão */
 .modal-header {
   display: flex;
   justify-content: space-between;
@@ -142,7 +174,6 @@
   margin-bottom: 15px;
 }
 
-/* Botão X */
 .modal-close-btn {
   background: transparent;
   border: none;
@@ -151,9 +182,30 @@
   cursor: pointer;
   color: #444;
   font-weight: bold;
-  transition: 0.2s;
+  transition: .2s;
 }
 
 .modal-close-btn:hover {
   color: #000;
+}
+
+/* Responsividade: mantém central e permite rolagem horizontal */
+@media (max-width: 1024px) {
+  .periods-grid {
+    grid-template-columns: 80px repeat(6, 120px);
+    grid-auto-rows: minmax(120px, auto);
+  }
+}
+
+@media (max-width: 768px) {
+  .periods-grid {
+    grid-template-columns: 70px repeat(6, 110px);
+    grid-auto-rows: minmax(110px, auto);
+  }
+
+  .day-column-header {
+    width: 110px;
+    margin: 0 2px;
+    border-radius: 6px;
+  }
 }

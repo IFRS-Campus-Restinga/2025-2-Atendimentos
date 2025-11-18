@@ -6,14 +6,18 @@ from accounts.models.evento_ordinario import EventoOrdinario
 from ..serializers.evento_ordinario_serializer import EventoOrdinarioSerializer
 
 class EventoOrdinarioViewSet(viewsets.ModelViewSet):
-    queryset = EventoOrdinario.objects.all().order_by('-data_evento', '-hora_evento')
+    queryset = EventoOrdinario.objects.all().order_by('-data_evento', '-hora_evento_inicio')
     serializer_class = EventoOrdinarioSerializer
     permission_classes = [AllowAny]
 
     def create(self, request, *args, **kwargs):
         dia_semana = request.data.get('dia_semana')      
         data_fim = request.data.get('data_fim')          # 2025-10-31
-        hora_str = request.data.get('hora_evento')  # 15:00
+        hora_inicio_str = request.data.get('hora_evento_inicio')  # 15:00
+        hora_fim_str = request.data.get('hora_evento_fim')        # 16:00
+        # compat: aceitar payload antigo
+        if not hora_inicio_str and request.data.get('hora_evento'):
+            hora_inicio_str = request.data.get('hora_evento')
         turma = request.data.get('turma')
         disciplina = request.data.get('disciplina')
         limite = request.data.get('limite')
@@ -21,7 +25,15 @@ class EventoOrdinarioViewSet(viewsets.ModelViewSet):
 
         # Convertendo tipos
         data_fim = datetime.strptime(data_fim, "%Y-%m-%d").date()
-        hora_evento = datetime.strptime(hora_str, "%H:%M").time()
+        hora_inicio = datetime.strptime(hora_inicio_str, "%H:%M").time()
+        if not hora_fim_str:
+            return Response({"detail": "hora_evento_fim é obrigatório."}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            hora_fim = datetime.strptime(hora_fim_str, "%H:%M").time()
+        except Exception:
+            return Response({"detail": "hora_evento_fim inválido."}, status=status.HTTP_400_BAD_REQUEST)
+        if hora_fim <= hora_inicio:
+            return Response({"detail": "hora_evento_fim deve ser maior que hora_evento_inicio."}, status=status.HTTP_400_BAD_REQUEST)
 
         map_dias = {
             'SEG': 0, 'TER': 1, 'QUA': 2,
@@ -40,7 +52,8 @@ class EventoOrdinarioViewSet(viewsets.ModelViewSet):
             evento = EventoOrdinario.objects.create(
                 dia_semana=dia_semana,
                 data_evento=data_atual,
-                hora_evento=hora_evento,
+                hora_evento_inicio=hora_inicio,
+                hora_evento_fim=hora_fim,
                 turma_id=turma,
                 disciplina_id=disciplina,
                 limite=limite,

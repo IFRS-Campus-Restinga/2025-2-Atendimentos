@@ -1,7 +1,7 @@
 import EventoOrdinarioForm from './EventoOrdinarioForm';
 import './Agenda.css';
 
-const EventoOrdinarioModal = ({ isOpen, onClose }) => {
+const EventoOrdinarioModal = ({ isOpen, onClose, onSuccess }) => {
     if (!isOpen) return null;
 
     const handleOverlayClick = (e) => {
@@ -18,7 +18,7 @@ const EventoOrdinarioModal = ({ isOpen, onClose }) => {
                     <button className="modal-close-btn" onClick={onClose}>×</button>
                 </div>
 
-                <EventoOrdinarioForm onSuccess={onClose} />
+                <EventoOrdinarioForm onSuccess={onSuccess || onClose} />
             </div>
         </div>
     );

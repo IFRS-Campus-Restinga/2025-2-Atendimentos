@@ -3,7 +3,8 @@ import { getApiUrl } from "../../services/api";
 
 const EventoOrdinarioForm = ({ onSuccess }) => {
     const [diaSemana, setDiaSemana] = useState("SEG");
-    const [hora, setHora] = useState("");
+    const [horaInicio, setHoraInicio] = useState("");
+    const [horaFim, setHoraFim] = useState("");
     const [dataFim, setDataFim] = useState("");
     const [turmaId, setTurmaId] = useState("");
     const [disciplinaId, setDisciplinaId] = useState("");
@@ -48,16 +49,22 @@ const EventoOrdinarioForm = ({ onSuccess }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        console.log("Submit chamado", { diaSemana, hora, dataFim, turmaId, disciplinaId, limite, status });
+        console.log("Submit chamado", { diaSemana, horaInicio, horaFim, dataFim, turmaId, disciplinaId, limite, status });
 
-        if (!diaSemana || !hora || !dataFim || !turmaId || !disciplinaId) {
-            alert("Preencha Dia da semana, Horário, Data final, Turma e Disciplina.");
+        if (!diaSemana || !horaInicio || !horaFim || !dataFim || !turmaId || !disciplinaId) {
+            alert("Preencha Dia da semana, Horário início, Horário término, Data final, Turma e Disciplina.");
+            return;
+        }
+
+        if (horaFim && horaInicio && horaFim <= horaInicio) {
+            alert("O horário de término deve ser maior que o de início.");
             return;
         }
 
         const payload = {
             dia_semana: diaSemana,
-            hora_evento: hora, // "HH:MM"
+            hora_evento_inicio: horaInicio, // "HH:MM"
+            hora_evento_fim: horaFim,
             data_fim: dataFim, // "YYYY-MM-DD"
             turma: Number(turmaId),
             disciplina: Number(disciplinaId),
@@ -95,7 +102,8 @@ const EventoOrdinarioForm = ({ onSuccess }) => {
                 console.log("Evento(s) criado(s):", data);
                 alert("Evento(s) criado(s) com sucesso!");
                 // reset
-                setHora("");
+                setHoraInicio("");
+                setHoraFim("");
                 setDataFim("");
                 setTurmaId("");
                 setDisciplinaId("");
@@ -140,15 +148,26 @@ const EventoOrdinarioForm = ({ onSuccess }) => {
                 </select>
             </div>
 
-            <div className="mb-3">
-                <label>Horário</label>
-                <input
-                    type="time"
-                    className="form-control"
-                    value={hora}
-                    onChange={(e) => setHora(e.target.value)}
-                    required
-                />
+            <div className="mb-3" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+                <div>
+                    <label>Início</label>
+                    <input
+                        type="time"
+                        className="form-control"
+                        value={horaInicio}
+                        onChange={(e) => setHoraInicio(e.target.value)}
+                        required
+                    />
+                </div>
+                <div>
+                    <label>Término</label>
+                    <input
+                        type="time"
+                        className="form-control"
+                        value={horaFim}
+                        onChange={(e) => setHoraFim(e.target.value)}
+                    />
+                </div>
             </div>
 
             <div className="mb-3">
