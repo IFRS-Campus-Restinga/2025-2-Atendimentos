@@ -4,12 +4,7 @@ from accounts.enumerations.tipo_usuario import TipoUsuario
 from accounts.models.usuario import Usuario
 
 class EventoOrdinarioSerializer(serializers.ModelSerializer):
-    # usuarios = serializers.PrimaryKeyRelatedField(
-    #     many=True,
-    #     queryset=Usuario.objects.filter(tipoPerfil=TipoUsuario.ALUNO)
-    # )
-
-
+    
     class Meta:
         model = EventoOrdinario
         fields = '__all__'

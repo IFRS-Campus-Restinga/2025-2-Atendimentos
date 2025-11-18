@@ -6,15 +6,16 @@ from accounts.models.evento_ordinario import EventoOrdinario
 from ..serializers.evento_ordinario_serializer import EventoOrdinarioSerializer
 
 class EventoOrdinarioViewSet(viewsets.ModelViewSet):
-    queryset = EventoOrdinario.objects.all().order_by('-data_evento', '-data_hora_evento')
+    queryset = EventoOrdinario.objects.all().order_by('-data_evento', '-hora_evento')
     serializer_class = EventoOrdinarioSerializer
     permission_classes = [AllowAny]
 
     def create(self, request, *args, **kwargs):
         dia_semana = request.data.get('dia_semana')      
         data_fim = request.data.get('data_fim')          # 2025-10-31
-        hora_str = request.data.get('data_hora_evento')  # 15:00
+        hora_str = request.data.get('hora_evento')  # 15:00
         turma = request.data.get('turma')
+        disciplina = request.data.get('disciplina')
         limite = request.data.get('limite')
         usuario_create = request.user if request.user.is_authenticated else None
 
@@ -39,8 +40,9 @@ class EventoOrdinarioViewSet(viewsets.ModelViewSet):
             evento = EventoOrdinario.objects.create(
                 dia_semana=dia_semana,
                 data_evento=data_atual,
-                data_hora_evento=hora_evento,
-                turma=turma,
+                hora_evento=hora_evento,
+                turma_id=turma,
+                disciplina_id=disciplina,
                 limite=limite,
                 usuario_create=usuario_create,
                 data_inicio=hoje,

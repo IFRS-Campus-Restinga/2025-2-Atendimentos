@@ -1,17 +1,22 @@
 import { useState, useEffect } from "react";
+import { getApiUrl } from "../../services/api";
 
 const EventoOrdinarioForm = ({ onSuccess }) => {
     const [diaSemana, setDiaSemana] = useState("SEG");
     const [hora, setHora] = useState("");
     const [dataFim, setDataFim] = useState("");
-    const [turma, setTurma] = useState("");
+    const [turmaId, setTurmaId] = useState("");
+    const [disciplinaId, setDisciplinaId] = useState("");
+    const [turmas, setTurmas] = useState([]);
+    const [disciplinas, setDisciplinas] = useState([]);
     const [limite, setLimite] = useState(25);
     const [status, setStatus] = useState("");
     const [statusOptions, setStatusOptions] = useState([]);
     const [sending, setSending] = useState(false);
 
     useEffect(() => {
-        fetch("http://localhost:8000/services/api/eventos-ordinarios/status-choices/")
+        // Status choices
+        fetch(getApiUrl("/services/api/eventos-ordinarios/status-choices/"))
             .then((res) => res.json())
             .then((data) => {
                 setStatusOptions(data);
@@ -20,23 +25,42 @@ const EventoOrdinarioForm = ({ onSuccess }) => {
             .catch((err) => {
                 console.error("Erro ao buscar status:", err);
             });
+
+        // Turmas
+        fetch(getApiUrl("turmas"))
+            .then((res) => res.json())
+            .then((data) => {
+                const list = Array.isArray(data) ? data : data?.results || [];
+                setTurmas(list);
+            })
+            .catch((err) => console.error("Erro ao buscar turmas:", err));
+
+        // Disciplinas
+        fetch(getApiUrl("disciplinas"))
+            .then((res) => res.json())
+            .then((data) => {
+                const list = Array.isArray(data) ? data : data?.results || [];
+                setDisciplinas(list);
+            })
+            .catch((err) => console.error("Erro ao buscar disciplinas:", err));
     }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        console.log("Submit chamado", { diaSemana, hora, dataFim, turma, limite, status });
+        console.log("Submit chamado", { diaSemana, hora, dataFim, turmaId, disciplinaId, limite, status });
 
-        if (!diaSemana || !hora || !dataFim) {
-            alert("Preencha Dia da semana, Horário e Data final.");
+        if (!diaSemana || !hora || !dataFim || !turmaId || !disciplinaId) {
+            alert("Preencha Dia da semana, Horário, Data final, Turma e Disciplina.");
             return;
         }
 
         const payload = {
             dia_semana: diaSemana,
-            data_hora_evento: hora, // "HH:MM"
+            hora_evento: hora, // "HH:MM"
             data_fim: dataFim, // "YYYY-MM-DD"
-            turma,
+            turma: Number(turmaId),
+            disciplina: Number(disciplinaId),
             limite,
             status_atendimento: status,
         };
@@ -46,8 +70,8 @@ const EventoOrdinarioForm = ({ onSuccess }) => {
         try {
 
             const urlsToTry = [
-                "http://localhost:8000/services/evento-ordinario/",
-                "http://localhost:8000/services/evento-ordinario/"
+                getApiUrl("/services/evento-ordinario/"),
+                getApiUrl("/services/evento-ordinario/")
             ];
 
             let res = null;
@@ -73,7 +97,8 @@ const EventoOrdinarioForm = ({ onSuccess }) => {
                 // reset
                 setHora("");
                 setDataFim("");
-                setTurma("");
+                setTurmaId("");
+                setDisciplinaId("");
                 setLimite(25);
                 setStatus(statusOptions[0]?.value || "");
                 onSuccess?.();
@@ -139,7 +164,36 @@ const EventoOrdinarioForm = ({ onSuccess }) => {
 
             <div className="mb-3">
                 <label>Turma</label>
-                <input type="text" className="form-control" value={turma} onChange={(e) => setTurma(e.target.value)} />
+                <select
+                    className="form-select"
+                    value={turmaId}
+                    onChange={(e) => setTurmaId(e.target.value)}
+                    required
+                >
+                    <option value="">Selecione a turma</option>
+                    {turmas.map((t) => (
+                        <option key={t.id} value={t.id}>
+                            {t.nome}
+                        </option>
+                    ))}
+                </select>
+            </div>
+
+            <div className="mb-3">
+                <label>Disciplina</label>
+                <select
+                    className="form-select"
+                    value={disciplinaId}
+                    onChange={(e) => setDisciplinaId(e.target.value)}
+                    required
+                >
+                    <option value="">Selecione a disciplina</option>
+                    {disciplinas.map((d) => (
+                        <option key={d.id} value={d.id}>
+                            {d.nome}
+                        </option>
+                    ))}
+                </select>
             </div>
 
             <div className="mb-3">
