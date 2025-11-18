@@ -7,12 +7,7 @@ from .turma import Turma
 from .disciplina import Disciplina
 
 class Evento(BaseModel):
-
-    data_criacao = models.DateTimeField(
-        default=timezone.now,
-        blank=True,
-        help_text="Data e hora de criação do evento" )
-
+    
     data_evento = models.DateField(
         default=timezone.now,
         help_text="Data do evento" )
