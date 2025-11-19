@@ -46,7 +46,7 @@ const EventoExtraordinarioForm = ({ onSuccess }) => {
         }
 
         const payload = {
-            data,                      // YYYY-MM-DD
+            data_evento: data,                      // YYYY-MM-DD
             hora_evento_inicio: horaInicio,
             hora_evento_fim: horaFim,
             turma: Number(turmaId),
