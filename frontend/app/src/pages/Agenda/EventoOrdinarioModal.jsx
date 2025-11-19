@@ -1,7 +1,8 @@
 import EventoOrdinarioForm from './EventoOrdinarioForm';
+import EventoExtraordinarioForm from './EventoExtraordinarioForm';
 import './Agenda.css';
 
-const EventoOrdinarioModal = ({ isOpen, onClose, onSuccess }) => {
+const EventoOrdinarioModal = ({ isOpen, tipo, onClose, onSuccess }) => {
     if (!isOpen) return null;
 
     const handleOverlayClick = (e) => {
@@ -14,11 +15,19 @@ const EventoOrdinarioModal = ({ isOpen, onClose, onSuccess }) => {
         <div className="modal-overlay" onClick={handleOverlayClick}>
             <div className="modal-container" onClick={(e) => e.stopPropagation()}>
                 <div className="modal-header">
-                    <h4>Cadastrar Atendimento de Turma</h4>
+                    <h4>
+                        {tipo === "ordinario"
+                            ? "Cadastrar Atendimento de Turma"
+                            : "Solicitar / Marcar Atendimento"}
+                    </h4>
                     <button className="modal-close-btn" onClick={onClose}>×</button>
                 </div>
 
-                <EventoOrdinarioForm onSuccess={onSuccess || onClose} />
+                {tipo === "ordinario" ? (
+                    <EventoOrdinarioForm onSuccess={onSuccess || onClose} />
+                ) : (
+                    <EventoExtraordinarioForm onSuccess={onSuccess || onClose} />
+                )}
             </div>
         </div>
     );

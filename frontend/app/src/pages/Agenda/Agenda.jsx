@@ -39,6 +39,7 @@ const Agenda = () => {
     }
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalTipo, setModalTipo] = useState(null);       //, troca a renderizacao ao escolher o botao
   const [turmas, setTurmas] = useState([]);
   const [disciplinas, setDisciplinas] = useState([]);
 
@@ -154,8 +155,15 @@ const Agenda = () => {
         </div>
 
         <div style={{ display: 'flex', justifyContent: 'flex-start', marginBottom: 8 }}>
-          <button className="btn btn-success" onClick={() => setIsModalOpen(true)} disabled={!turmaFilter}>
+          <button className="btn btn-success" 
+          onClick={() => { setModalTipo("ordinario"); setIsModalOpen(true); }} 
+          disabled={!turmaFilter}>
             + Novo Atendimento de Turma
+          </button>
+          <button className="btn btn-success" style={{ marginLeft: '8px' }} 
+          onClick={() => { setModalTipo("solicitar"); setIsModalOpen(true); }}
+          disabled={!turmaFilter}>
+            Solicitar / Marcar Atendimento
           </button>
         </div>
         <div className="mb-3" style={{ maxWidth: 360 }}>
@@ -235,6 +243,7 @@ const Agenda = () => {
 
       <EventoOrdinarioModal
         isOpen={isModalOpen}
+        tipo={modalTipo}
         onClose={() => setIsModalOpen(false)}
         onSuccess={() => { setIsModalOpen(false); reloadEventos(); }}
       />
