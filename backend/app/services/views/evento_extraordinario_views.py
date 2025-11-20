@@ -14,3 +14,8 @@ class EventoExtraordinarioViewSet(viewsets.ModelViewSet):
         if turma_id:
             qs = qs.filter(turma_id=turma_id)
         return qs
+
+    def perform_create(self, serializer):
+        print("DEBUG USER:", self.request.user, self.request.user.is_authenticated)
+        user = self.request.user if self.request.user.is_authenticated else None
+        serializer.save(usuario_create=user)

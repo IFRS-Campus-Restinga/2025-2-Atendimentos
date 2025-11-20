@@ -22,15 +22,22 @@ const EventoExtraordinarioForm = ({ onSuccess }) => {
             })
             .catch((err) => console.error("Erro ao buscar turmas:", err));
 
-        // Carregar disciplinas
-        fetch(getApiUrl("disciplinas"))
+    }, []);
+
+    useEffect(() => {
+        // Se não selecionou nenhuma turma, busca todas
+        setDisciplinaId("");
+        const url = turmaId ? getApiUrl(`disciplinas?turma=${turmaId}`) : getApiUrl("disciplinas");
+
+        fetch(url)
             .then((res) => res.json())
             .then((data) => {
                 const list = Array.isArray(data) ? data : data?.results || [];
                 setDisciplinas(list);
             })
             .catch((err) => console.error("Erro ao buscar disciplinas:", err));
-    }, []);
+    }, [turmaId]);
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();

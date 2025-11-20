@@ -14,3 +14,4 @@ class EventoExtraordinarioSerializer(serializers.ModelSerializer):
     class Meta:
         model = EventoExtraordinario
         fields = '__all__'
+        read_only_fields = ['usuario_create']
