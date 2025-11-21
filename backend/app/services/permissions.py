@@ -12,7 +12,25 @@ class CustomPermissions(permissions.DjangoModelPermissions):
     }
 
 
+class PodeAprovarEvento(permissions.BasePermission):
+    """Verifica se usuário tem permissão de aprovar evento"""
+    def has_permission(self, request, view):
+        return request.user.has_perm('accounts.pode_aprovar_evento')
 
+
+class PodeCancelarEvento(permissions.BasePermission):
+    """Verifica se usuário tem permissão de cancelar evento"""
+    def has_permission(self, request, view):
+        return request.user.has_perm('accounts.pode_cancelar_evento')
+
+
+class PodeRegendarEvento(permissions.BasePermission):
+    """Verifica se usuário tem permissão de reagendar evento"""
+    def has_permission(self, request, view):
+        return request.user.has_perm('accounts.pode_reagendar_evento')
+
+
+# Mantendo compatibilidade com nome antigo (deprecated)
 class ProfessorPodeAprovar(permissions.BasePermission):
     def has_permission(self, request, view):
         if request.method in permissions.SAFE_METHODS:
