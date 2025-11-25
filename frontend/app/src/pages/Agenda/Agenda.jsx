@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import './Agenda.css';
-import EventoOrdinarioModal from './EventoOrdinarioModal';
+import EventoOrdinarioModal from './EventoOrdinario/EventoOrdinarioModal';
 import { getApiUrl } from '../../services/api';
 
 // Period definitions

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getApiUrl } from "../../services/api";
+import { getApiUrl } from "../../../services/api";
 
 const EventoOrdinarioForm = ({ onSuccess }) => {
     const [diaSemana, setDiaSemana] = useState("SEG");
