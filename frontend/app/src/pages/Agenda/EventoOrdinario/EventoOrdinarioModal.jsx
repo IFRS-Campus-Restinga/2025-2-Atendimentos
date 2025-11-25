@@ -1,6 +1,6 @@
 import EventoOrdinarioForm from './EventoOrdinarioForm';
 import EventoExtraordinarioForm from '../EventoExtraordinario/EventoExtraordinarioForm';
-import '../Agenda.css';
+import '../Evento.css';
 
 const EventoOrdinarioModal = ({ isOpen, tipo, onClose, onSuccess }) => {
     if (!isOpen) return null;

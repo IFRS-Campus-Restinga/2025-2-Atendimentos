@@ -1,6 +1,8 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import './Agenda.css';
 import EventoOrdinarioModal from './EventoOrdinario/EventoOrdinarioModal';
+import DetalheEventoOrdinario from './EventoOrdinario/DetalheEventoOrdinario';
+import EditarEventoOrdinario from './EventoOrdinario/EditarEventoOrdinario';
 import { getApiUrl } from '../../services/api';
 
 // Period definitions
@@ -42,6 +44,11 @@ const Agenda = () => {
   const [modalTipo, setModalTipo] = useState(null);       //, troca a renderizacao ao escolher o botao
   const [turmas, setTurmas] = useState([]);
   const [disciplinas, setDisciplinas] = useState([]);
+  
+  // Estados para visualização e edição de eventos
+  const [showDetailModal, setShowDetailModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [selectedEvento, setSelectedEvento] = useState(null);
 
   const dayNames = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
 
@@ -190,6 +197,17 @@ const Agenda = () => {
           </select>
         </div>
 
+        <div className="legenda-eventos mb-3">
+          <div className="legenda-item">
+            <span className="legenda-cor evento-ordinario"></span>
+            <span>Atendimento de Turma</span>
+          </div>
+          <div className="legenda-item">
+            <span className="legenda-cor evento-extraordinario"></span>
+            <span>Atendimento Extra</span>
+          </div>
+        </div>
+
         <div className="weekly-calendar">
           <div className="calendar-header">
             <button className="btn btn-outline-secondary" onClick={() => navigateWeek(-1)}>← Semana Anterior</button>
@@ -224,10 +242,24 @@ const Agenda = () => {
                           const inicio = (ev.hora_evento_inicio || '').slice(0, 5);
                           const fim = (ev.hora_evento_fim || '').slice(0, 5);
                           const horario = fim ? `${inicio}–${fim}` : `${inicio}`;
+                          const isOrdinario = Boolean(ev.dia_semana);
+                          const tipoLabel = isOrdinario ? 'Turma' : 'Extra';
+                          const tipoClass = isOrdinario ? 'evento-ordinario' : 'evento-extraordinario';
                           return (
-                            <div key={ev.id} className="appointment-indicator">
+                            <div 
+                              key={ev.id} 
+                              className={`appointment-indicator ${tipoClass}`}
+                              onClick={() => {
+                                if (isOrdinario) {
+                                  setSelectedEvento(ev);
+                                  setShowDetailModal(true);
+                                }
+                              }}
+                              style={{ cursor: isOrdinario ? 'pointer' : 'default' }}
+                            >
                               <div className="appt-line"><strong>{horario}</strong> • {turmaNome}</div>
                               <div className="appt-line small text-muted">{discNome}</div>
+                              <div className="appt-line appt-tipo">{tipoLabel}</div>
                             </div>
                           );
                         })}
@@ -246,6 +278,39 @@ const Agenda = () => {
         tipo={modalTipo}
         onClose={() => setIsModalOpen(false)}
         onSuccess={() => { setIsModalOpen(false); reloadEventos(); }}
+      />
+
+      <DetalheEventoOrdinario
+        isOpen={showDetailModal}
+        onClose={() => {
+          setShowDetailModal(false);
+          setSelectedEvento(null);
+        }}
+        onEdit={(evento) => {
+          setShowDetailModal(false);
+          setSelectedEvento(evento);
+          setShowEditModal(true);
+        }}
+        eventId={selectedEvento?.id}
+        fallbackEvento={selectedEvento}
+        turmaNameById={turmaNameById}
+        disciplinaNameById={disciplinaNameById}
+      />
+
+      <EditarEventoOrdinario
+        isOpen={showEditModal}
+        onClose={() => {
+          setShowEditModal(false);
+          setSelectedEvento(null);
+        }}
+        evento={selectedEvento}
+        turmas={turmas}
+        disciplinas={disciplinas}
+        onSuccess={() => {
+          setShowEditModal(false);
+          setSelectedEvento(null);
+          reloadEventos();
+        }}
       />
     </div>
   );
