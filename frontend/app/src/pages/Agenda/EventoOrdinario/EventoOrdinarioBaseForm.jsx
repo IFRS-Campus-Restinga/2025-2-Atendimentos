@@ -146,7 +146,6 @@ const EventoOrdinarioBaseForm = ({
                 
                 console.error("Falha ao criar evento:", res, errBody);
                 
-                // Exibir mensagem de erro mais amigável
                 if (errBody && errBody.detail) {
                     alert(errBody.detail);
                 } else if (errBody && errBody.non_field_errors) {

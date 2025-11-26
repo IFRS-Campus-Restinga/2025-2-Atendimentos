@@ -83,7 +83,6 @@ const Agenda = () => {
   }, [turmaFilter]);
 
   useEffect(() => {
-    // initial load (only after turma selected if required)
     if (turmaFilter) reloadEventos(turmaFilter);
     (async () => {
       try {

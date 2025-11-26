@@ -113,7 +113,6 @@ const EventoOrdinarioForm = ({ onSuccess }) => {
                 const data = await res.json().catch(() => null);
                 console.log("Evento(s) criado(s):", data);
                 alert("Evento(s) criado(s) com sucesso!");
-                // reset
                 setHoraInicio("");
                 setHoraFim("");
                 setDataFim("");
@@ -123,7 +122,6 @@ const EventoOrdinarioForm = ({ onSuccess }) => {
                 setStatus(statusOptions[0]?.value || "");
                 onSuccess?.();
             } else {
-                // tenta pegar corpo do erro pra mostrar
                 let errBody = null;
                 try {
                     errBody = await (res && res.json ? res.json() : Promise.resolve(null));
@@ -132,7 +130,6 @@ const EventoOrdinarioForm = ({ onSuccess }) => {
                 }
                 console.error("Falha ao criar evento:", res, errBody);
                 
-                // Exibir mensagem de erro mais amigável
                 if (errBody && errBody.detail) {
                     alert(errBody.detail);
                 } else if (errBody && errBody.non_field_errors) {

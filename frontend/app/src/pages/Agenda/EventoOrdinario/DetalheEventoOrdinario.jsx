@@ -19,7 +19,7 @@ export default function DetalheEventoOrdinario({ isOpen, onClose, onEdit, eventI
         async function load() {
             setLoading(true);
             try {
-                const res = await fetch(getApiUrl(`/services/eventos/${eventId}/`));
+                const res = await fetch(getApiUrl(`/services/evento-ordinario/${eventId}/`));
                 const data = await res.json();
                 if (active) setEvento(data);
             } catch (e) {
@@ -43,6 +43,7 @@ export default function DetalheEventoOrdinario({ isOpen, onClose, onEdit, eventI
     const inicio = (evento?.hora_evento_inicio || '').slice(0, 5);
     const fim = (evento?.hora_evento_fim || '').slice(0, 5);
     const horario = fim ? `${inicio}–${fim}` : inicio;
+    const cadastradoPor = evento?.usuario_create?.name || evento?.usuario_create?.username || 'Não informado';
     const dataStr = (() => {
         const s = evento?.data_evento;
         if (!s) return '';
@@ -73,6 +74,7 @@ export default function DetalheEventoOrdinario({ isOpen, onClose, onEdit, eventI
                         {typeof evento.limite !== 'undefined' && (
                             <Row label="Limite">{evento.limite}</Row>
                         )}
+                        <Row label="Cadastrado por">{cadastradoPor}</Row>
                         <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 12 }}>
                             <button className="btn btn-secondary" onClick={onClose}>Voltar</button>
                             <button
