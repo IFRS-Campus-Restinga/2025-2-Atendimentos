@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from datetime import datetime, timedelta, date, time
 from accounts.models.evento_ordinario import EventoOrdinario
+from accounts.models.turma import Turma
 from django.db import transaction
 from rest_framework.decorators import action
 from ..serializers.evento_ordinario_serializer import EventoOrdinarioSerializer
@@ -43,6 +44,13 @@ class EventoOrdinarioViewSet(viewsets.ModelViewSet):
             return Response({"detail": "hora_evento_fim inválido."}, status=status.HTTP_400_BAD_REQUEST)
         if hora_fim <= hora_inicio:
             return Response({"detail": "hora_evento_fim deve ser maior que hora_evento_inicio."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Validar duração máxima de 1 hora
+        inicio_dt = datetime.combine(date.today(), hora_inicio)
+        fim_dt = datetime.combine(date.today(), hora_fim)
+        duracao = fim_dt - inicio_dt
+        if duracao > timedelta(hours=1):
+            return Response({"detail": "Atendimentos ordinários podem ter no máximo 1 hora de duração."}, status=status.HTTP_400_BAD_REQUEST)
 
         map_dias = {
             'SEG': 0, 'TER': 1, 'QUA': 2,
@@ -57,21 +65,42 @@ class EventoOrdinarioViewSet(viewsets.ModelViewSet):
 
         eventos = []
 
-        while data_atual <= data_fim:
-            evento = EventoOrdinario.objects.create(
-                dia_semana=dia_semana,
-                data_evento=data_atual,
-                hora_evento_inicio=hora_inicio,
-                hora_evento_fim=hora_fim,
-                turma_id=turma,
-                disciplina_id=disciplina,
-                limite=limite,
-                usuario_create=usuario_create,
-                data_inicio=hoje,
-                data_fim=data_fim
-            )
-            eventos.append(evento)
-            data_atual += timedelta(days=7)
+        with transaction.atomic():
+            while data_atual <= data_fim:
+                # Verificar se já existe evento nesse dia/hora/turma
+                conflitos = EventoOrdinario.objects.filter(
+                    data_evento=data_atual,
+                    turma_id=turma
+                ).exclude(
+                    hora_evento_fim__lte=hora_inicio
+                ).exclude(
+                    hora_evento_inicio__gte=hora_fim
+                )
+                
+                if conflitos.exists():
+                    primeiro_conflito = conflitos.first()
+                    turma_obj = Turma.objects.filter(id=turma).first()
+                    turma_nome = turma_obj.nome if turma_obj else 'a turma selecionada'
+                    return Response({
+                        "detail": f"Conflito de horário detectado para a turma \"{turma_nome}\" no dia {data_atual.strftime('%d/%m/%Y')}. "
+                                 f"Já existe um atendimento das {primeiro_conflito.hora_evento_inicio.strftime('%H:%M')} "
+                                 f"às {primeiro_conflito.hora_evento_fim.strftime('%H:%M')}."
+                    }, status=status.HTTP_400_BAD_REQUEST)
+                
+                evento = EventoOrdinario.objects.create(
+                    dia_semana=dia_semana,
+                    data_evento=data_atual,
+                    hora_evento_inicio=hora_inicio,
+                    hora_evento_fim=hora_fim,
+                    turma_id=turma,
+                    disciplina_id=disciplina,
+                    limite=limite,
+                    usuario_create=usuario_create,
+                    data_inicio=hoje,
+                    data_fim=data_fim
+                )
+                eventos.append(evento)
+                data_atual += timedelta(days=7)
 
         serializer = self.get_serializer(eventos, many=True)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -107,6 +136,13 @@ class EventoOrdinarioViewSet(viewsets.ModelViewSet):
             return Response({"detail": "hora_evento_fim inválido."}, status=status.HTTP_400_BAD_REQUEST)
         if hora_fim <= hora_inicio:
             return Response({"detail": "hora_evento_fim deve ser maior que hora_evento_inicio."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Validar duração máxima de 1 hora
+        inicio_dt = datetime.combine(date.today(), hora_inicio)
+        fim_dt = datetime.combine(date.today(), hora_fim)
+        duracao = fim_dt - inicio_dt
+        if duracao > timedelta(hours=1):
+            return Response({"detail": "Atendimentos ordinários podem ter no máximo 1 hora de duração."}, status=status.HTTP_400_BAD_REQUEST)
 
         def apply_updates(obj):
             obj.hora_evento_inicio = hora_inicio

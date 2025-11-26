@@ -79,6 +79,18 @@ const EventoOrdinarioBaseForm = ({
             return;
         }
 
+        // Validar duração máxima de 1 hora
+        if (horaInicio && horaFim) {
+            const [horaIni, minIni] = horaInicio.split(':').map(Number);
+            const [horaFim2, minFim] = horaFim.split(':').map(Number);
+            const duracaoMinutos = (horaFim2 * 60 + minFim) - (horaIni * 60 + minIni);
+            
+            if (duracaoMinutos > 60) {
+                alert("Atendimentos ordinários podem ter no máximo 1 hora de duração.");
+                return;
+            }
+        }
+
         const payload = {
             dia_semana: diaSemana,
             hora_evento_inicio: horaInicio,
@@ -128,9 +140,20 @@ const EventoOrdinarioBaseForm = ({
                 onSuccess?.();
             } else {
                 let errBody = null;
-                try { errBody = await (res && res.json ? res.json() : Promise.resolve(null)); } catch { }
+                try { 
+                    errBody = await (res && res.json ? res.json() : Promise.resolve(null)); 
+                } catch { }
+                
                 console.error("Falha ao criar evento:", res, errBody);
-                alert("Erro ao criar evento. Veja console (Network) para mais detalhes.");
+                
+                // Exibir mensagem de erro mais amigável
+                if (errBody && errBody.detail) {
+                    alert(errBody.detail);
+                } else if (errBody && errBody.non_field_errors) {
+                    alert(errBody.non_field_errors.join('\n'));
+                } else {
+                    alert("Erro ao criar evento. Verifique se não há conflito de horários.");
+                }
             }
         } catch (err) {
             console.error("Erro no fetch:", err);
