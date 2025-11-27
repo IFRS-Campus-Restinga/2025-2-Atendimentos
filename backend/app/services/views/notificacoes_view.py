@@ -10,15 +10,26 @@ class NotificacaoViewSet(ViewSet):
     def list(self, request):
         eventos = EventoExtraordinario.objects.order_by('-updated_at')[:10]
 
-        data = [
-            {
+        eventos = EventoExtraordinario.objects.order_by('-updated_at')[:10]
+
+        status_map = {
+            "CONF": "foi confirmado",
+            "CANC": "foi cancelado",
+            "PEND": "está pendente",
+        }
+
+        data = []
+        for e in eventos:
+            mensagem = (
+                f"O evento {str(e)} {status_map.get(e.status_atendimento, '')}"
+            )
+
+            data.append({
                 "id": e.id,
-                "mensagem": f"Evento atualizado: {str(e)}",
+                "mensagem": mensagem,
+                "status": e.status_atendimento,
                 "created_at": e.created_at,
                 "updated_at": e.updated_at,
-                "status": e.status_atendimento,
-            }
-            for e in eventos
-        ]
+            })
 
         return Response(data)
