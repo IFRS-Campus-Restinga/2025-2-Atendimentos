@@ -2,6 +2,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import logo from "../assets/ifrs_logo_branca.png";
 import { useEffect, useState } from "react";
 import "./Header.css";
+import NotificationBell from "../components/NotificationBell";
 
 function Header({ onLogout }) {
   const navigate = useNavigate();
@@ -88,6 +89,9 @@ function Header({ onLogout }) {
 
         {usuario && (
           <div className="d-flex align-items-center gap-2">
+            
+            <NotificationBell />
+
             <img
               src={usuario.foto}
               alt="Foto de perfil"
