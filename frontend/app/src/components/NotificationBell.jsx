@@ -5,6 +5,7 @@ import "./notification.css";
 export default function NotificationBell() {
   const [open, setOpen] = useState(false);
   const [notificacoes, setNotificacoes] = useState([]);
+  const [lidas, setLidas] = useState([]);
 
   const API = axios.create({
     baseURL: 'http://127.0.0.1:8000/services/notificacoes',
@@ -16,13 +17,15 @@ export default function NotificationBell() {
         const response = await API.get("/");
 
         // AGORA response.data É SEMPRE UM ARRAY → map funciona
-        setNotificacoes(
-          response.data.map((n) => ({
+        const notificacoesFiltradas = response.data
+          .filter((n) => !lidas.includes(n.id)) // ← IGNORA as que foram marcadas como lidas
+          .map((n) => ({
             id: n.id,
             mensagem: n.mensagem,
             status: n.status,
-          }))
-        );
+          }));
+
+        setNotificacoes(notificacoesFiltradas);
       } catch (err) {
         console.error("Erro ao buscar notificações:", err);
       }
@@ -31,7 +34,12 @@ export default function NotificationBell() {
     fetchNotificacoes();
     const interval = setInterval(fetchNotificacoes, 5000);
     return () => clearInterval(interval);
-  }, []);
+  }, [lidas]);
+
+  function marcarComoLida(id) {
+    setLidas((prev) => [...prev, id]);        // registra que foi lida
+    setNotificacoes((prev) => prev.filter((n) => n.id !== id)); // remove da lista atual
+  }
 
   return (
     <div className="notification-wrapper">
@@ -49,7 +57,14 @@ export default function NotificationBell() {
           ) : (
             notificacoes.map((n) => (
               <div key={n.id} className="notification-item">
-                {n.mensagem}
+                <span>{n.mensagem}</span>
+                {/* Botãozinho para marcar como lida */}
+                <button
+                  className="btn-lida"
+                  onClick={() => marcarComoLida(n.id)}
+                >
+                  ✓
+                </button>
               </div>
             ))
           )}
