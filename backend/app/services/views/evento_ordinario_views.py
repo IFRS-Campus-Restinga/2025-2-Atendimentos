@@ -31,6 +31,7 @@ class EventoOrdinarioViewSet(viewsets.ModelViewSet):
         turma = request.data.get('turma')
         disciplina = request.data.get('disciplina')
         limite = request.data.get('limite')
+        sala = request.data.get('sala')
         usuario_create = request.user if request.user.is_authenticated else None
 
         # Convertendo tipos
@@ -95,6 +96,7 @@ class EventoOrdinarioViewSet(viewsets.ModelViewSet):
                     turma_id=turma,
                     disciplina_id=disciplina,
                     limite=limite,
+                    sala=sala,
                     usuario_create=usuario_create,
                     data_inicio=hoje,
                     data_fim=data_fim

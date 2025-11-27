@@ -68,6 +68,7 @@ export default function DetalheEventoOrdinario({ isOpen, onClose, onEdit, eventI
                         <Row label="Horário">{horario}</Row>
                         <Row label="Turma">{turmaNome}</Row>
                         <Row label="Disciplina">{discNome}</Row>
+                        <Row label="Sala">{evento?.sala ? evento.sala : 'Não informado'}</Row>
                         {evento.status_atendimento && (
                             <Row label="Status">{evento.status_atendimento}</Row>
                         )}

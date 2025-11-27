@@ -13,6 +13,13 @@ class EventoOrdinario(Evento):
     data_inicio = models.DateField()
     data_fim = models.DateField()
 
+    sala = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        help_text="Sala/local do atendimento"
+    )
+
     
     class Meta:
         verbose_name = 'Evento Ordinário'

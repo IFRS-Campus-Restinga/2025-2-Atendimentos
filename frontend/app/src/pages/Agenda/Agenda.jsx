@@ -44,7 +44,7 @@ const Agenda = () => {
   const [modalTipo, setModalTipo] = useState(null);       //, troca a renderizacao ao escolher o botao
   const [turmas, setTurmas] = useState([]);
   const [disciplinas, setDisciplinas] = useState([]);
-  
+
   // Estados para visualização e edição de eventos
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -131,7 +131,7 @@ const Agenda = () => {
     setCurrentDate(newDate);
   };
 
-  function getDateStr(d) { 
+  function getDateStr(d) {
     const year = d.getFullYear();
     const month = String(d.getMonth() + 1).padStart(2, '0');
     const day = String(d.getDate()).padStart(2, '0');
@@ -166,14 +166,14 @@ const Agenda = () => {
         </div>
 
         <div style={{ display: 'flex', justifyContent: 'flex-start', marginBottom: 8 }}>
-          <button className="btn btn-success" 
-          onClick={() => { setModalTipo("ordinario"); setIsModalOpen(true); }} 
-          disabled={!turmaFilter}>
+          <button className="btn btn-success"
+            onClick={() => { setModalTipo("ordinario"); setIsModalOpen(true); }}
+            disabled={!turmaFilter}>
             + Novo Atendimento de Turma
           </button>
-          <button className="btn btn-success" style={{ marginLeft: '8px' }} 
-          onClick={() => { setModalTipo("solicitar"); setIsModalOpen(true); }}
-          disabled={!turmaFilter}>
+          <button className="btn btn-success" style={{ marginLeft: '8px' }}
+            onClick={() => { setModalTipo("solicitar"); setIsModalOpen(true); }}
+            disabled={!turmaFilter}>
             Solicitar / Marcar Atendimento
           </button>
         </div>
@@ -185,7 +185,7 @@ const Agenda = () => {
             onChange={(e) => {
               const v = e.target.value;
               setTurmaFilter(v);
-              try { localStorage.setItem('agendaTurmaId', v); } catch {}
+              try { localStorage.setItem('agendaTurmaId', v); } catch { }
               if (v) {
                 reloadEventos(v);
               } else {
@@ -250,8 +250,8 @@ const Agenda = () => {
                           const tipoLabel = isOrdinario ? 'Turma' : 'Extra';
                           const tipoClass = isOrdinario ? 'evento-ordinario' : 'evento-extraordinario';
                           return (
-                            <div 
-                              key={ev.id} 
+                            <div
+                              key={ev.id}
                               className={`appointment-indicator ${tipoClass}`}
                               onClick={() => {
                                 if (isOrdinario) {
@@ -262,7 +262,7 @@ const Agenda = () => {
                               style={{ cursor: isOrdinario ? 'pointer' : 'default' }}
                             >
                               <div className="appt-line"><strong>{horario}</strong> • {turmaNome}</div>
-                              <div className="appt-line small text-muted">{discNome}</div>
+                              <div className="appt-line small text-muted">{discNome}{ev.sala ? ` • ${ev.sala}` : ''}</div>
                               <div className="appt-line appt-tipo">{tipoLabel}</div>
                             </div>
                           );

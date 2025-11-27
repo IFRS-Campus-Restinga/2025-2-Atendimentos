@@ -19,6 +19,7 @@ const EventoOrdinarioBaseForm = ({
     const [turmas, setTurmas] = useState([]);
     const [disciplinas, setDisciplinas] = useState([]);
     const [limite, setLimite] = useState(25);
+    const [sala, setSala] = useState("");
     const [status, setStatus] = useState("");
     const [statusOptions, setStatusOptions] = useState([]);
     const [sending, setSending] = useState(false);
@@ -32,6 +33,7 @@ const EventoOrdinarioBaseForm = ({
         if (initialValues.turma) setTurmaId(String(initialValues.turma));
         if (initialValues.disciplina) setDisciplinaId(String(initialValues.disciplina));
         if (typeof initialValues.limite !== 'undefined') setLimite(initialValues.limite);
+        if (typeof initialValues.sala !== 'undefined' && initialValues.sala !== null) setSala(String(initialValues.sala));
         if (initialValues.status_atendimento) setStatus(initialValues.status_atendimento);
     }, [mode, initialValues]);
 
@@ -84,7 +86,7 @@ const EventoOrdinarioBaseForm = ({
             const [horaIni, minIni] = horaInicio.split(':').map(Number);
             const [horaFim2, minFim] = horaFim.split(':').map(Number);
             const duracaoMinutos = (horaFim2 * 60 + minFim) - (horaIni * 60 + minIni);
-            
+
             if (duracaoMinutos > 60) {
                 alert("Atendimentos ordinários podem ter no máximo 1 hora de duração.");
                 return;
@@ -99,6 +101,7 @@ const EventoOrdinarioBaseForm = ({
             turma: Number(turmaId),
             disciplina: Number(disciplinaId),
             limite,
+            sala: sala || null,
             status_atendimento: status,
         };
 
@@ -140,12 +143,12 @@ const EventoOrdinarioBaseForm = ({
                 onSuccess?.();
             } else {
                 let errBody = null;
-                try { 
-                    errBody = await (res && res.json ? res.json() : Promise.resolve(null)); 
+                try {
+                    errBody = await (res && res.json ? res.json() : Promise.resolve(null));
                 } catch { }
-                
+
                 console.error("Falha ao criar evento:", res, errBody);
-                
+
                 if (errBody && errBody.detail) {
                     alert(errBody.detail);
                 } else if (errBody && errBody.non_field_errors) {
@@ -228,9 +231,15 @@ const EventoOrdinarioBaseForm = ({
                 <div className="form-section-title">Opções</div>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
                     <div>
-                        <label>Limite</label>
+                        <label>Limite (opcional)</label>
                         <input type="number" className="form-control" value={limite} onChange={(e) => setLimite(e.target.value)} min="1" />
                     </div>
+                    <div>
+                        <label>Sala (opcional)</label>
+                        <input type="text" className="form-control" value={sala} onChange={(e) => setSala(e.target.value)} placeholder="Ex.: Sala 102" />
+                    </div>
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 8, marginTop: 8 }}>
                     <div>
                         <label>Status</label>
                         <select className="form-select" value={status} onChange={(e) => setStatus(e.target.value)}>

@@ -29,6 +29,7 @@ export default function EditarEventoOrdinario({ isOpen, onClose, evento, turmas,
             turma: Number(values.turma),
             disciplina: Number(values.disciplina),
             limite: values.limite,
+            sala: values.sala || null,
             status_atendimento: values.status_atendimento,
         };
 
@@ -65,6 +66,9 @@ export default function EditarEventoOrdinario({ isOpen, onClose, evento, turmas,
                 }
                 if ((evento?.limite ?? null) !== (values.limite ?? null)) {
                     parts.push(`Limite: ${evento?.limite ?? ''} → ${values.limite ?? ''}`);
+                }
+                if ((evento?.sala ?? '') !== (values.sala ?? '')) {
+                    parts.push(`Sala: ${evento?.sala ?? ''} → ${values.sala ?? ''}`);
                 }
                 if ((evento?.status_atendimento ?? '') !== (values.status_atendimento ?? '')) {
                     parts.push(`Status: ${evento?.status_atendimento ?? ''} → ${values.status_atendimento ?? ''}`);
@@ -130,6 +134,7 @@ export default function EditarEventoOrdinario({ isOpen, onClose, evento, turmas,
                         turma: evento?.turma,
                         disciplina: evento?.disciplina,
                         limite: evento?.limite,
+                        sala: evento?.sala,
                         status_atendimento: evento?.status_atendimento,
                     }}
                     hideFields={{ diaSemana: false, dataFim: true }}
