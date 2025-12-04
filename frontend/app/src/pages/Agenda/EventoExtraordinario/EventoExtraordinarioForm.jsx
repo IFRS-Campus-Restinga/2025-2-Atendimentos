@@ -14,7 +14,9 @@ const EventoExtraordinarioForm = ({ onSuccess }) => {
 
     useEffect(() => {
         // Carregar turmas
-        fetch(getApiUrl("turmas"))
+        const authToken = localStorage.getItem('authToken');
+        const authHeaders = authToken ? { Authorization: `Bearer ${authToken}` } : {};
+        fetch(getApiUrl("turmas"), { headers: authHeaders })
             .then((res) => res.json())
             .then((data) => {
                 const list = Array.isArray(data) ? data : data?.results || [];
@@ -25,11 +27,13 @@ const EventoExtraordinarioForm = ({ onSuccess }) => {
     }, []);
 
     useEffect(() => {
-        // Se não selecionou nenhuma turma, busca todas
+        
         setDisciplinaId("");
         const url = turmaId ? getApiUrl(`disciplinas?turma=${turmaId}`) : getApiUrl("disciplinas");
 
-        fetch(url)
+        const authToken = localStorage.getItem('authToken');
+        const authHeaders = authToken ? { Authorization: `Bearer ${authToken}` } : {};
+        fetch(url, { headers: authHeaders })
             .then((res) => res.json())
             .then((data) => {
                 const list = Array.isArray(data) ? data : data?.results || [];
@@ -65,9 +69,11 @@ const EventoExtraordinarioForm = ({ onSuccess }) => {
         try {
             const url = getApiUrl("/services/evento-extraordinario/");
 
+            const authToken = localStorage.getItem('authToken');
+            const authHeaders = authToken ? { Authorization: `Bearer ${authToken}` } : {};
             const res = await fetch(url, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: { "Content-Type": "application/json", ...authHeaders },
                 body: JSON.stringify(payload),
             });
 

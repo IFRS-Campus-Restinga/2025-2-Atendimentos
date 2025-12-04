@@ -56,10 +56,12 @@ const Agenda = () => {
     try {
       const tId = overrideTurmaId ?? turmaFilter;
       const q = tId ? `?turma=${encodeURIComponent(tId)}` : '';
+      const authToken = localStorage.getItem('authToken');
+      const authHeaders = authToken ? { Authorization: `Bearer ${authToken}` } : {};
       const [ordRes, extraRes, baseRes] = await Promise.all([
-        fetch(getApiUrl(`/services/evento-ordinario/${q}`)),
-        fetch(getApiUrl(`/services/evento-extraordinario/${q}`)),
-        fetch(getApiUrl(`/services/eventos/${q}`))
+        fetch(getApiUrl(`/services/evento-ordinario/${q}`), { headers: authHeaders }),
+        fetch(getApiUrl(`/services/evento-extraordinario/${q}`), { headers: authHeaders }),
+        fetch(getApiUrl(`/services/eventos/${q}`), { headers: authHeaders })
       ]);
       const ordJson = await ordRes.json().catch(() => []);
       const extraJson = await extraRes.json().catch(() => []);
@@ -86,13 +88,15 @@ const Agenda = () => {
     if (turmaFilter) reloadEventos(turmaFilter);
     (async () => {
       try {
-        const tRes = await fetch(getApiUrl('turmas'));
+        const authToken = localStorage.getItem('authToken');
+        const authHeaders = authToken ? { Authorization: `Bearer ${authToken}` } : {};
+        const tRes = await fetch(getApiUrl('turmas'), { headers: authHeaders });
         const tJson = await tRes.json();
         setTurmas(Array.isArray(tJson) ? tJson : tJson?.results || []);
       } catch (e) { console.error('Erro turmas:', e); }
 
       try {
-        const dRes = await fetch(getApiUrl('disciplinas'));
+        const dRes = await fetch(getApiUrl('disciplinas'), { headers: authHeaders });
         const dJson = await dRes.json();
         setDisciplinas(Array.isArray(dJson) ? dJson : dJson?.results || []);
       } catch (e) { console.error('Erro disciplinas:', e); }

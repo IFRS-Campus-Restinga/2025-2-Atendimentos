@@ -38,7 +38,10 @@ const EventoOrdinarioBaseForm = ({
     }, [mode, initialValues]);
 
     useEffect(() => {
-        fetch(getApiUrl("/services/api/eventos-ordinarios/status-choices/"))
+        const authToken = localStorage.getItem('authToken');
+        const authHeaders = authToken ? { Authorization: `Bearer ${authToken}` } : {};
+
+        fetch(getApiUrl("/services/api/eventos-ordinarios/status-choices/"), { headers: authHeaders })
             .then((res) => res.json())
             .then((data) => {
                 setStatusOptions(data);
@@ -48,7 +51,7 @@ const EventoOrdinarioBaseForm = ({
                 console.error("Erro ao buscar status:", err);
             });
 
-        fetch(getApiUrl("turmas"))
+        fetch(getApiUrl("turmas"), { headers: authHeaders })
             .then((res) => res.json())
             .then((data) => {
                 const list = Array.isArray(data) ? data : data?.results || [];
@@ -56,7 +59,7 @@ const EventoOrdinarioBaseForm = ({
             })
             .catch((err) => console.error("Erro ao buscar turmas:", err));
 
-        fetch(getApiUrl("disciplinas"))
+        fetch(getApiUrl("disciplinas"), { headers: authHeaders })
             .then((res) => res.json())
             .then((data) => {
                 const list = Array.isArray(data) ? data : data?.results || [];
@@ -120,11 +123,14 @@ const EventoOrdinarioBaseForm = ({
                 getApiUrl("/services/evento-ordinario/")
             ];
 
+            const authToken = localStorage.getItem('authToken');
+            const authHeaders = authToken ? { Authorization: `Bearer ${authToken}` } : {};
+
             let res = null;
             for (const url of urlsToTry) {
                 res = await fetch(url, {
                     method: "POST",
-                    headers: { "Content-Type": "application/json" },
+                    headers: { "Content-Type": "application/json", ...authHeaders },
                     body: JSON.stringify(payload),
                 });
                 if (res.ok) break;

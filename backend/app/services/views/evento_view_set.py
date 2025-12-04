@@ -11,7 +11,23 @@ from services.permissions import PodeAprovarEvento, PodeCancelarEvento, PodeRege
 class EventoViewSet(ModelViewSet):
     queryset = Evento.objects.all()
     serializer_class = EventoSerializer
-    permission_classes = [AllowAny]
+    # Criar/editar eventos deve exigir autenticação para vincular o criador
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        """Ao criar um Evento, vincula o perfil `Usuario`"""
+        user = getattr(self.request, 'user', None)
+        perfil = None
+        if user and user.is_authenticated:
+            try:
+                from accounts.models.usuario import Usuario
+                perfil = Usuario.objects.filter(user=user).first()
+                if not perfil and getattr(user, 'email', None):
+                    perfil = Usuario.objects.filter(email__iexact=user.email).first()
+            except Exception:
+                perfil = None
+
+        serializer.save(usuario_create=perfil)
 
     def get_queryset(self):
         qs = super().get_queryset()

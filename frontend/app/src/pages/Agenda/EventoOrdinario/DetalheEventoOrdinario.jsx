@@ -19,7 +19,9 @@ export default function DetalheEventoOrdinario({ isOpen, onClose, onEdit, eventI
         async function load() {
             setLoading(true);
             try {
-                const res = await fetch(getApiUrl(`/services/evento-ordinario/${eventId}/`));
+                const authToken = localStorage.getItem('authToken');
+                const authHeaders = authToken ? { Authorization: `Bearer ${authToken}` } : {};
+                const res = await fetch(getApiUrl(`/services/evento-ordinario/${eventId}/`), { headers: authHeaders });
                 const data = await res.json();
                 if (active) setEvento(data);
             } catch (e) {
@@ -43,7 +45,13 @@ export default function DetalheEventoOrdinario({ isOpen, onClose, onEdit, eventI
     const inicio = (evento?.hora_evento_inicio || '').slice(0, 5);
     const fim = (evento?.hora_evento_fim || '').slice(0, 5);
     const horario = fim ? `${inicio}–${fim}` : inicio;
-    const cadastradoPor = evento?.usuario_create?.name || evento?.usuario_create?.username || 'Não informado';
+    // `Usuario` model uses `nome` (Portuguese). Try multiple fallbacks for compatibility.
+    const cadastradoPor = evento?.usuario_create?.nome
+        || evento?.usuario_create?.name
+        || evento?.usuario_create?.username
+        || evento?.usuario_create_name
+        || evento?.usuario_create?.email
+        || 'Não informado';
     const dataStr = (() => {
         const s = evento?.data_evento;
         if (!s) return '';
