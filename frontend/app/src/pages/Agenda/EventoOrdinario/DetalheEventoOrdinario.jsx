@@ -12,6 +12,7 @@ const Row = ({ label, children }) => (
 export default function DetalheEventoOrdinario({ isOpen, onClose, onEdit, eventId, fallbackEvento, turmaNameById, disciplinaNameById }) {
     const [loading, setLoading] = useState(false);
     const [evento, setEvento] = useState(fallbackEvento || null);
+    const [canEdit, setCanEdit] = useState(false);
 
     useEffect(() => {
         if (!isOpen || !eventId) return;
@@ -24,6 +25,16 @@ export default function DetalheEventoOrdinario({ isOpen, onClose, onEdit, eventI
                 const res = await fetch(getApiUrl(`/services/evento-ordinario/${eventId}/`), { headers: authHeaders });
                 const data = await res.json();
                 if (active) setEvento(data);
+                // Ve permissões
+                try {
+                    const pRes = await fetch(getApiUrl('/services/api/permissions/'), { headers: authHeaders });
+                    if (pRes.ok) {
+                        const pJson = await pRes.json();
+                        if (active) setCanEdit(Boolean(pJson.can_change_event));
+                    }
+                } catch (err) {
+                    console.error('Erro ao buscar permissões:', err);
+                }
             } catch (e) {
                 console.error('Erro ao carregar evento:', e);
             } finally {
@@ -45,7 +56,6 @@ export default function DetalheEventoOrdinario({ isOpen, onClose, onEdit, eventI
     const inicio = (evento?.hora_evento_inicio || '').slice(0, 5);
     const fim = (evento?.hora_evento_fim || '').slice(0, 5);
     const horario = fim ? `${inicio}–${fim}` : inicio;
-    // `Usuario` model uses `nome` (Portuguese). Try multiple fallbacks for compatibility.
     const cadastradoPor = evento?.usuario_create?.nome
         || evento?.usuario_create?.name
         || evento?.usuario_create?.username
@@ -86,15 +96,17 @@ export default function DetalheEventoOrdinario({ isOpen, onClose, onEdit, eventI
                         <Row label="Cadastrado por">{cadastradoPor}</Row>
                         <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 12 }}>
                             <button className="btn btn-secondary" onClick={onClose}>Voltar</button>
-                            <button
-                                className="btn btn-primary"
-                                onClick={() => onEdit?.({
-                                    ...evento,
-                                    dia_semana: evento?.dia_semana ?? fallbackEvento?.dia_semana,
-                                })}
-                            >
-                                Editar
-                            </button>
+                            {canEdit && (
+                                <button
+                                    className="btn btn-primary"
+                                    onClick={() => onEdit?.({
+                                        ...evento,
+                                        dia_semana: evento?.dia_semana ?? fallbackEvento?.dia_semana,
+                                    })}
+                                >
+                                    Editar
+                                </button>
+                            )}
                         </div>
                     </div>
                 )}
