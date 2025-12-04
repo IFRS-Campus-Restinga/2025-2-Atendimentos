@@ -3,6 +3,8 @@ import './Agenda.css';
 import EventoOrdinarioModal from './EventoOrdinario/EventoOrdinarioModal';
 import DetalheEventoOrdinario from './EventoOrdinario/DetalheEventoOrdinario';
 import EditarEventoOrdinario from './EventoOrdinario/EditarEventoOrdinario';
+import DetalheEventoExtraordinario from './EventoExtraordinario/DetalheEventoExtraordinario';
+import EditarEventoExtraordinario from './EventoExtraordinario/EditarEventoExtraordinario';
 import { getApiUrl } from '../../services/api';
 
 // Period definitions
@@ -47,6 +49,8 @@ const Agenda = () => {
   const [permissions, setPermissions] = useState({});
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showEditExtraModal, setShowEditExtraModal] = useState(false); // EXTRAORDINÁRIO
+  const [showDetailExtraModal, setShowDetailExtraModal] = useState(false);
   const [selectedEvento, setSelectedEvento] = useState(null);
 
   const dayNames = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
@@ -273,12 +277,14 @@ const Agenda = () => {
                               key={ev.id}
                               className={`appointment-indicator ${tipoClass}`}
                               onClick={() => {
+                                setSelectedEvento(ev);
                                 if (isOrdinario) {
-                                  setSelectedEvento(ev);
                                   setShowDetailModal(true);
+                                }else{
+                                  setShowDetailExtraModal(true);
                                 }
                               }}
-                              style={{ cursor: isOrdinario ? 'pointer' : 'default' }}
+                              style={{ cursor: 'pointer' }}
                             >
                               <div className="appt-line"><strong>{horario}</strong> • {turmaNome}</div>
                               <div className="appt-line small text-muted">{discNome}{ev.sala ? ` • ${ev.sala}` : ''}</div>
@@ -320,6 +326,24 @@ const Agenda = () => {
         disciplinaNameById={disciplinaNameById}
       />
 
+      <DetalheEventoExtraordinario
+        isOpen={showDetailExtraModal}
+        onClose={() => {
+          setShowDetailExtraModal(false);
+          setSelectedEvento(null);
+        }}
+        onEdit={(evento) => {
+          setShowDetailExtraModal(false);
+          setSelectedEvento(evento);
+          setShowEditExtraModal(true);
+        }}
+        eventId={selectedEvento?.id}
+        fallbackEvento={selectedEvento}
+        turmaNameById={turmaNameById}
+        disciplinaNameById={disciplinaNameById}
+      />
+
+
       <EditarEventoOrdinario
         isOpen={showEditModal}
         onClose={() => {
@@ -331,6 +355,22 @@ const Agenda = () => {
         disciplinas={disciplinas}
         onSuccess={() => {
           setShowEditModal(false);
+          setSelectedEvento(null);
+          reloadEventos();
+        }}
+      />
+
+      <EditarEventoExtraordinario
+        isOpen={showEditExtraModal}
+        onClose={() => {
+          setShowEditExtraModal(false);
+          setSelectedEvento(null);
+        }}
+        evento={selectedEvento}
+        turmas={turmas}
+        disciplinas={disciplinas}
+        onSuccess={() => {
+          setShowEditExtraModal(false);
           setSelectedEvento(null);
           reloadEventos();
         }}
