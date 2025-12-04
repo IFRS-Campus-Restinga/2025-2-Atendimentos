@@ -2,9 +2,9 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
-
 from django.contrib.auth import get_user_model
 from django.db import transaction
+from django.contrib.auth.models import Group
 
 from accounts.models.usuario import Usuario
 from accounts.enumerations.tipo_usuario import TipoUsuario
@@ -108,6 +108,23 @@ class UsuarioMeView(APIView):
             usuario_data['user'] = auth_user
             usuario = Usuario.objects.create(**usuario_data)
             created = True
+
+        # Ensure auth Group membership reflects the selected tipoPerfil
+        GRUPO_MAP = {
+            'PROF': 'Professores',
+            'ALU': 'Alunos',
+            'COORD': 'Coordenadores',
+            'ADM': 'Administradores'
+        }
+        grupo_nome = GRUPO_MAP.get(tipo)
+        if grupo_nome:
+            grupo_obj, _ = Group.objects.get_or_create(name=grupo_nome)
+            try:
+                # Replace user's groups with the selected one to keep it in sync
+                auth_user.groups.clear()
+                auth_user.groups.add(grupo_obj)
+            except Exception:
+                pass
 
         return Response({
             'created': created,
