@@ -4,6 +4,7 @@ from rest_framework.permissions import AllowAny
 from datetime import datetime, timedelta, date, time
 from accounts.models.evento_ordinario import EventoOrdinario
 from accounts.models.turma import Turma
+from accounts.models.usuario import Usuario
 from django.db import transaction
 from rest_framework.decorators import action
 from ..serializers.evento_ordinario_serializer import EventoOrdinarioSerializer
@@ -32,7 +33,15 @@ class EventoOrdinarioViewSet(viewsets.ModelViewSet):
         disciplina = request.data.get('disciplina')
         limite = request.data.get('limite')
         sala = request.data.get('sala')
-        usuario_create = request.user if request.user.is_authenticated else None
+        user = request.user if request.user.is_authenticated else None
+        usuario_create = None
+        if user and user.is_authenticated:
+            try:
+                usuario_create = Usuario.objects.filter(user=user).first()
+                if not usuario_create and getattr(user, 'email', None):
+                    usuario_create = Usuario.objects.filter(email__iexact=user.email).first()
+            except Exception:
+                usuario_create = None
 
         # Convertendo tipos
         data_fim = datetime.strptime(data_fim, "%Y-%m-%d").date()

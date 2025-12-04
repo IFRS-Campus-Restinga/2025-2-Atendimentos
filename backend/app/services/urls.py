@@ -15,6 +15,8 @@ from services.views.auth_views import GoogleLoginView
 from services.views.registro_atendimento_views_set import RegistroAtendimentoViewSet
 # Removed complemento/profile views
 from services.views.usuario_me_view import UsuarioMeView
+from services.views.notificacoes_view import NotificacaoViewSet
+from services.views.permissions_view import PermissionsView
 
 app_name = 'api'
 router = DefaultRouter()
@@ -27,10 +29,12 @@ router.register(r'evento-ordinario', EventoOrdinarioViewSet, basename='evento-or
 router.register(r'evento-extraordinario', EventoExtraordinarioViewSet, basename='evento-extraordinario')
 router.register(r'usuario', UsuarioViewSet, basename='usuario')
 router.register(r'registro-atendimento', RegistroAtendimentoViewSet, basename='registro-atendimento')
+router.register(r'notificacoes', NotificacaoViewSet, basename='notificacoes')
 
 
 urlpatterns = [
     path('api/google-login/', GoogleLoginView.as_view(), name='google-login'),
+    path('api/permissions/', PermissionsView.as_view(), name='permissions'),
     path('', include(router.urls)),
     # complemento-cadastro and profile endpoints removed
     path('api/usuario/me', UsuarioMeView.as_view(), name='usuario-me'),
