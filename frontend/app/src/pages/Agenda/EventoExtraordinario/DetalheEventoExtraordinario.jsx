@@ -9,28 +9,24 @@ const Row = ({ label, value }) => (
     </div>
 );
 
-const DetalheEventoExtraordinario = ({ isOpen, id, onClose, onEdit }) => {
+const DetalheEventoExtraordinario = ({ isOpen, eventId, onClose, onEdit }) => {
     const [data, setData] = useState(null);
 
-    // 🔥 1. HOOKS SEMPRE AQUI EM CIMA (antes de qualquer return)
-
     useEffect(() => {
-        if (!isOpen || !id) {
+        if (!isOpen || !eventId) {
             setData(null);
             return;
         }
 
-        const auth = localStorage.getItem("authToken");
-        const headers = auth ? { Authorization: `Bearer ${auth}` } : {};
+        const token = localStorage.getItem("authToken");
+        const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
-        fetch(getApiUrl(`/services/evento-extraordinario/${id}/`), { headers })
+        fetch(getApiUrl(`/services/evento-extraordinario/${eventId}/`), { headers })
             .then((res) => res.json())
             .then((json) => setData(json))
             .catch((err) => console.error("Erro ao carregar detalhes:", err));
+    }, [eventId, isOpen]);
 
-    }, [id, isOpen]);
-
-    // 🔥 2. Só depois disso você pode não renderizar o modal
     if (!isOpen) return null;
     if (!data) return null;
 
@@ -53,10 +49,10 @@ const DetalheEventoExtraordinario = ({ isOpen, id, onClose, onEdit }) => {
                 <div className="modal-body">
                     <Row label="Data" value={formatDate(data.data_evento)} />
                     <Row label="Horário de Início" value={formatTime(data.hora_evento_inicio)} />
-                    <Row label="Horário de Término" value={formatTime(data.hora_evento_fim)} />
-                    <Row label="Turma" value={data?.turma_nome} />
-                    <Row label="Disciplina" value={data?.disciplina_nome} />
-                    <Row label="Cadastrado por" value={data?.usuario_nome} />
+                    <Row label="Horário de Fim" value={formatTime(data.hora_evento_fim)} />
+                    <Row label="Turma" value={data.turma_nome || data.turma} />
+                    <Row label="Disciplina" value={data.disciplina_nome || data.disciplina} />
+                    <Row label="Cadastrado por" value={data.usuario_nome || data.usuario_create} />
 
                     <div className="detail-actions">
                         <button className="btn btn-secondary" onClick={onClose}>Fechar</button>
