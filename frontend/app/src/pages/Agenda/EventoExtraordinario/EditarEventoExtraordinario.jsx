@@ -1,69 +1,37 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { getApiUrl } from '../../../services/api';
 import '../Evento.css';
+import EventoExtraordinarioBaseForm from './EventoExtraordinarioBaseForm';
 
-const EditarEventoExtraordinario = ({ isOpen, onClose, item, onSaved }) => {
-    const [data, setData] = useState("");
-    const [horaInicio, setHoraInicio] = useState("");
-    const [horaFim, setHoraFim] = useState("");
-    const [sending, setSending] = useState(false);
+export default function EditarEventoExtraordinario({ isOpen, onClose, evento, onSuccess }) {
 
     useEffect(() => {
-        if (item) {
-            setData(item.data_evento || "");
-            setHoraInicio(item.hora_evento_inicio || "");
-            setHoraFim(item.hora_evento_fim || "");
-        }
-    }, [item]);
+        if (!isOpen || !evento) return;
+    }, [isOpen, evento]);
 
-    if (!isOpen || !item) return null;
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        if (horaFim <= horaInicio) {
-            alert("O horário final deve ser maior que o inicial.");
-            return;
-        }
-
-        const payload = {
-            data_evento: data,
-            hora_evento_inicio: horaInicio,
-            hora_evento_fim: horaFim,
-        };
-
-        setSending(true);
-
-        try {
-            const url = getApiUrl(`/services/evento-extraordinario/${item.id}/`);
-            const auth = localStorage.getItem("authToken");
-            const headers = auth ? { Authorization: `Bearer ${auth}`, "Content-Type": "application/json" } : {};
-
-            const res = await fetch(url, {
-                method: "PATCH",
-                headers,
-                body: JSON.stringify(payload),
-            });
-
-            if (!res.ok) {
-                alert("Erro ao editar o atendimento.");
-                return;
-            }
-
-            alert("Atendimento extraordinário atualizado!");
-            onSaved?.();
-            onClose?.();
-
-        } catch (err) {
-            console.error("Erro na edição:", err);
-            alert("Erro no servidor.");
-        } finally {
-            setSending(false);
-        }
-    };
+    if (!isOpen || !evento) return null;
 
     const handleOverlayClick = (e) => {
-        if (e.target.classList.contains("modal-overlay")) onClose();
+        if (e.target.classList.contains('modal-overlay')) onClose?.();
+    };
+
+    const submitOverride = async (values) => {
+        const url = getApiUrl(`/services/evento-extraordinario/${evento.id}/`);
+        const authToken = localStorage.getItem('authToken');
+        const authHeaders = authToken ? { Authorization: `Bearer ${authToken}` } : {};
+
+        const res = await fetch(url, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json', ...authHeaders },
+            body: JSON.stringify(values),
+        });
+
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            throw new Error(err.detail || 'Falha ao salvar');
+        }
+
+        return true;
     };
 
     return (
@@ -74,39 +42,12 @@ const EditarEventoExtraordinario = ({ isOpen, onClose, item, onSaved }) => {
                     <button className="modal-close-btn" onClick={onClose}>×</button>
                 </div>
 
-                <form onSubmit={handleSubmit} className="modal-form">
-
-                    <div className="form-section-box">
-                        <div className="form-section-title">Informações</div>
-
-                        <div className="mb-3">
-                            <label>Data</label>
-                            <input type="date" className="form-control" value={data} onChange={e => setData(e.target.value)} required />
-                        </div>
-
-                        <div className="mb-3" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
-                            <div>
-                                <label>Início</label>
-                                <input type="time" className="form-control" value={horaInicio} onChange={e => setHoraInicio(e.target.value)} required />
-                            </div>
-                            <div>
-                                <label>Término</label>
-                                <input type="time" className="form-control" value={horaFim} onChange={e => setHoraFim(e.target.value)} required />
-                            </div>
-                        </div>
-
-                        <div style={{ display: "flex", justifyContent: "flex-end", gap: 8 }}>
-                            <button type="button" className="btn btn-secondary" onClick={onClose}>Cancelar</button>
-                            <button type="submit" className="btn btn-success" disabled={sending}>
-                                {sending ? "Salvando..." : "Salvar"}
-                            </button>
-                        </div>
-                    </div>
-
-                </form>
+                <EventoExtraordinarioBaseForm
+                    isEditing={true}           // indica que é edição
+                    defaultData={evento}       // inicializa os campos com os valores do evento
+                    onSuccess={onSuccess}      // callback após salvar
+                />
             </div>
         </div>
     );
-};
-
-export default EditarEventoExtraordinario;
+}

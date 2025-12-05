@@ -11,7 +11,7 @@ const EventoExtraordinarioBaseForm = ({
     const [horaInicio, setHoraInicio] = useState(defaultData?.hora_evento_inicio || "");
     const [horaFim, setHoraFim] = useState(defaultData?.hora_evento_fim || "");
     const [turmaId, setTurmaId] = useState(defaultData?.turma || "");
-    const [disciplinaId, setDisciplinaId] = useState(defaultData?.disciplina || "");
+    const [disciplinaId, setDisciplinaId] = useState(defaultData?.disciplina ? String(defaultData.disciplina) : "");
 
     const [turmas, setTurmas] = useState([]);
     const [disciplinas, setDisciplinas] = useState([]);
@@ -32,25 +32,25 @@ const EventoExtraordinarioBaseForm = ({
     }, []);
 
     // ---------------------- CARREGAR DISCIPLINAS ----------------------
-    useEffect(() => {
-        setDisciplinaId("");
+useEffect(() => {
+    const url = getApiUrl("disciplinas"); // apenas todas, sem filtro de turma
+    const authToken = localStorage.getItem('authToken');
+    const authHeaders = authToken ? { Authorization: `Bearer ${authToken}` } : {};
 
-        const url = turmaId
-            ? getApiUrl(`disciplinas?turma=${turmaId}`)
-            : getApiUrl("disciplinas");
+    fetch(url, { headers: authHeaders })
+        .then((res) => res.json())
+        .then((data) => {
+            const list = Array.isArray(data) ? data : data?.results || [];
+            setDisciplinas(list);
 
-        const authToken = localStorage.getItem('authToken');
-        const authHeaders = authToken ? { Authorization: `Bearer ${authToken}` } : {};
+            // se estiver editando, seta a disciplina inicial
+            if (defaultData?.disciplina) {
+                setDisciplinaId(String(defaultData.disciplina));
+            }
+        })
+        .catch((err) => console.error("Erro ao buscar disciplinas:", err));
+}, [defaultData]);
 
-        fetch(url, { headers: authHeaders })
-            .then((res) => res.json())
-            .then((data) => {
-                const list = Array.isArray(data) ? data : data?.results || [];
-                setDisciplinaId("");
-                setDisciplinas(list);
-            })
-            .catch((err) => console.error("Erro ao buscar disciplinas:", err));
-    }, [turmaId]);
 
     // ---------------------- SALVAR / EDITAR ----------------------
     const handleSubmit = async (e) => {
