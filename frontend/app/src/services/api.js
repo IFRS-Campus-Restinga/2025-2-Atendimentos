@@ -10,6 +10,11 @@ export const API_CONFIG = {
     professores: '/services/professores/',
     turmas: '/services/turmas/',
     usuarioMe: '/services/api/usuario/me',
+    profileStatus: '/services/api/profile/status/',           // ✅ adicionado
+    complementoCadastro: '/services/api/usuario/complemento/', // ✅ adicionado
+    eventoOrdinario: '/services/evento-ordinario/',
+    eventoExtraordinario: '/services/evento-extraordinario/',
+    eventoConvocacao: '/api/evento-convocacao/',              // ✅ novo endpoint
   }
 };
 
@@ -122,4 +127,72 @@ export async function saveUsuarioMe(payload) {
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(data?.detail || 'Falha ao salvar usuário');
   return data;
+}
+
+// --- Funções de Convocação ---
+export async function criarConvocacao(payload) {
+  const url = getApiUrl("eventoConvocacao");
+  const res = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...getAuthHeaders(),
+    },
+    body: JSON.stringify(payload),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data?.detail || "Falha ao criar convocação");
+  return data;
+}
+
+export async function listarConvocacoes() {
+  const url = getApiUrl("eventoConvocacao");
+  const res = await fetch(url, {
+    method: "GET",
+    headers: {
+      "Accept": "application/json",
+      ...getAuthHeaders(),
+    },
+  });
+  if (!res.ok) throw new Error("Falha ao listar convocações");
+  return res.json();
+}
+
+export async function editarConvocacao(id, payload) {
+  const url = `${getApiUrl("eventoConvocacao")}${id}/`;
+  const res = await fetch(url, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      ...getAuthHeaders(),
+    },
+    body: JSON.stringify(payload),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data?.detail || "Falha ao editar convocação");
+  return data;
+}
+
+export async function encerrarConvocacao(id) {
+  const url = `${getApiUrl("eventoConvocacao")}${id}/encerrar/`;
+  const res = await fetch(url, {
+    method: "POST",
+    headers: {
+      ...getAuthHeaders(),
+    },
+  });
+  if (!res.ok) throw new Error("Falha ao encerrar convocação");
+  return res.json();
+}
+
+export async function cancelarConvocacao(id) {
+  const url = `${getApiUrl("eventoConvocacao")}${id}/cancelar/`;
+  const res = await fetch(url, {
+    method: "POST",
+    headers: {
+      ...getAuthHeaders(),
+    },
+  });
+  if (!res.ok) throw new Error("Falha ao cancelar convocação");
+  return res.json();
 }
