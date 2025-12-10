@@ -1,6 +1,7 @@
 from rest_framework import viewsets, status
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import IsAuthenticated
+from guardian.shortcuts import assign_perm
 from datetime import datetime, timedelta, date, time
 from accounts.models.evento_ordinario import EventoOrdinario
 from accounts.models.turma import Turma
@@ -12,7 +13,7 @@ from ..serializers.evento_ordinario_serializer import EventoOrdinarioSerializer
 class EventoOrdinarioViewSet(viewsets.ModelViewSet):
     queryset = EventoOrdinario.objects.all().order_by('-data_evento', '-hora_evento_inicio')
     serializer_class = EventoOrdinarioSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         qs = super().get_queryset()
@@ -110,6 +111,13 @@ class EventoOrdinarioViewSet(viewsets.ModelViewSet):
                     data_inicio=hoje,
                     data_fim=data_fim
                 )
+                try:
+                    if user and user.is_authenticated:
+                        assign_perm('accounts.pode_aprovar_evento', user, evento)
+                        assign_perm('accounts.pode_cancelar_evento', user, evento)
+                        assign_perm('accounts.pode_reagendar_evento', user, evento)
+                except Exception:
+                    pass
                 eventos.append(evento)
                 data_atual += timedelta(days=7)
 
@@ -121,7 +129,6 @@ class EventoOrdinarioViewSet(viewsets.ModelViewSet):
         ev = self.get_object()
         apply_scope = request.data.get("apply_scope", "single").lower()
 
-        # Campos possíveis de atualização
         hora_inicio_str = request.data.get('hora_evento_inicio')
         hora_fim_str = request.data.get('hora_evento_fim')
         turma = request.data.get('turma')

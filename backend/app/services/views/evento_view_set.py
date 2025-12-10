@@ -6,7 +6,12 @@ from accounts.enumerations.status_atendimento import StatusAtendimento
 from ..serializers.evento_serializer import EventoSerializer
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
-from services.permissions import PodeAprovarEvento, PodeCancelarEvento, PodeRegendarEvento
+from services.permissions import (
+    PodeAprovarEvento, PodeCancelarEvento, PodeRegendarEvento,
+    PodeAprovarEventoObjectPermission, PodeCancelarEventoObjectPermission,
+    PodeRegendarEventoObjectPermission,
+)
+from guardian.shortcuts import assign_perm
 
 class EventoViewSet(ModelViewSet):
     queryset = Evento.objects.all()
@@ -27,7 +32,14 @@ class EventoViewSet(ModelViewSet):
             except Exception:
                 perfil = None
 
-        serializer.save(usuario_create=perfil)
+        evento = serializer.save(usuario_create=perfil)
+        try:
+            if user and user.is_authenticated and evento is not None:
+                assign_perm('accounts.pode_aprovar_evento', user, evento)
+                assign_perm('accounts.pode_cancelar_evento', user, evento)
+                assign_perm('accounts.pode_reagendar_evento', user, evento)
+        except Exception:
+            pass
 
     def get_queryset(self):
         qs = super().get_queryset()
@@ -35,8 +47,9 @@ class EventoViewSet(ModelViewSet):
         if turma_id:
             qs = qs.filter(turma_id=turma_id)
         return qs
+
     @action(detail=True, methods=['post'], url_path='aprovar',
-            permission_classes=[PodeAprovarEvento]) 
+        permission_classes=[PodeAprovarEventoObjectPermission])
     def aprovar(self, request, pk=None):
         """Aprova/confirma um evento. Requer permissão 'pode_aprovar_evento'"""
         evento = self.get_object()
@@ -49,7 +62,7 @@ class EventoViewSet(ModelViewSet):
         )
 
     @action(detail=True, methods=['post'], url_path='cancelar',
-            permission_classes=[PodeCancelarEvento])
+        permission_classes=[PodeCancelarEventoObjectPermission])
     def cancelar(self, request, pk=None):
         """Cancela um evento. Requer permissão 'pode_cancelar_evento'"""
         evento = self.get_object()
@@ -62,7 +75,7 @@ class EventoViewSet(ModelViewSet):
         )
 
     @action(detail=True, methods=['post'], url_path='reagendar',
-            permission_classes=[PodeRegendarEvento])
+        permission_classes=[PodeRegendarEventoObjectPermission])
     def reagendar(self, request, pk=None):
         """Reagenda um evento para nova data/hora. Requer permissão 'pode_reagendar_evento'"""
         evento = self.get_object()

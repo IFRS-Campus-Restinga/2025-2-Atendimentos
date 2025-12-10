@@ -36,3 +36,24 @@ class ProfessorPodeAprovar(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             return True # Permite a leitura para qualquer um
         return request.user.has_perm('accounts.pode_aprovar_evento')
+
+class PodeAprovarEventoObjectPermission(permissions.BasePermission):
+    """Permissão por objeto para aprovar um evento (accounts.pode_aprovar_evento on obj)"""
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        return request.user.has_perm('accounts.pode_aprovar_evento', obj)
+    
+class PodeCancelarEventoObjectPermission(permissions.BasePermission):
+    """Permissão por objeto para cancelar um evento (accounts.pode_cancelar_evento on obj)"""
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        return request.user.has_perm('accounts.pode_cancelar_evento', obj)
+
+class PodeRegendarEventoObjectPermission(permissions.BasePermission):
+    """Permissão por objeto para reagendar um evento (accounts.pode_reagendar_evento on obj)"""
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        return request.user.has_perm('accounts.pode_reagendar_evento', obj)

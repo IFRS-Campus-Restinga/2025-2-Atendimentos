@@ -17,6 +17,10 @@ from services.views.registro_atendimento_views_set import RegistroAtendimentoVie
 from services.views.usuario_me_view import UsuarioMeView
 from services.views.notificacoes_view import NotificacaoViewSet
 from services.views.permissions_view import PermissionsView
+from services.views.admin_permissions import (
+    AdminPermissionsList, AdminGroupsList, AdminUsersList,
+    GroupPermsAssign, UserGroupsAssign,
+)
 
 app_name = 'api'
 router = DefaultRouter()
@@ -35,6 +39,13 @@ router.register(r'notificacoes', NotificacaoViewSet, basename='notificacoes')
 urlpatterns = [
     path('api/google-login/', GoogleLoginView.as_view(), name='google-login'),
     path('api/permissions/', PermissionsView.as_view(), name='permissions'),
+    path('api/admin/permissions/', AdminPermissionsList.as_view(), name='admin-permissions-list'),
+    path('api/admin/groups/', AdminGroupsList.as_view(), name='admin-groups-list'),
+    path('api/admin/users/', AdminUsersList.as_view(), name='admin-users-list'),
+    path('api/admin/groups/<int:group_id>/perms/', GroupPermsAssign.as_view(), name='admin-group-perms-assign'),
+    path('api/admin/groups/<int:group_id>/perms/<str:perm_codename>/', GroupPermsAssign.as_view(), name='admin-group-perms-remove'),
+    path('api/admin/users/<int:user_id>/groups/', UserGroupsAssign.as_view(), name='admin-user-groups-assign'),
+    path('api/admin/users/<int:user_id>/groups/<int:group_id>/', UserGroupsAssign.as_view(), name='admin-user-groups-remove'),
     path('', include(router.urls)),
     # complemento-cadastro and profile endpoints removed
     path('api/usuario/me', UsuarioMeView.as_view(), name='usuario-me'),
