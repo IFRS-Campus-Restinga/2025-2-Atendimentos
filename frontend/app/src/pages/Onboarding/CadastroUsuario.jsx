@@ -21,6 +21,8 @@ export default function CadastroUsuario() {
     curso_id: ''
   });
   const [cursos, setCursos] = useState([]);
+  const [disciplinas, setDisciplinas] = useState([]);
+  const [selectedDisciplinas, setSelectedDisciplinas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [isCoordRedirecting, setIsCoordRedirecting] = useState(false);
@@ -77,6 +79,13 @@ export default function CadastroUsuario() {
           credentials: 'include',
         });
         const cursosData = await cursosRes.json();
+        // Buscar disciplinas disponíveis
+        const disciplinasRes = await fetch(`${API_CONFIG.baseURL}${API_CONFIG.endpoints.disciplinas}`, {
+          method: 'GET',
+          headers: { 'Accept': 'application/json', ...getAuthHeaders() },
+          credentials: 'include',
+        });
+        const disciplinasData = await disciplinasRes.json();
         
         if (!ignore) {
           setForm({
@@ -88,6 +97,8 @@ export default function CadastroUsuario() {
             curso_id: userData?.curso?.id || '',
           });
           setCursos(cursosData?.results || cursosData || []);
+          setDisciplinas(disciplinasData?.results || disciplinasData || []);
+          setSelectedDisciplinas(userData?.disciplinas || []);
           setLoading(false);
         }
       } catch {
@@ -139,6 +150,7 @@ export default function CadastroUsuario() {
       // Adicionar campos específicos conforme o papel
       if (form.tipoPerfil === 'PROF') {
         payload.registro = form.registro;
+        if (selectedDisciplinas && selectedDisciplinas.length) payload.disciplinas = selectedDisciplinas;
       } else if (form.tipoPerfil === 'ALU') {
         payload.matricula = form.matricula;
         payload.curso_id = form.curso_id;
@@ -228,6 +240,26 @@ export default function CadastroUsuario() {
               <div className="mb-3">
                 <label className="form-label">Registro <span className="text-danger">*</span></label>
                 <input className="form-control" name="registro" value={form.registro} onChange={onChange} required />
+              </div>
+            )}
+
+            {form.tipoPerfil === 'PROF' && (
+              <div className="mb-3">
+                <label className="form-label">Disciplinas (marque as que leciona)</label>
+                <select
+                  multiple
+                  className="form-select"
+                  value={selectedDisciplinas.map(id => String(id))}
+                  onChange={(e) => {
+                    const opts = Array.from(e.target.selectedOptions).map(o => Number(o.value));
+                    setSelectedDisciplinas(opts);
+                  }}
+                >
+                  {disciplinas.map(d => (
+                    <option key={d.id} value={d.id}>{d.codigo} - {d.nome}</option>
+                  ))}
+                </select>
+                <div className="form-text">Você pode selecionar múltiplas disciplinas (Ctrl/Cmd + clique).</div>
               </div>
             )}
 

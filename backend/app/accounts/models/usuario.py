@@ -60,6 +60,13 @@ class Usuario(BaseModel):
         help_text="Curso vinculado (quando aplicável ao aluno)"
     )
 
+    disciplinas = models.ManyToManyField(
+        'accounts.Disciplina',
+        blank=True,
+        related_name='professores',
+        help_text='Disciplinas associadas ao professor'
+    )
+
     def __str__(self):
         return f"{self.nome} ({self.email})"
 

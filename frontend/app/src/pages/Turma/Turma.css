@@ -90,6 +90,24 @@
   overflow: hidden;
 }
 
+/* Melhor alinhamento e largura previsível das colunas */
+.turmas-table th,
+.turmas-table td {
+  vertical-align: middle; /* centraliza conteúdo das células */
+}
+
+/* coluna de ações não deve colapsar ao conter botões */
+.turmas-table td.btn-group {
+  min-width: 140px;
+  text-align: center;
+}
+
+/* evita inputs muito largos quebrarem o layout */
+.turmas-table input,
+.turmas-table select {
+  max-width: 100%;
+}
+
 .turmas-table th,
 .turmas-table td {
   padding: 0.5rem;

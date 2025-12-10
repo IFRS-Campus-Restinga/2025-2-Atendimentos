@@ -16,6 +16,7 @@ import CompletarCadastro from './pages/Onboarding/CompletarCadastro.jsx';
 import CadastroUsuario from './pages/Onboarding/CadastroUsuario.jsx';
 import DashboardAluno from './pages/Aluno/DashboardAluno.jsx';
 import DashboardProfessor from './pages/Professor/DashboardProfessor.jsx';
+import DisciplinasManager from './pages/Professor/DisciplinasManager.jsx';
 import DashboardCoordenador from './pages/Coordenador/DashboardCoordenador.jsx';
 import NotAvailable from './pages/NotAvailable.jsx';
 import AdminDashboard from './pages/AdminDashboard.jsx';
@@ -263,6 +264,7 @@ function App() {
           <Route path="/dashboard" element={<RotaProtegida><AdminDashboard /></RotaProtegida>} />
           <Route path="/dashboard/aluno" element={<RotaProtegida><DashboardAluno /></RotaProtegida>} />
           <Route path="/dashboard/professor" element={<RotaProtegida><DashboardProfessor /></RotaProtegida>} />
+          <Route path="/dashboard/professor/disciplinas" element={<RotaProtegida><DisciplinasManager /></RotaProtegida>} />
           <Route path="/dashboard/coordenador" element={<RotaProtegida><DashboardCoordenador /></RotaProtegida>} />
           <Route path="/appointments" element={<RotaProtegida><h1>Página de Atendimentos</h1></RotaProtegida>} />
           <Route path="/disciplina" element={<RotaProtegida><ListarDisciplina /></RotaProtegida>} />

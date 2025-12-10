@@ -115,3 +115,15 @@
   text-decoration: none;
   font-weight: bold;
 }
+
+/* Dashboard: disciplinas block to avoid overlapping the card */
+.prof-disciplinas {
+  display: block;
+}
+.prof-disciplinas > strong {
+  display: block;
+  margin-bottom: 0.35rem;
+}
+.prof-disciplinas .d-flex {
+  margin-top: 0.25rem;
+}
