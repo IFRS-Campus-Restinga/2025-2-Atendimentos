@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'rest_framework', 
     'rest_framework.authtoken', 
     "corsheaders",
+    'guardian',
     'accounts',
     'services',
     #'django.contrib.sites',  # Necessário para allauth
@@ -88,6 +89,14 @@ REST_FRAMEWORK = {
         #'rest_framework.permissions.AllowAny',
     ],
 }
+
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'guardian.backends.ObjectPermissionBackend',
+)
+
+ANONYMOUS_USER_ID = -1
 
 CORS_ALLOW_CREDENTIALS = True
 ROOT_URLCONF = 'app.urls'

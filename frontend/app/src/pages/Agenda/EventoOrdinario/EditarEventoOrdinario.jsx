@@ -35,7 +35,9 @@ export default function EditarEventoOrdinario({ isOpen, onClose, evento, turmas,
 
         if (isOrdinario) {
             if (applyScope === 'series') {
-                const countRes = await fetch(getApiUrl(`/services/evento-ordinario/${evento.id}/series-count/`));
+                const authToken = localStorage.getItem('authToken');
+                const authHeaders = authToken ? { Authorization: `Bearer ${authToken}` } : {};
+                const countRes = await fetch(getApiUrl(`/services/evento-ordinario/${evento.id}/series-count/`), { headers: authHeaders });
                 const countJson = await countRes.json().catch(() => ({ count: 0 }));
                 const n = countJson?.count ?? 0;
 
@@ -88,9 +90,11 @@ export default function EditarEventoOrdinario({ isOpen, onClose, evento, turmas,
             url = getApiUrl(`/services/eventos/${evento.id}/`);
         }
 
+        const authToken = localStorage.getItem('authToken');
+        const authHeaders = authToken ? { Authorization: `Bearer ${authToken}` } : {};
         const res = await fetch(url, {
             method,
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', ...authHeaders },
             body: JSON.stringify(body),
         });
         if (!res.ok) {

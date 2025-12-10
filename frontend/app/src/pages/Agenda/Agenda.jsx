@@ -3,6 +3,8 @@ import './Agenda.css';
 import EventoOrdinarioModal from './EventoOrdinario/EventoOrdinarioModal';
 import DetalheEventoOrdinario from './EventoOrdinario/DetalheEventoOrdinario';
 import EditarEventoOrdinario from './EventoOrdinario/EditarEventoOrdinario';
+import DetalheEventoExtraordinario from './EventoExtraordinario/DetalheEventoExtraordinario';
+import EditarEventoExtraordinario from './EventoExtraordinario/EditarEventoExtraordinario';
 import { getApiUrl } from '../../services/api';
 
 // Period definitions
@@ -44,10 +46,11 @@ const Agenda = () => {
   const [modalTipo, setModalTipo] = useState(null);       //, troca a renderizacao ao escolher o botao
   const [turmas, setTurmas] = useState([]);
   const [disciplinas, setDisciplinas] = useState([]);
-
-  // Estados para visualização e edição de eventos
+  const [permissions, setPermissions] = useState({});
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showEditExtraModal, setShowEditExtraModal] = useState(false); // EXTRAORDINÁRIO
+  const [showDetailExtraModal, setShowDetailExtraModal] = useState(false);
   const [selectedEvento, setSelectedEvento] = useState(null);
 
   const dayNames = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
@@ -56,10 +59,12 @@ const Agenda = () => {
     try {
       const tId = overrideTurmaId ?? turmaFilter;
       const q = tId ? `?turma=${encodeURIComponent(tId)}` : '';
+      const authToken = localStorage.getItem('authToken');
+      const authHeaders = authToken ? { Authorization: `Bearer ${authToken}` } : {};
       const [ordRes, extraRes, baseRes] = await Promise.all([
-        fetch(getApiUrl(`/services/evento-ordinario/${q}`)),
-        fetch(getApiUrl(`/services/evento-extraordinario/${q}`)),
-        fetch(getApiUrl(`/services/eventos/${q}`))
+        fetch(getApiUrl(`/services/evento-ordinario/${q}`), { headers: authHeaders }),
+        fetch(getApiUrl(`/services/evento-extraordinario/${q}`), { headers: authHeaders }),
+        fetch(getApiUrl(`/services/eventos/${q}`), { headers: authHeaders })
       ]);
       const ordJson = await ordRes.json().catch(() => []);
       const extraJson = await extraRes.json().catch(() => []);
@@ -86,16 +91,30 @@ const Agenda = () => {
     if (turmaFilter) reloadEventos(turmaFilter);
     (async () => {
       try {
-        const tRes = await fetch(getApiUrl('turmas'));
+        const authToken = localStorage.getItem('authToken');
+        const authHeaders = authToken ? { Authorization: `Bearer ${authToken}` } : {};
+        const tRes = await fetch(getApiUrl('turmas'), { headers: authHeaders });
         const tJson = await tRes.json();
         setTurmas(Array.isArray(tJson) ? tJson : tJson?.results || []);
       } catch (e) { console.error('Erro turmas:', e); }
 
       try {
-        const dRes = await fetch(getApiUrl('disciplinas'));
+        const dRes = await fetch(getApiUrl('disciplinas'), { headers: authHeaders });
         const dJson = await dRes.json();
         setDisciplinas(Array.isArray(dJson) ? dJson : dJson?.results || []);
       } catch (e) { console.error('Erro disciplinas:', e); }
+      // Busca permissões
+      try {
+        const authToken = localStorage.getItem('authToken');
+        const authHeaders = authToken ? { Authorization: `Bearer ${authToken}` } : {};
+        const pRes = await fetch(getApiUrl('/services/api/permissions/'), { headers: authHeaders });
+        if (pRes.ok) {
+          const pJson = await pRes.json();
+          setPermissions(pJson || {});
+        }
+      } catch (e) {
+        console.error('Erro buscando permissões:', e);
+      }
     })();
   }, [reloadEventos, turmaFilter]);
 
@@ -166,16 +185,20 @@ const Agenda = () => {
         </div>
 
         <div style={{ display: 'flex', justifyContent: 'flex-start', marginBottom: 8 }}>
-          <button className="btn btn-success"
-            onClick={() => { setModalTipo("ordinario"); setIsModalOpen(true); }}
-            disabled={!turmaFilter}>
-            + Novo Atendimento de Turma
-          </button>
-          <button className="btn btn-success" style={{ marginLeft: '8px' }}
-            onClick={() => { setModalTipo("solicitar"); setIsModalOpen(true); }}
-            disabled={!turmaFilter}>
-            Solicitar / Marcar Atendimento
-          </button>
+          {permissions.can_create_ordinario !== false && (
+            <button className="btn btn-success"
+              onClick={() => { setModalTipo("ordinario"); setIsModalOpen(true); }}
+              disabled={!turmaFilter}>
+              + Novo Atendimento de Turma
+            </button>
+          )}
+          {permissions.can_create_extraordinario && (
+            <button className="btn btn-success" style={{ marginLeft: '8px' }}
+              onClick={() => { setModalTipo("solicitar"); setIsModalOpen(true); }}
+              disabled={!turmaFilter}>
+              Solicitar / Marcar Atendimento
+            </button>
+          )}
         </div>
         <div className="mb-3" style={{ maxWidth: 360 }}>
           <label className="form-label fw-semibold mb-1">Turma</label>
@@ -254,12 +277,14 @@ const Agenda = () => {
                               key={ev.id}
                               className={`appointment-indicator ${tipoClass}`}
                               onClick={() => {
+                                setSelectedEvento(ev);
                                 if (isOrdinario) {
-                                  setSelectedEvento(ev);
                                   setShowDetailModal(true);
+                                }else{
+                                  setShowDetailExtraModal(true);
                                 }
                               }}
-                              style={{ cursor: isOrdinario ? 'pointer' : 'default' }}
+                              style={{ cursor: 'pointer' }}
                             >
                               <div className="appt-line"><strong>{horario}</strong> • {turmaNome}</div>
                               <div className="appt-line small text-muted">{discNome}{ev.sala ? ` • ${ev.sala}` : ''}</div>
@@ -301,6 +326,24 @@ const Agenda = () => {
         disciplinaNameById={disciplinaNameById}
       />
 
+      <DetalheEventoExtraordinario
+        isOpen={showDetailExtraModal}
+        onClose={() => {
+          setShowDetailExtraModal(false);
+          setSelectedEvento(null);
+        }}
+        onEdit={(evento) => {
+          setShowDetailExtraModal(false);
+          setSelectedEvento(evento);
+          setShowEditExtraModal(true);
+        }}
+        eventId={selectedEvento?.id}
+        fallbackEvento={selectedEvento}
+        turmaNameById={turmaNameById}
+        disciplinaNameById={disciplinaNameById}
+      />
+
+
       <EditarEventoOrdinario
         isOpen={showEditModal}
         onClose={() => {
@@ -312,6 +355,22 @@ const Agenda = () => {
         disciplinas={disciplinas}
         onSuccess={() => {
           setShowEditModal(false);
+          setSelectedEvento(null);
+          reloadEventos();
+        }}
+      />
+
+      <EditarEventoExtraordinario
+        isOpen={showEditExtraModal}
+        onClose={() => {
+          setShowEditExtraModal(false);
+          setSelectedEvento(null);
+        }}
+        evento={selectedEvento}
+        turmas={turmas}
+        disciplinas={disciplinas}
+        onSuccess={() => {
+          setShowEditExtraModal(false);
           setSelectedEvento(null);
           reloadEventos();
         }}

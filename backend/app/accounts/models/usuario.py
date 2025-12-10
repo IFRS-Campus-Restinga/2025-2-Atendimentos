@@ -74,12 +74,4 @@ class Usuario(BaseModel):
         except Exception:
             return False
 
-    def clean(self):
-        from django.core.exceptions import ValidationError
-        # Validação condicional
-        if self.tipoPerfil == TipoUsuario.PROFESSOR and not self.disciplinas.exists():
-            raise ValidationError("Professor deve estar vinculado a pelo menos uma disciplina.")
-        if self.tipoPerfil == TipoUsuario.ALUNO and not self.curso:
-            raise ValidationError("Aluno deve estar vinculado a um curso.")
-        if self.tipoPerfil == TipoUsuario.ALUNO and self.disciplinas.exists():
-            raise ValidationError("Aluno não pode ter disciplinas vinculadas diretamente.")
+    

@@ -11,6 +11,9 @@ class EventoExtraordinarioSerializer(serializers.ModelSerializer):
         allow_empty=True
     )
 
+    disciplina_nome = serializers.CharField(source='disciplina.nome', read_only=True)
+    usuario_nome = serializers.CharField(source='usuario_create.nome', read_only=True)
+
     class Meta:
         model = EventoExtraordinario
         fields = '__all__'

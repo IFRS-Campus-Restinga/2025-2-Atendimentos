@@ -16,6 +16,7 @@ import CompletarCadastro from './pages/Onboarding/CompletarCadastro.jsx';
 import CadastroUsuario from './pages/Onboarding/CadastroUsuario.jsx';
 import DashboardAluno from './pages/Aluno/DashboardAluno.jsx';
 import DashboardProfessor from './pages/Professor/DashboardProfessor.jsx';
+import DisciplinasManager from './pages/Professor/DisciplinasManager.jsx';
 import DashboardCoordenador from './pages/Coordenador/DashboardCoordenador.jsx';
 import NotAvailable from './pages/NotAvailable.jsx';
 import AdminDashboard from './pages/AdminDashboard.jsx';
@@ -74,10 +75,8 @@ function App() {
         foto: dados.picture
       };
 
-      setUsuario(userData);
-      setLogado(true);
-      localStorage.setItem("usuario", JSON.stringify(userData));
-      // Não armazene o idToken do Google; usaremos apenas o token do backend
+      // Não marcar como logado agora nem navegar — primeiro validar no backend
+      // Nem salvar o usuário no localStorage antes de receber o token.
       localStorage.removeItem('selectedRole');
 
       const response = await fetch(getApiUrl('googleLogin'), {
@@ -93,20 +92,79 @@ function App() {
           console.error("Erro ao validar token no backend:", data);
           throw new Error(data?.error || 'Falha na autenticação no servidor');
         }
-
-        // Se o backend retornar dados do usuário, preferimos os dele
+        let finalUser = userData;
         if (data?.user) {
-          const srvUser = {
+          finalUser = {
             email: data.user.email || userData.email,
             nome: data.user.name || userData.nome,
             foto: data.user.picture || userData.foto,
           };
-          setUsuario(srvUser);
-          localStorage.setItem("usuario", JSON.stringify(srvUser));
         }
 
         if (data?.token) {
+          // Salva token 
           localStorage.setItem("authToken", data.token);
+
+          // Buscar perfil completo usando o token 
+          const perfilRes = await fetch(getApiUrl('usuarioMe'), {
+            method: 'GET',
+            headers: {
+              'Accept': 'application/json',
+              'Authorization': `Bearer ${data.token}`
+            }
+          });
+
+          if (!perfilRes.ok) {
+            console.error('Falha ao obter perfil após login:', await perfilRes.text());
+            throw new Error('Falha ao obter perfil do usuário');
+          }
+
+          const perfil = await perfilRes.json();
+
+          // Preferir dados vindos do perfil completo
+          const userFromProfile = perfil || {};
+          const mergedUser = {
+            email: userFromProfile.email || finalUser.email,
+            nome: userFromProfile.nome || finalUser.nome,
+            foto: finalUser.foto,
+          };
+
+          setUsuario(mergedUser);
+          localStorage.setItem("usuario", JSON.stringify(mergedUser));
+          setLogado(true);
+
+          // Decide o dash com base no perfil
+          try {
+            const needsComplemento = userFromProfile.needs_complemento ?? true;
+            if (needsComplemento) {
+              window.history.replaceState({}, '', '/onboarding/usuario');
+            } else {
+              const tipo = userFromProfile.tipoPerfil || null;
+              const mapRole = {
+                'PROF': 'Professor',
+                'ALU': 'Aluno',
+                'COORD': 'Coordenador',
+                'ADM': 'Administrador'
+              };
+              const roleName = mapRole[tipo] || null;
+              if (roleName) localStorage.setItem('selectedRole', roleName);
+
+              let dest = '/onboarding/usuario';
+              if (roleName === 'Administrador') dest = '/dashboard';
+              else if (roleName === 'Aluno') dest = '/dashboard/aluno';
+              else if (roleName === 'Professor') dest = '/dashboard/professor';
+              else if (roleName === 'Coordenador') dest = '/dashboard/coordenador';
+
+              window.history.replaceState({}, '', dest);
+            }
+          } catch (error) {
+            console.error("Erro ao decidir rota:", error);
+            window.history.replaceState({}, '', '/onboarding/usuario');
+          }
+
+        } else {
+          console.error('Backend não retornou token.');
+          throw new Error('Falha na autenticação no servidor');
         }
       } else {
         const text = await response.text();
@@ -114,7 +172,30 @@ function App() {
         throw new Error('Resposta inesperada do backend');
       }
       try {
-        window.history.replaceState({}, '', '/onboarding/usuario');
+        const needsComplemento = data?.user?.needs_complemento ?? true;
+        if (needsComplemento) {
+          window.history.replaceState({}, '', '/onboarding/usuario');
+        } else {
+       
+          const tipo = data?.user?.tipoPerfil || null; // ex: 'PROF', 'ALU', 'COORD', 'ADM'
+          const mapRole = {
+            'PROF': 'Professor',
+            'ALU': 'Aluno',
+            'COORD': 'Coordenador',
+            'ADM': 'Administrador'
+          };
+          const roleName = mapRole[tipo] || null;
+          if (roleName) localStorage.setItem('selectedRole', roleName);
+
+        
+          let dest = '/onboarding/usuario';
+          if (roleName === 'Administrador') dest = '/dashboard';
+          else if (roleName === 'Aluno') dest = '/dashboard/aluno';
+          else if (roleName === 'Professor') dest = '/dashboard/professor';
+          else if (roleName === 'Coordenador') dest = '/dashboard/coordenador';
+
+          window.history.replaceState({}, '', dest);
+        }
       } catch (error) {
         console.error("Resposta inesperada:", error);
       }
@@ -183,6 +264,7 @@ function App() {
           <Route path="/dashboard" element={<RotaProtegida><AdminDashboard /></RotaProtegida>} />
           <Route path="/dashboard/aluno" element={<RotaProtegida><DashboardAluno /></RotaProtegida>} />
           <Route path="/dashboard/professor" element={<RotaProtegida><DashboardProfessor /></RotaProtegida>} />
+          <Route path="/dashboard/professor/disciplinas" element={<RotaProtegida><DisciplinasManager /></RotaProtegida>} />
           <Route path="/dashboard/coordenador" element={<RotaProtegida><DashboardCoordenador /></RotaProtegida>} />
           <Route path="/appointments" element={<RotaProtegida><h1>Página de Atendimentos</h1></RotaProtegida>} />
           <Route path="/disciplina" element={<RotaProtegida><ListarDisciplina /></RotaProtegida>} />
