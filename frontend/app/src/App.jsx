@@ -20,6 +20,7 @@ import DisciplinasManager from './pages/Professor/DisciplinasManager.jsx';
 import DashboardCoordenador from './pages/Coordenador/DashboardCoordenador.jsx';
 import NotAvailable from './pages/NotAvailable.jsx';
 import AdminDashboard from './pages/AdminDashboard.jsx';
+import AdminPermissions from './pages/Admin/AdminPermissions.jsx';
 import './index.css';
 
 import CadastrarCurso from './pages/Curso/CadastrarCurso.jsx';
@@ -262,6 +263,7 @@ function App() {
           <Route path="/onboarding/:role" element={<RotaProtegida><CompletarCadastro /></RotaProtegida>} />
           <Route path="/nao-disponivel" element={<RotaProtegida><NotAvailable /></RotaProtegida>} />
           <Route path="/dashboard" element={<RotaProtegida><AdminDashboard /></RotaProtegida>} />
+          <Route path="/admin/permissions" element={<RotaProtegida><AdminPermissions /></RotaProtegida>} />
           <Route path="/dashboard/aluno" element={<RotaProtegida><DashboardAluno /></RotaProtegida>} />
           <Route path="/dashboard/professor" element={<RotaProtegida><DashboardProfessor /></RotaProtegida>} />
           <Route path="/dashboard/professor/disciplinas" element={<RotaProtegida><DisciplinasManager /></RotaProtegida>} />
@@ -275,10 +277,6 @@ function App() {
           <Route path="/turma/cadastrar" element={<RotaProtegida><CadastrarTurma /></RotaProtegida>} />
           <Route path="/coord" element={<RotaProtegida><ListarCoordenador /></RotaProtegida>} />
           <Route path="/coord/cadastrar" element={<RotaProtegida><CadastraCoordenador /></RotaProtegida>} />
-          <Route path="/alunos" element={<RotaProtegida><ListarAluno /></RotaProtegida>} />
-          <Route path="/alunos/cadastrar" element={<RotaProtegida><CadastraAluno /></RotaProtegida>} />
-          <Route path="/professores" element={<RotaProtegida><ListarProfessor /></RotaProtegida>} />
-          <Route path="/professores/cadastrar" element={<RotaProtegida><CadastraProfessor /></RotaProtegida>} />
           <Route path="/registros" element={<RotaProtegida><ListarRegistro /></RotaProtegida>} />
           <Route path="/registros/cadastrar" element={<RotaProtegida><CadastrarRegistroAtendimento /></RotaProtegida>} />
           <Route path="/agenda" element={<RotaProtegida><Agenda /></RotaProtegida>} />

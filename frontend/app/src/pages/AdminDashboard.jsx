@@ -66,6 +66,21 @@ function AdminDashboard() {
               </div>
             </div>
           </Link>
+          
+          <Link to="/admin/permissions" className="text-decoration-none">
+            <div className="app-card is-perms position-relative mb-3">
+              <div className="app-card-body">
+                <div className="app-card-icon">ADM</div>
+                <div className="app-card-content">
+                  <h6 className="mb-1">Permissões</h6>
+                  <p className="text-muted small mb-2">Gerencie grupos e permissões do sistema.</p>
+                  <div className="app-card-actions">
+                    <span className="app-card-hover-label">Acessar</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Link>
         </div>
 
         {/* Coluna 2: Acadêmico */}
