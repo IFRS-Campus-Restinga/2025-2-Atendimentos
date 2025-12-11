@@ -1,3 +1,4 @@
+/* Wrapper e container */
 .agenda-wrapper {
   padding: 20px;
   background-color: #f0f2f5;
@@ -14,6 +15,7 @@
   font-family: Arial, sans-serif;
 }
 
+/* Cabeçalho */
 .agenda-header {
   text-align: center;
   margin-bottom: 20px;
@@ -29,10 +31,12 @@
   margin: 0;
 }
 
+/* Botões */
 .btn {
   cursor: pointer;
 }
 
+/* Calendário semanal */
 .weekly-calendar {
   margin-top: 20px;
   overflow-x: auto;
@@ -51,11 +55,8 @@
 
 .periods-grid {
   display: grid;
-  /* Alterar colunas turno. */
   grid-template-columns: 90px repeat(6, 130px);
-  /* Alterar colunas dias. */
   grid-auto-rows: minmax(60px, auto);
-
   gap: 8px;
   padding: 8px;
   justify-content: center;
@@ -100,9 +101,8 @@
   box-shadow: 0 0 0 2px rgba(25, 135, 84, 0.15);
 }
 
-/* Evento */
+/* Indicadores de evento */
 .appointment-indicator {
-  background-color: #198754;
   color: #fff;
   font-size: 0.72rem;
   padding: 4px 6px;
@@ -115,29 +115,36 @@
   transition: all 0.2s ease;
 }
 
-/* Evento Ordinário (Turma) - Verde Escuro */
+/* Ordinário */
 .appointment-indicator.evento-ordinario {
   background-color: #52b788;
   border-left: 3px solid #2d6a4f;
 }
-
 .appointment-indicator.evento-ordinario:hover {
   background-color: #40916c;
 }
 
-/* Evento Extraordinário (Extra) - Verde Claro */
+/* Extraordinário */
 .appointment-indicator.evento-extraordinario {
   background-color: #7cb992;
   border-left: 3px solid #5a9d72;
   opacity: 0.85;
 }
-
 .appointment-indicator.evento-extraordinario:hover {
-  background-color: #7cb992;
-  transform: none;
-  box-shadow: none;
+  background-color: #6fa884;
 }
 
+/* Convocação */
+.appointment-indicator.evento-convocacao {
+  background-color: #498660;
+  border-left: 3px solid #4e8f67;
+  opacity: 0.9;
+}
+.appointment-indicator.evento-convocacao:hover {
+  background-color: #4e8f67;
+}
+
+/* Hover geral */
 .appointment-indicator:hover {
   transform: translateY(-1px);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -154,7 +161,7 @@
   opacity: 0.9;
 }
 
-/* Legenda de eventos */
+/* Legenda */
 .legenda-eventos {
   display: flex;
   gap: 20px;
@@ -188,10 +195,14 @@
   border-left: 3px solid #5a9d72;
 }
 
+.legenda-cor.evento-convocacao {
+  background-color: #498660;
+  border-left: 3px solid #4e8f67;
+}
+
 /* Cabeçalhos de dia */
 .day-column-header {
   width: 125px;
-  /* match day column width */
   text-align: center;
   padding: 6px 0;
   border-radius: 8px;
@@ -208,7 +219,7 @@
   font-size: 0.9rem;
 }
 
-/* Responsividade: mantém central e permite rolagem horizontal */
+/* Responsividade */
 @media (max-width: 1024px) {
   .periods-grid {
     grid-template-columns: 80px repeat(6, 120px);

@@ -13,6 +13,7 @@ from .views.usuario_view_set import UsuarioViewSet
 # Removed Coordenador viewset
 from services.views.auth_views import GoogleLoginView
 from services.views.registro_atendimento_views_set import RegistroAtendimentoViewSet
+from services.views.evento_convocacao_views import EventoConvocacaoViewSet
 # Removed complemento/profile views
 from services.views.usuario_me_view import UsuarioMeView
 from services.views.notificacoes_view import NotificacaoViewSet
@@ -34,6 +35,8 @@ router.register(r'evento-extraordinario', EventoExtraordinarioViewSet, basename=
 router.register(r'usuario', UsuarioViewSet, basename='usuario')
 router.register(r'registro-atendimento', RegistroAtendimentoViewSet, basename='registro-atendimento')
 router.register(r'notificacoes', NotificacaoViewSet, basename='notificacoes')
+router.register(r'evento-convocacao', EventoConvocacaoViewSet, basename='evento-convocacao')
+
 
 
 urlpatterns = [

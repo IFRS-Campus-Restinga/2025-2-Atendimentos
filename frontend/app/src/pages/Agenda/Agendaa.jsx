@@ -5,8 +5,6 @@ import DetalheEventoOrdinario from './EventoOrdinario/DetalheEventoOrdinario';
 import EditarEventoOrdinario from './EventoOrdinario/EditarEventoOrdinario';
 import DetalheEventoExtraordinario from './EventoExtraordinario/DetalheEventoExtraordinario';
 import EditarEventoExtraordinario from './EventoExtraordinario/EditarEventoExtraordinario';
-import DetalheEventoConvocacao from './EventoConvocacao/DetalheEventoConvocacao';
-import EditarEventoConvocacao from './EventoConvocacao/EditarEventoConvocacao';
 import { getApiUrl } from '../../services/api';
 
 // Period definitions
@@ -29,28 +27,30 @@ function classifyPeriod(ev) {
   const minutes = timeToMinutes(start);
   const found = PERIODS.find(p => minutes >= p.start && minutes <= p.end);
   if (found) return found.key;
-  if (minutes < PERIODS[0].start) return PERIODS[0].key;
-  if (minutes > PERIODS[PERIODS.length - 1].end) return PERIODS[PERIODS.length - 1].key;
-  return 'TARDE';
+  if (minutes < PERIODS[0].start) return PERIODS[0].key; // antes das 08:00 => manhã
+  if (minutes > PERIODS[PERIODS.length - 1].end) return PERIODS[PERIODS.length - 1].key; // depois de 22:30 => noite
+  return 'TARDE'; // fallback para lacunas
 }
 
 const Agenda = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [eventos, setEventos] = useState([]);
+  const [eventos, setEventos] = useState([]); // unified events
   const [turmaFilter, setTurmaFilter] = useState(() => {
-    try { return localStorage.getItem('agendaTurmaId') || ''; } catch { return ''; }
+    try {
+      return localStorage.getItem('agendaTurmaId') || '';
+    } catch {
+      return '';
+    }
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalTipo, setModalTipo] = useState(null);
+  const [modalTipo, setModalTipo] = useState(null);       //, troca a renderizacao ao escolher o botao
   const [turmas, setTurmas] = useState([]);
   const [disciplinas, setDisciplinas] = useState([]);
   const [permissions, setPermissions] = useState({});
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
-  const [showEditExtraModal, setShowEditExtraModal] = useState(false);
+  const [showEditExtraModal, setShowEditExtraModal] = useState(false); // EXTRAORDINÁRIO
   const [showDetailExtraModal, setShowDetailExtraModal] = useState(false);
-  const [showDetailConvocacaoModal, setShowDetailConvocacaoModal] = useState(false);
-  const [showEditConvocacaoModal, setShowEditConvocacaoModal] = useState(false);
   const [selectedEvento, setSelectedEvento] = useState(null);
 
   const dayNames = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
@@ -61,38 +61,26 @@ const Agenda = () => {
       const q = tId ? `?turma=${encodeURIComponent(tId)}` : '';
       const authToken = localStorage.getItem('authToken');
       const authHeaders = authToken ? { Authorization: `Bearer ${authToken}` } : {};
-      const [ordRes, extraRes, convRes, baseRes] = await Promise.all([
+      const [ordRes, extraRes, baseRes] = await Promise.all([
         fetch(getApiUrl(`/services/evento-ordinario/${q}`), { headers: authHeaders }),
         fetch(getApiUrl(`/services/evento-extraordinario/${q}`), { headers: authHeaders }),
-        fetch(getApiUrl(`/services/evento-convocacao/${q}`), { headers: authHeaders }),
         fetch(getApiUrl(`/services/eventos/${q}`), { headers: authHeaders })
       ]);
       const ordJson = await ordRes.json().catch(() => []);
       const extraJson = await extraRes.json().catch(() => []);
-      const convJson = await convRes.json().catch(() => []);
       const baseJson = await baseRes.json().catch(() => []);
       const ordList = Array.isArray(ordJson) ? ordJson : ordJson?.results || [];
       const extraList = Array.isArray(extraJson) ? extraJson : extraJson?.results || [];
-      const convList = Array.isArray(convJson) ? convJson : convJson?.results || [];
       const baseList = Array.isArray(baseJson) ? baseJson : baseJson?.results || [];
-      const mergedRaw = [...ordList, ...extraList, ...convList, ...baseList];
+      const mergedRaw = [
+        ...ordList,
+        ...extraList,
+        ...baseList,
+      ];
       const unique = new Map();
       mergedRaw.forEach(ev => { if (!unique.has(ev.id)) unique.set(ev.id, ev); });
-      // const mergedUnique = Array.from(unique.values());
-      // const clientFiltered = tId ? mergedUnique.filter(ev => String(ev.turma) === String(tId)) : mergedUnique;
-      // setEventos(clientFiltered);
       const mergedUnique = Array.from(unique.values());
-
-      // 1️⃣ Filtrar pela turma (se existir)
-      let clientFiltered = tId
-        ? mergedUnique.filter(ev => String(ev.turma) === String(tId))
-        : mergedUnique;
-
-      // 2️⃣ Filtrar para remover concluídos
-      clientFiltered = clientFiltered.filter(ev => {
-        return (ev.status_atendimento || "").toUpperCase() !== "CONCL";
-      });
-
+      const clientFiltered = tId ? mergedUnique.filter(ev => String(ev.turma) === String(tId)) : mergedUnique;
       setEventos(clientFiltered);
     } catch (e) {
       console.error('Erro eventos:', e);
@@ -115,14 +103,18 @@ const Agenda = () => {
         const dJson = await dRes.json();
         setDisciplinas(Array.isArray(dJson) ? dJson : dJson?.results || []);
       } catch (e) { console.error('Erro disciplinas:', e); }
-
+      // Busca permissões
       try {
+        const authToken = localStorage.getItem('authToken');
+        const authHeaders = authToken ? { Authorization: `Bearer ${authToken}` } : {};
         const pRes = await fetch(getApiUrl('/services/api/permissions/'), { headers: authHeaders });
         if (pRes.ok) {
           const pJson = await pRes.json();
           setPermissions(pJson || {});
         }
-      } catch (e) { console.error('Erro buscando permissões:', e); }
+      } catch (e) {
+        console.error('Erro buscando permissões:', e);
+      }
     })();
   }, [reloadEventos, turmaFilter]);
 
@@ -141,10 +133,10 @@ const Agenda = () => {
   const getWeekDays = (date) => {
     const start = new Date(date);
     const day = start.getDay();
-    const offset = day === 0 ? -6 : 1 - day;
+    const offset = day === 0 ? -6 : 1 - day; // Monday start
     start.setDate(start.getDate() + offset);
     const days = [];
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < 6; i++) { // Mon-Sat
       const d = new Date(start);
       d.setDate(start.getDate() + i);
       days.push(d);
@@ -168,7 +160,7 @@ const Agenda = () => {
   const grouped = useMemo(() => {
     const map = {};
     eventos.forEach(ev => {
-      const dateKey = ev.data_evento;
+      const dateKey = ev.data_evento; // YYYY-MM-DD from backend
       const periodKey = classifyPeriod(ev);
       if (!map[dateKey]) map[dateKey] = { MANHA: [], TARDE: [], NOITE: [], OUTRO: [] };
       if (!map[dateKey][periodKey]) map[dateKey][periodKey] = [];
@@ -184,12 +176,12 @@ const Agenda = () => {
 
   const weekDays = getWeekDays(currentDate);
 
-   return (
+  return (
     <div className="agenda-wrapper">
       <div className="agenda-container">
         <div className="agenda-header">
           <h2>Agenda Semanal</h2>
-          <p className="text-muted">Eventos (ordinários, extraordinários e convocações)</p>
+          <p className="text-muted">Eventos (ordinários, extraordinários e futuros tipos)</p>
         </div>
 
         <div style={{ display: 'flex', justifyContent: 'flex-start', marginBottom: 8 }}>
@@ -200,22 +192,14 @@ const Agenda = () => {
               + Novo Atendimento de Turma
             </button>
           )}
-          {permissions.can_create_extraordinario !== false && (
+          {permissions.can_create_extraordinario && (
             <button className="btn btn-success" style={{ marginLeft: '8px' }}
-              onClick={() => { setModalTipo("extraordinario"); setIsModalOpen(true); }}
+              onClick={() => { setModalTipo("solicitar"); setIsModalOpen(true); }}
               disabled={!turmaFilter}>
               Solicitar / Marcar Atendimento
             </button>
           )}
-         
-            <button className="btn btn-success" style={{ marginLeft: '8px' }}
-              onClick={() => { setModalTipo("convocacao"); setIsModalOpen(true); }}
-              disabled={!turmaFilter}>
-              + Nova Convocação
-            </button>
-        
         </div>
-
         <div className="mb-3" style={{ maxWidth: 360 }}>
           <label className="form-label fw-semibold mb-1">Turma</label>
           <select
@@ -225,7 +209,11 @@ const Agenda = () => {
               const v = e.target.value;
               setTurmaFilter(v);
               try { localStorage.setItem('agendaTurmaId', v); } catch { }
-              if (v) { reloadEventos(v); } else { setEventos([]); }
+              if (v) {
+                reloadEventos(v);
+              } else {
+                setEventos([]);
+              }
             }}
             required
           >
@@ -244,10 +232,6 @@ const Agenda = () => {
           <div className="legenda-item">
             <span className="legenda-cor evento-extraordinario"></span>
             <span>Atendimento Extra</span>
-          </div>
-          <div className="legenda-item">
-            <span className="legenda-cor evento-convocacao"></span>
-            <span>Convocação</span>
           </div>
         </div>
 
@@ -286,16 +270,8 @@ const Agenda = () => {
                           const fim = (ev.hora_evento_fim || '').slice(0, 5);
                           const horario = fim ? `${inicio}–${fim}` : `${inicio}`;
                           const isOrdinario = Boolean(ev.dia_semana);
-                          const isConvocacao = ev.tipo === 'convocacao';
-                          let tipoLabel = 'Extra';
-                          let tipoClass = 'evento-extraordinario';
-                          if (isOrdinario) {
-                            tipoLabel = 'Turma';
-                            tipoClass = 'evento-ordinario';
-                          } else if (isConvocacao) {
-                            tipoLabel = 'Convocação';
-                            tipoClass = 'evento-convocacao';
-                          }
+                          const tipoLabel = isOrdinario ? 'Turma' : 'Extra';
+                          const tipoClass = isOrdinario ? 'evento-ordinario' : 'evento-extraordinario';
                           return (
                             <div
                               key={ev.id}
@@ -304,9 +280,7 @@ const Agenda = () => {
                                 setSelectedEvento(ev);
                                 if (isOrdinario) {
                                   setShowDetailModal(true);
-                                } else if (isConvocacao) {
-                                  setShowDetailConvocacaoModal(true);
-                                } else {
+                                }else{
                                   setShowDetailExtraModal(true);
                                 }
                               }}
@@ -337,8 +311,15 @@ const Agenda = () => {
 
       <DetalheEventoOrdinario
         isOpen={showDetailModal}
-        onClose={() => { setShowDetailModal(false); setSelectedEvento(null); }}
-        onEdit={(evento) => { setShowDetailModal(false); setSelectedEvento(evento); setShowEditModal(true); }}
+        onClose={() => {
+          setShowDetailModal(false);
+          setSelectedEvento(null);
+        }}
+        onEdit={(evento) => {
+          setShowDetailModal(false);
+          setSelectedEvento(evento);
+          setShowEditModal(true);
+        }}
         eventId={selectedEvento?.id}
         fallbackEvento={selectedEvento}
         turmaNameById={turmaNameById}
@@ -347,49 +328,52 @@ const Agenda = () => {
 
       <DetalheEventoExtraordinario
         isOpen={showDetailExtraModal}
-        onClose={() => { setShowDetailExtraModal(false); setSelectedEvento(null); }}
-        onEdit={(evento) => { setShowDetailExtraModal(false); setSelectedEvento(evento); setShowEditExtraModal(true); }}
+        onClose={() => {
+          setShowDetailExtraModal(false);
+          setSelectedEvento(null);
+        }}
+        onEdit={(evento) => {
+          setShowDetailExtraModal(false);
+          setSelectedEvento(evento);
+          setShowEditExtraModal(true);
+        }}
         eventId={selectedEvento?.id}
         fallbackEvento={selectedEvento}
         turmaNameById={turmaNameById}
         disciplinaNameById={disciplinaNameById}
       />
 
-      <DetalheEventoConvocacao
-        isOpen={showDetailConvocacaoModal}
-        onClose={() => { setShowDetailConvocacaoModal(false); setSelectedEvento(null); }}
-        onEdit={(evento) => { setShowDetailConvocacaoModal(false); setSelectedEvento(evento); setShowEditConvocacaoModal(true); }}
-        eventId={selectedEvento?.id}
-        fallbackEvento={selectedEvento}
-        turmaNameById={turmaNameById}
-        disciplinaNameById={disciplinaNameById}
-      />
 
       <EditarEventoOrdinario
         isOpen={showEditModal}
-        onClose={() => { setShowEditModal(false); setSelectedEvento(null); }}
+        onClose={() => {
+          setShowEditModal(false);
+          setSelectedEvento(null);
+        }}
         evento={selectedEvento}
         turmas={turmas}
         disciplinas={disciplinas}
-        onSuccess={() => { setShowEditModal(false); setSelectedEvento(null); reloadEventos(); }}
+        onSuccess={() => {
+          setShowEditModal(false);
+          setSelectedEvento(null);
+          reloadEventos();
+        }}
       />
 
       <EditarEventoExtraordinario
         isOpen={showEditExtraModal}
-        onClose={() => { setShowEditExtraModal(false); setSelectedEvento(null); }}
+        onClose={() => {
+          setShowEditExtraModal(false);
+          setSelectedEvento(null);
+        }}
         evento={selectedEvento}
         turmas={turmas}
         disciplinas={disciplinas}
-        onSuccess={() => { setShowEditExtraModal(false); setSelectedEvento(null); reloadEventos(); }}
-      />
-
-      <EditarEventoConvocacao
-        isOpen={showEditConvocacaoModal}
-        onClose={() => { setShowEditConvocacaoModal(false); setSelectedEvento(null); }}
-        evento={selectedEvento}
-        turmas={turmas}
-        disciplinas={disciplinas}
-        onSuccess={() => { setShowEditConvocacaoModal(false); setSelectedEvento(null); reloadEventos(); }}
+        onSuccess={() => {
+          setShowEditExtraModal(false);
+          setSelectedEvento(null);
+          reloadEventos();
+        }}
       />
     </div>
   );
