@@ -56,21 +56,10 @@ export default function DashboardProfessor() {
               <div className="card-body">
                 <h5 className="card-title">Seus dados</h5>
                 <ul className="mb-0">
+                  <li><strong>Nome:</strong> {data.nome}</li>
                   <li><strong>Registro:</strong> {data.registro}</li>
-                  <li className="prof-disciplinas">
-                    <strong>Disciplinas:</strong>
-                    {data.disciplinas_full && data.disciplinas_full.length > 0 ? (
-                      <div className="d-flex flex-wrap gap-2 mt-1">
-                        {data.disciplinas_full.map(d => (
-                          <span key={d.id} className="badge bg-success text-white me-1 mb-1" title={d.nome}>
-                            {d.codigo}
-                          </span>
-                        ))}
-                      </div>
-                    ) : (
-                      <span className="text-muted ms-2">Nenhuma disciplina atribuída. <Link to="/dashboard/professor/disciplinas">Gerenciar</Link></span>
-                    )}
-                  </li>
+                  <li><strong>Disciplina:</strong> {data.disciplina}</li>
+                  <li><strong>Email:</strong> {data.email}</li>
                 </ul>
                 <div className="mt-3 d-flex justify-content-end">
                   <Link to="/dashboard/professor/disciplinas" className="btn btn-sm btn-success">Gerenciar Disciplinas</Link>
@@ -87,6 +76,36 @@ export default function DashboardProfessor() {
                 </div>
                 <div className="d-flex gap-2">
                   <Link to="/agenda" className="btn btn-success">Abrir Agenda</Link>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Card de convocações */}
+          <div className="col-12 col-lg-6">
+            <div className="card">
+              <div className="card-body d-flex flex-column justify-content-between">
+                <div>
+                  <h5 className="card-title">Convocações</h5>
+                  <p className="text-muted">Gerencie convocações de alunos para atendimentos.</p>
+                </div>
+                <div>
+                  <Link to="/convocacoes" className="btn btn-outline-success">Abrir Convocações</Link>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Card de eventos extraordinários */}
+          <div className="col-12 col-lg-6">
+            <div className="card">
+              <div className="card-body d-flex flex-column justify-content-between">
+                <div>
+                  <h5 className="card-title">Eventos Extraordinários</h5>
+                  <p className="text-muted">Solicite ou gerencie atendimentos extraordinários.</p>
+                </div>
+                <div>
+                  <Link to="/eventos-extra" className="btn btn-outline-primary">Abrir Eventos</Link>
                 </div>
               </div>
             </div>
