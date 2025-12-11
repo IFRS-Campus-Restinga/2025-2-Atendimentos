@@ -71,9 +71,9 @@ function ListarRegistro() {
     <div className="registros-container">
       <h1 className="registros-title">Lista de Registros de Evento</h1>
       <div style={{ textAlign: "center", marginTop: "1.5rem" }}>
-        <button className="btn-salvar" onClick={() => navigate("/registros/cadastrar")}>
+        {/* <button className="btn-salvar" onClick={() => navigate("/registros/cadastrar")}>
           Cadastrar Novo Registro
-        </button>
+        </button> */}
       </div>
 
       {/* ✅ Adicionando paginação igual às outras listas */}
@@ -83,7 +83,6 @@ function ListarRegistro() {
             <thead>
               <tr>
                 <th>Turma</th>
-                <th>Data/Hora do Evento</th>
                 <th>Data do Registro</th>
                 <th>Descrição</th>
                 <th>Ações</th>
@@ -93,7 +92,6 @@ function ListarRegistro() {
               {itensPaginaAtual.map((registro) => (
                 <tr key={registro.id}>
                   <td>{registro.turma || "-"}</td>
-                  <td>{formataDataHora(registro.data_evento)}</td>
                   <td>
                     {editId === registro.id ? (
                       <input

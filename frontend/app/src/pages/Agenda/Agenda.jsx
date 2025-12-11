@@ -79,8 +79,21 @@ const Agenda = () => {
       ];
       const unique = new Map();
       mergedRaw.forEach(ev => { if (!unique.has(ev.id)) unique.set(ev.id, ev); });
+      // const mergedUnique = Array.from(unique.values());
+      // const clientFiltered = tId ? mergedUnique.filter(ev => String(ev.turma) === String(tId)) : mergedUnique;
+      // setEventos(clientFiltered);
       const mergedUnique = Array.from(unique.values());
-      const clientFiltered = tId ? mergedUnique.filter(ev => String(ev.turma) === String(tId)) : mergedUnique;
+
+      // 1️⃣ Filtrar pela turma (se existir)
+      let clientFiltered = tId
+        ? mergedUnique.filter(ev => String(ev.turma) === String(tId))
+        : mergedUnique;
+
+      // 2️⃣ Filtrar para remover concluídos
+      clientFiltered = clientFiltered.filter(ev => {
+        return (ev.status_atendimento || "").toUpperCase() !== "CONCL";
+      });
+
       setEventos(clientFiltered);
     } catch (e) {
       console.error('Erro eventos:', e);

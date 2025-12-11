@@ -6,3 +6,4 @@ class StatusAtendimento(models.TextChoices):
     CANCELADO = "CANC", "Cancelado"
     DISPONIVEL = "DISP", "Disponível"
     OCUPADO = "OCUP", "Ocupado"
+    CONCLUIDO = "CONCL", "Concluido"

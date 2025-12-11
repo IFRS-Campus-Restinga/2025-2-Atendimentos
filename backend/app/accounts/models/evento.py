@@ -53,7 +53,7 @@ class Evento(BaseModel):
     status_atendimento = models.CharField(
         max_length=5,
         choices=StatusAtendimento.choices,
-        default=StatusAtendimento.PENDENTE
+        default=StatusAtendimento.CONFIRMADO
     )
 
     usuario_create = models.ForeignKey(
