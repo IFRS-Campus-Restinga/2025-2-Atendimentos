@@ -1,7 +1,6 @@
 from rest_framework import serializers
 from accounts.models.evento_convocacao import EventoConvocacao
 from accounts.models.usuario import Usuario
-from django.db.models import Q
 from datetime import datetime, timedelta, date
 
 
@@ -23,13 +22,12 @@ class EventoConvocacaoSerializer(serializers.ModelSerializer):
         - Data mínima: >= amanhã
         - Duração mínima: 30 minutos
         - Conflito de horário na mesma turma
-        - Perfis corretos: professor/aluno
+        - Perfil correto: aluno deve ser ALU
         """
         data_evento = data.get('data_evento')
         hora_inicio = data.get('hora_evento_inicio')
         hora_fim = data.get('hora_evento_fim')
         curso = data.get('curso')
-        professor = data.get('professor')
         aluno = data.get('aluno')
 
         # Validação: data mínima = amanhã
@@ -67,18 +65,14 @@ class EventoConvocacaoSerializer(serializers.ModelSerializer):
         # Verificar sobreposição de horários
         for evento in conflitos:
             if (hora_inicio < evento.hora_evento_fim and hora_fim > evento.hora_evento_inicio):
-                curso_nome = curso.nome if curso else 'o curso selecionado'
+                curso_nome = getattr(curso, "nome", "o curso selecionado")
                 raise serializers.ValidationError({
                     'detail': f'Já existe uma convocação para o curso "{curso_nome}" no dia {data_evento.strftime("%d/%m/%Y")} '
                               f'das {evento.hora_evento_inicio.strftime("%H:%M")} às {evento.hora_evento_fim.strftime("%H:%M")}.'
                 })
 
-        # Validar perfis corretos
-        if professor and professor.perfil.user != 'Professor':
-            raise serializers.ValidationError({
-                'detail': 'Usuário convocador deve ter perfil Professor.'
-            })
-        if aluno and aluno.perfil.user != 'Aluno':
+        # Validar perfil correto do aluno
+        if aluno and isinstance(aluno, Usuario) and aluno.tipoPerfil != 'ALU':
             raise serializers.ValidationError({
                 'detail': 'Usuário convocado deve ter perfil Aluno.'
             })

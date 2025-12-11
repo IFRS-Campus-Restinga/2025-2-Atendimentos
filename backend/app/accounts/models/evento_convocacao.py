@@ -18,10 +18,13 @@ class EventoConvocacao(Evento):
 
     professor = models.ForeignKey(
         Usuario,
-        on_delete=models.PROTECT,
-        related_name='convocacoes_professor',
-        help_text="Usuário com perfil Professor que convoca"
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="eventos_professor"
     )
+
+
 
     aluno = models.ForeignKey(
         Usuario,
@@ -37,6 +40,7 @@ class EventoConvocacao(Evento):
         blank=True,
         help_text="Curso relacionado ao evento"
     )
+    mensagem = models.TextField(null=True, blank=True) 
 
     encerrado_em = models.DateTimeField(
         null=True,

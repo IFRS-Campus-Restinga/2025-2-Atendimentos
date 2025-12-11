@@ -3,18 +3,18 @@ export const API_CONFIG = {
   baseURL: import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000',
   endpoints: {
     googleLogin: '/services/api/google-login/',
-    alunos: '/services/alunos/',
     coordenadores: '/services/coord/',
     cursos: '/services/cursos/',
     disciplinas: '/services/disciplinas/',
     professores: '/services/professores/',
     turmas: '/services/turmas/',
     usuarioMe: '/services/api/usuario/me',
-    profileStatus: '/services/api/profile/status/',           // ✅ adicionado
-    complementoCadastro: '/services/api/usuario/complemento/', // ✅ adicionado
+    usuarios: '/services/usuarios/',
+    profileStatus: '/services/api/profile/status/',
+    complementoCadastro: '/services/api/usuario/complemento/', 
     eventoOrdinario: '/services/evento-ordinario/',
     eventoExtraordinario: '/services/evento-extraordinario/',
-    eventoConvocacao: '/api/evento-convocacao/',              // ✅ novo endpoint
+    eventoConvocacao: '/services/evento-convocacao/',
   }
 };
 

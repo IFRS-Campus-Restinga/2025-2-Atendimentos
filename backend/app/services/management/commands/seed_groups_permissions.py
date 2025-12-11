@@ -9,6 +9,7 @@ class Command(BaseCommand):
         mapping = {
             'Professores': [
                 'add_eventoordinario',
+                'add_convocacao',
                 'change_evento',
                 'pode_aprovar_evento',
                 'pode_reagendar_evento',
@@ -25,6 +26,7 @@ class Command(BaseCommand):
               
                 'add_eventoordinario',
                 'add_eventoextraordinario',
+                'add_convocacao',
                 'change_evento',
                 'delete_evento',
                 'pode_aprovar_evento',

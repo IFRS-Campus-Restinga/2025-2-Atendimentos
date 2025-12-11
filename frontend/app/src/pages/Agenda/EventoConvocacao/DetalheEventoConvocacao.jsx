@@ -9,7 +9,7 @@ const Row = ({ label, children }) => (
   </div>
 );
 
-export default function DetalheEventoConvocacao({ isOpen, onClose, onEdit, eventId, fallbackEvento, turmaNameById, disciplinaNameById, alunoNameById }) {
+export default function DetalheEventoConvocacao({ isOpen, onClose, onEdit, eventId, fallbackEvento, cursoNameById, disciplinaNameById, alunoNameById }) {
   const [loading, setLoading] = useState(false);
   const [evento, setEvento] = useState(fallbackEvento || null);
 
@@ -19,7 +19,7 @@ export default function DetalheEventoConvocacao({ isOpen, onClose, onEdit, event
     async function load() {
       setLoading(true);
       try {
-        const res = await fetch(getApiUrl(`/api/evento-convocacao/${eventId}/`));
+        const res = await fetch(getApiUrl(`/services/evento-convocacao/${eventId}/`));
         const data = await res.json();
         if (active) setEvento(data);
       } catch (e) {
@@ -38,7 +38,7 @@ export default function DetalheEventoConvocacao({ isOpen, onClose, onEdit, event
     if (e.target.classList.contains('modal-overlay')) onClose?.();
   };
 
-  const turmaNome = evento ? (turmaNameById.get?.(evento.turma) || 'Turma') : '';
+  const cursoNome = evento ? (cursoNameById.get?.(evento.curso) || 'Curso') : '';
   const discNome = evento ? (disciplinaNameById.get?.(evento.disciplina) || 'Disciplina') : '';
   const alunoNome = evento ? (alunoNameById.get?.(evento.aluno) || 'Aluno') : '';
   const inicio = (evento?.hora_evento_inicio || '').slice(0, 5);
@@ -67,7 +67,7 @@ export default function DetalheEventoConvocacao({ isOpen, onClose, onEdit, event
             <div className="form-section-title">Informações da Convocação</div>
             <Row label="Data">{dataStr}</Row>
             <Row label="Horário">{horario}</Row>
-            <Row label="Turma">{turmaNome}</Row>
+            <Row label="Curso">{cursoNome}</Row>
             <Row label="Disciplina">{discNome}</Row>
             <Row label="Aluno">{alunoNome}</Row>
             <Row label="Mensagem">{evento?.mensagem || 'Não informado'}</Row>

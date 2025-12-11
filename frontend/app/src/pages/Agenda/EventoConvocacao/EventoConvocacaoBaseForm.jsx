@@ -11,11 +11,11 @@ const EventoConvocacaoForm = ({
   const [dataEvento, setDataEvento] = useState("");
   const [horaInicio, setHoraInicio] = useState("");
   const [horaFim, setHoraFim] = useState("");
-  const [turmaId, setTurmaId] = useState("");
+  const [cursoId, setCursoId] = useState("");
   const [disciplinaId, setDisciplinaId] = useState("");
   const [alunoId, setAlunoId] = useState("");
   const [mensagem, setMensagem] = useState("");
-  const [turmas, setTurmas] = useState([]);
+  const [cursos, setCursos] = useState([]);
   const [disciplinas, setDisciplinas] = useState([]);
   const [alunos, setAlunos] = useState([]);
   const [sala, setSala] = useState("");
@@ -29,7 +29,7 @@ const EventoConvocacaoForm = ({
       setHoraInicio(String(initialValues.hora_evento_inicio).slice(0, 5));
     if (initialValues.hora_evento_fim)
       setHoraFim(String(initialValues.hora_evento_fim).slice(0, 5));
-    if (initialValues.turma) setTurmaId(String(initialValues.turma));
+    if (initialValues.curso) setCursoId(String(initialValues.curso));
     if (initialValues.disciplina) setDisciplinaId(String(initialValues.disciplina));
     if (initialValues.aluno) setAlunoId(String(initialValues.aluno));
     if (initialValues.mensagem) setMensagem(initialValues.mensagem);
@@ -37,33 +37,54 @@ const EventoConvocacaoForm = ({
       setSala(String(initialValues.sala));
   }, [mode, initialValues]);
 
-  // Carregar turmas, disciplinas e alunos
+  // Carregar cursos e disciplinas
   useEffect(() => {
-    fetch(getApiUrl("turmas"))
+    fetch(getApiUrl("cursos"))
       .then((res) => res.json())
-      .then((data) => setTurmas(Array.isArray(data) ? data : data?.results || []))
-      .catch((err) => console.error("Erro ao buscar turmas:", err));
+      .then((data) => setCursos(Array.isArray(data) ? data : data?.results || []))
+      .catch((err) => console.error("Erro ao buscar cursos:", err));
 
     fetch(getApiUrl("disciplinas"))
       .then((res) => res.json())
       .then((data) => setDisciplinas(Array.isArray(data) ? data : data?.results || []))
       .catch((err) => console.error("Erro ao buscar disciplinas:", err));
-
-    fetch(getApiUrl("alunos"), { headers: getAuthHeaders() })
-      .then((res) => res.json())
-      .then((data) => setAlunos(Array.isArray(data) ? data : data?.results || []))
-      .catch((err) => console.error("Erro ao buscar alunos:", err));
   }, []);
+
+  // Buscar alunos vinculados ao curso selecionado e com tipoPerfil = ALU
+useEffect(() => {
+  if (!cursoId) {
+    setAlunos([]);
+    return;
+  }
+
+  fetch(getApiUrl(`/services/usuario/?curso=${cursoId}&tipoPerfil=ALU`), {
+    headers: getAuthHeaders(),
+  })
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error(`Erro HTTP ${res.status}`);
+      }
+      return res.json();
+    })
+    .then((data) => {
+      const lista = Array.isArray(data) ? data : data?.results || [];
+      const filtrados = lista.filter(
+        (u) => u.tipoPerfil === "ALU" && String(u.curso) === String(cursoId)
+      );
+      setAlunos(filtrados);
+    })
+    .catch((err) => console.error("Erro ao buscar alunos do curso:", err));
+  }, [cursoId]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!dataEvento || !horaInicio || !horaFim || !turmaId || !disciplinaId || !alunoId) {
+    if (!dataEvento || !horaInicio || !horaFim || !cursoId || !disciplinaId || !alunoId) {
       alert("Preencha todos os campos obrigatórios.");
       return;
     }
 
-    // Validação de data mínima (> hoje)
+    // Validações de data e horário
     const hoje = new Date();
     const dataSelecionada = new Date(dataEvento);
     if (dataSelecionada <= hoje) {
@@ -71,7 +92,6 @@ const EventoConvocacaoForm = ({
       return;
     }
 
-    // Validação de horário início (08:00–22:00)
     const [hIni, mIni] = horaInicio.split(":").map(Number);
     const minutosInicio = hIni * 60 + mIni;
     if (minutosInicio < 8 * 60 || minutosInicio > 22 * 60) {
@@ -79,7 +99,6 @@ const EventoConvocacaoForm = ({
       return;
     }
 
-    // Validação de horário término (08:00–22:30)
     const [hFim, mFim] = horaFim.split(":").map(Number);
     const minutosFim = hFim * 60 + mFim;
     if (minutosFim < 8 * 60 || minutosFim > (22 * 60 + 30)) {
@@ -87,7 +106,6 @@ const EventoConvocacaoForm = ({
       return;
     }
 
-    // Validação de duração mínima (>= 30 min)
     const duracaoMin = minutosFim - minutosInicio;
     if (duracaoMin < 30) {
       alert("A duração mínima do atendimento é de 30 minutos.");
@@ -98,18 +116,18 @@ const EventoConvocacaoForm = ({
       data_evento: dataEvento,
       hora_evento_inicio: horaInicio,
       hora_evento_fim: horaFim,
-      turma: Number(turmaId),
+      curso: Number(cursoId),
       disciplina: Number(disciplinaId),
       aluno: Number(alunoId),
       mensagem,
-      limite: 1, // fixo
+      limite: 1,
       sala: sala || null,
-      status_atendimento: true, // default true na criação
+      status_atendimento: true,
     };
 
     setSending(true);
     try {
-      const res = await fetch(getApiUrl("/api/evento-convocacao/"), {
+      const res = await fetch(getApiUrl("/services/evento-convocacao/"), {
         method: mode === "edit" ? "PATCH" : "POST",
         headers: {
           "Content-Type": "application/json",
@@ -203,25 +221,24 @@ const EventoConvocacaoForm = ({
           </div>
         </div>
       </div>
-
-      <div className="form-section-box">
-        <div className="form-section-title">Aluno</div>
-        <select
-          className="form-select"
-          value={alunoId}
-          onChange={(e) => setAlunoId(e.target.value)}
-          required
-        >
-          <option value="">Selecione o aluno</option>
-          {alunos.map((a) => (
-            <option key={a.id} value={a.id}>
-              {a.nome}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      <div className="form-section-box">
+          <div className="form-section-box">
+          <div className="form-section-title">Aluno</div>
+          <select
+            className="form-select"
+            value={alunoId}
+            onChange={(e) => setAlunoId(e.target.value)}
+            required
+            disabled={!cursoId}
+          >
+            <option value="">Selecione o aluno</option>
+            {alunos.map((a) => (
+              <option key={a.id} value={a.id}>
+                {a.nome} ({a.email})
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="form-section-box">
         <div className="form-section-title">Mensagem</div>
         <textarea
           className="form-control"
@@ -232,7 +249,7 @@ const EventoConvocacaoForm = ({
         />
       </div>
 
-            <div className="form-section-box">
+      <div className="form-section-box">
         <div className="form-section-title">Opções</div>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
           <div>

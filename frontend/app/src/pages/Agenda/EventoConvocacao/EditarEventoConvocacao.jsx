@@ -3,7 +3,7 @@ import { getApiUrl } from '../../../services/api';
 import '../Evento.css';
 import EventoConvocacaoBaseForm from './EventoConvocacaoBaseForm';
 
-export default function EditarEventoConvocacao({ isOpen, onClose, evento, turmas, disciplinas, alunos, onSuccess }) {
+export default function EditarEventoConvocacao({ isOpen, onClose, evento, cursos, disciplinas, alunos, onSuccess }) {
   useEffect(() => {
     // qualquer lógica extra de inicialização pode ir aqui
   }, [isOpen, evento]);
@@ -15,13 +15,13 @@ export default function EditarEventoConvocacao({ isOpen, onClose, evento, turmas
   };
 
   const submitOverride = async (values) => {
-    const url = getApiUrl(`/api/evento-convocacao/${evento.id}/editar/`);
+    const url = getApiUrl(`/services/evento-convocacao/${evento.id}/editar/`);
     const method = 'PATCH';
     const body = {
       data_evento: values.data_evento,
       hora_evento_inicio: values.hora_evento_inicio,
       hora_evento_fim: values.hora_evento_fim,
-      turma: Number(values.turma),
+      curso: Number(values.curso),
       disciplina: Number(values.disciplina),
       aluno: Number(values.aluno),
       mensagem: values.mensagem,
@@ -56,7 +56,7 @@ export default function EditarEventoConvocacao({ isOpen, onClose, evento, turmas
             data_evento: evento?.data_evento,
             hora_evento_inicio: evento?.hora_evento_inicio,
             hora_evento_fim: evento?.hora_evento_fim,
-            turma: evento?.turma,
+            curso: evento?.curso,
             disciplina: evento?.disciplina,
             aluno: evento?.aluno,
             mensagem: evento?.mensagem,
