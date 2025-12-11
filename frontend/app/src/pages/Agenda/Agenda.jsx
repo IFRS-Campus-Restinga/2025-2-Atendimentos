@@ -187,7 +187,7 @@ const Agenda = () => {
               + Novo Atendimento de Turma
             </button>
           )}
-          {permissions.can_create_extraordinario && (
+          {permissions.can_create_extraordinario !== false && (
             <button className="btn btn-success" style={{ marginLeft: '8px' }}
               onClick={() => { setModalTipo("extraordinario"); setIsModalOpen(true); }}
               disabled={!turmaFilter}>
