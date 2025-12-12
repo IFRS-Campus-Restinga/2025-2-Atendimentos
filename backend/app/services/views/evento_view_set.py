@@ -35,9 +35,9 @@ class EventoViewSet(ModelViewSet):
         evento = serializer.save(usuario_create=perfil)
         try:
             if user and user.is_authenticated and evento is not None:
-                assign_perm('accounts.pode_aprovar_evento', user, evento)
-                assign_perm('accounts.pode_cancelar_evento', user, evento)
-                assign_perm('accounts.pode_reagendar_evento', user, evento)
+                assign_perm('accounts.approve_event', user, evento)
+                assign_perm('accounts.cancel_event', user, evento)
+                assign_perm('accounts.reschedule_event', user, evento)
         except Exception:
             pass
 
@@ -51,7 +51,7 @@ class EventoViewSet(ModelViewSet):
     @action(detail=True, methods=['post'], url_path='aprovar',
         permission_classes=[PodeAprovarEventoObjectPermission])
     def aprovar(self, request, pk=None):
-        """Aprova/confirma um evento. Requer permissão 'pode_aprovar_evento'"""
+        """Aprova/confirma um evento. Requer permissão 'approve_event'"""
         evento = self.get_object()
         evento.status_atendimento = StatusAtendimento.CONFIRMADO
         evento.save()
@@ -64,7 +64,7 @@ class EventoViewSet(ModelViewSet):
     @action(detail=True, methods=['post'], url_path='cancelar',
         permission_classes=[PodeCancelarEventoObjectPermission])
     def cancelar(self, request, pk=None):
-        """Cancela um evento. Requer permissão 'pode_cancelar_evento'"""
+        """Cancela um evento. Requer permissão 'cancel_event'"""
         evento = self.get_object()
         evento.status_atendimento = StatusAtendimento.CANCELADO
         evento.save()
@@ -77,7 +77,7 @@ class EventoViewSet(ModelViewSet):
     @action(detail=True, methods=['post'], url_path='reagendar',
         permission_classes=[PodeRegendarEventoObjectPermission])
     def reagendar(self, request, pk=None):
-        """Reagenda um evento para nova data/hora. Requer permissão 'pode_reagendar_evento'"""
+        """Reagenda um evento para nova data/hora. Requer permissão 'reschedule_event'"""
         evento = self.get_object()
         
         # Validar dados recebidos

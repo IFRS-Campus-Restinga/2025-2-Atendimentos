@@ -93,16 +93,16 @@ class EventoConvocacaoSerializer(serializers.ModelSerializer):
             return False
 
     def get_can_approve(self, obj):
-        return self._has_perm_obj('accounts.pode_aprovar_evento', obj)
+        return self._has_perm_obj('accounts.approve_event', obj)
 
     def get_can_cancel(self, obj):
         return (
-            self._has_perm_obj('accounts.pode_cancelar_evento', obj)
-            or self._has_perm_obj('accounts.pode_encerrar_convocacao', obj)
+            self._has_perm_obj('accounts.cancel_event', obj)
+            or self._has_perm_obj('accounts.end_convocation', obj)
         )
 
     def get_can_reagendar(self, obj):
-        return self._has_perm_obj('accounts.pode_reagendar_evento', obj)
+        return self._has_perm_obj('accounts.reschedule_event', obj)
 
     def get_can_change(self, obj):
         return (

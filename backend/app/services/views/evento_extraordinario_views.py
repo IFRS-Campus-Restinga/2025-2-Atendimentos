@@ -35,8 +35,8 @@ class EventoExtraordinarioViewSet(viewsets.ModelViewSet):
         # Atribuir permissões de objeto ao criador (ignora falhas)
         try:
             if user and evento is not None:
-                assign_perm('accounts.pode_aprovar_evento', user, evento)
-                assign_perm('accounts.pode_cancelar_evento', user, evento)
-                assign_perm('accounts.pode_reagendar_evento', user, evento)
+                assign_perm('accounts.approve_event', user, evento)
+                assign_perm('accounts.cancel_event', user, evento)
+                assign_perm('accounts.reschedule_event', user, evento)
         except Exception:
             pass

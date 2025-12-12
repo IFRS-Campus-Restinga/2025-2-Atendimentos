@@ -50,8 +50,8 @@ class EventoConvocacao(Evento):
 
     class Meta:
         permissions = [
-            ("pode_criar_convocacao", "Professor pode criar convocação"),
-            ("pode_encerrar_convocacao", "Professor pode encerrar convocação"),
+            ("create_convocation", "Can create convocation"),
+            ("end_convocation", "Can end convocation"),
         ]
         verbose_name = "Evento de Convocação"
         verbose_name_plural = "Eventos de Convocação"

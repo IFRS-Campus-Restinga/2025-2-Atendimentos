@@ -24,3 +24,8 @@ class EventoExtraordinario(Evento):
     class Meta:
         verbose_name = 'Evento Extraordinário'
         verbose_name_plural = 'Eventos Extraordinários'
+        permissions = [
+            ("approve_event", "Can approve/confirm event"),
+            ("cancel_event", "Can cancel event"),
+            ("reschedule_event", "Can reschedule event"),
+        ]

@@ -113,9 +113,9 @@ class EventoOrdinarioViewSet(viewsets.ModelViewSet):
                 )
                 try:
                     if user and user.is_authenticated:
-                        assign_perm('accounts.pode_aprovar_evento', user, evento)
-                        assign_perm('accounts.pode_cancelar_evento', user, evento)
-                        assign_perm('accounts.pode_reagendar_evento', user, evento)
+                        assign_perm('accounts.approve_event', user, evento)
+                        assign_perm('accounts.cancel_event', user, evento)
+                        assign_perm('accounts.reschedule_event', user, evento)
                 except Exception:
                     pass
                 eventos.append(evento)

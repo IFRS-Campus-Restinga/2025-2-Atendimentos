@@ -120,11 +120,9 @@ class EventoConvocacaoViewSet(viewsets.ModelViewSet):
         try:
             user = request.user if getattr(request, 'user', None) and request.user.is_authenticated else None
             if user and evento is not None:
-                # permissões gerais de evento (reaproveitar nomes já usados)
-                assign_perm('accounts.pode_cancelar_evento', user, evento)
-                assign_perm('accounts.pode_reagendar_evento', user, evento)
-                # permissão específica do modelo convocação (se aplicável)
-                assign_perm('accounts.pode_encerrar_convocacao', user, evento)
+                assign_perm('accounts.cancel_event', user, evento)
+                assign_perm('accounts.reschedule_event', user, evento)
+                assign_perm('accounts.end_convocation', user, evento)
         except Exception:
             pass
 

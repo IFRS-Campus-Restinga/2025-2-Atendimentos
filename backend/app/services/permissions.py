@@ -15,19 +15,19 @@ class CustomPermissions(permissions.DjangoModelPermissions):
 class PodeAprovarEvento(permissions.BasePermission):
     """Verifica se usuário tem permissão de aprovar evento"""
     def has_permission(self, request, view):
-        return request.user.has_perm('accounts.pode_aprovar_evento')
+        return request.user.has_perm('accounts.approve_event')
 
 
 class PodeCancelarEvento(permissions.BasePermission):
     """Verifica se usuário tem permissão de cancelar evento"""
     def has_permission(self, request, view):
-        return request.user.has_perm('accounts.pode_cancelar_evento')
+        return request.user.has_perm('accounts.cancel_event')
 
 
 class PodeRegendarEvento(permissions.BasePermission):
     """Verifica se usuário tem permissão de reagendar evento"""
     def has_permission(self, request, view):
-        return request.user.has_perm('accounts.pode_reagendar_evento')
+        return request.user.has_perm('accounts.reschedule_event')
 
 
 # Mantendo compatibilidade com nome antigo (deprecated)
@@ -35,25 +35,28 @@ class ProfessorPodeAprovar(permissions.BasePermission):
     def has_permission(self, request, view):
         if request.method in permissions.SAFE_METHODS:
             return True # Permite a leitura para qualquer um
-        return request.user.has_perm('accounts.pode_aprovar_evento')
+        return (
+            request.user.has_perm('accounts.approve_event')
+            or request.user.has_perm('accounts.pode_aprovar_evento')
+        )
 
 class PodeAprovarEventoObjectPermission(permissions.BasePermission):
-    """Permissão por objeto para aprovar um evento (accounts.pode_aprovar_evento on obj)"""
+    """Permissão por objeto para aprovar um evento (uses 'accounts.approve_event' on object)"""
     def has_object_permission(self, request, view, obj):
         if request.method in permissions.SAFE_METHODS:
             return True
-        return request.user.has_perm('accounts.pode_aprovar_evento', obj)
+        return request.user.has_perm('accounts.approve_event', obj)
     
 class PodeCancelarEventoObjectPermission(permissions.BasePermission):
-    """Permissão por objeto para cancelar um evento (accounts.pode_cancelar_evento on obj)"""
+    """Permissão por objeto para cancelar um evento (uses 'accounts.cancel_event' on object)"""
     def has_object_permission(self, request, view, obj):
         if request.method in permissions.SAFE_METHODS:
             return True
-        return request.user.has_perm('accounts.pode_cancelar_evento', obj)
+        return request.user.has_perm('accounts.cancel_event', obj)
 
 class PodeRegendarEventoObjectPermission(permissions.BasePermission):
-    """Permissão por objeto para reagendar um evento (accounts.pode_reagendar_evento on obj)"""
+    """Permissão por objeto para reagendar um evento (uses 'accounts.reschedule_event' on object)"""
     def has_object_permission(self, request, view, obj):
         if request.method in permissions.SAFE_METHODS:
             return True
-        return request.user.has_perm('accounts.pode_reagendar_evento', obj)
+        return request.user.has_perm('accounts.reschedule_event', obj)

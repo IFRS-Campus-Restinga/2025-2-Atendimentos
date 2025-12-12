@@ -6,32 +6,35 @@ class Command(BaseCommand):
     help = 'Cria grupos padrão e associa permissões relacionadas a eventos (Professores, Coordenadores, Alunos, Administradores)'
 
     def handle(self, *args, **options):
+
         mapping = {
             'Professores': [
-                'add_eventoordinario',
-                'add_convocacao',
-                'change_evento',
-                'pode_aprovar_evento',
-                'pode_reagendar_evento',
+
+                'add_disciplina', 'change_disciplina', 'view_disciplina',
+                'add_eventoordinario', 'change_eventoordinario', 'view_eventoordinario',
+                'add_eventoconvocacao', 'change_eventoconvocacao', 'view_eventoconvocacao',
+                'view_turma',
+                'view_eventoextraordinario', 'change_eventoextraordinario',
+                'approve_event', 'cancel_event', 'reschedule_event',
             ],
             'Coordenadores': [
-                'add_eventoordinario',
-                'change_evento',
-                'pode_aprovar_evento',
+                'view_disciplina', 'view_turma',
+                'view_eventoordinario', 'view_eventoconvocacao', 'view_eventoextraordinario',
+                'add_eventoconvocacao', 'change_eventoconvocacao', 'view_eventoconvocacao',
+                'approve_event', 'cancel_event', 'reschedule_event',
             ],
             'Alunos': [
-                'add_eventoextraordinario',
+                'view_turma', 'view_disciplina',
+                'add_eventoextraordinario', 'change_eventoextraordinario', 'view_eventoextraordinario',
+                'view_eventoordinario', 'view_eventoconvocacao',
             ],
             'Administradores': [
-              
-                'add_eventoordinario',
-                'add_eventoextraordinario',
-                'add_convocacao',
-                'change_evento',
-                'delete_evento',
-                'pode_aprovar_evento',
-                'pode_cancelar_evento',
-                'pode_reagendar_evento',
+                'add_eventoordinario', 'change_eventoordinario', 'delete_eventoordinario', 'view_eventoordinario',
+                'add_eventoextraordinario', 'change_eventoextraordinario', 'delete_eventoextraordinario', 'view_eventoextraordinario',
+                'add_eventoconvocacao', 'change_eventoconvocacao', 'delete_eventoconvocacao', 'view_eventoconvocacao',
+                'add_disciplina', 'change_disciplina', 'delete_disciplina', 'view_disciplina',
+                'add_turma', 'change_turma', 'delete_turma', 'view_turma',
+                'approve_event', 'cancel_event', 'reschedule_event', 'create_convocation', 'end_convocation',
             ],
         }
 

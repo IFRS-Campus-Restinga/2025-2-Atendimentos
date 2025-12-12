@@ -66,7 +66,7 @@ class Evento(BaseModel):
 
     class Meta:
         permissions = [
-            ("pode_aprovar_evento", "Pode Aprovar/Confirmar Evento"),
-            ("pode_cancelar_evento", "Pode Cancelar Evento"),
-            ("pode_reagendar_evento", "Pode Reagendar Evento"),
+            ("approve_event", "Can approve/confirm event"),
+            ("cancel_event", "Can cancel event"),
+            ("reschedule_event", "Can reschedule event"),
         ]

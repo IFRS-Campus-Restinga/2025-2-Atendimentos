@@ -4,11 +4,41 @@ from accounts.enumerations.tipo_usuario import TipoUsuario
 from accounts.models.usuario import Usuario
 from django.db.models import Q
 
+
 class EventoOrdinarioSerializer(serializers.ModelSerializer):
-    
+    can_change = serializers.SerializerMethodField()
+    can_reagendar = serializers.SerializerMethodField()
+    can_cancel = serializers.SerializerMethodField()
+    can_approve = serializers.SerializerMethodField()
+
+class EventoOrdinarioSerializer(serializers.ModelSerializer):
     class Meta:
         model = EventoOrdinario
         fields = '__all__'
+
+    def _has_perm_obj(self, perm_codename, obj):
+        request = self.context.get('request') if hasattr(self, 'context') else None
+        if not request or not getattr(request, 'user', None) or not request.user.is_authenticated:
+            return False
+        try:
+            return request.user.has_perm(perm_codename, obj)
+        except Exception:
+            return False
+
+    def get_can_change(self, obj):
+        return (
+            self._has_perm_obj('accounts.change_eventoordinario', obj)
+            or self._has_perm_obj('accounts.change_evento', obj)
+        )
+
+    def get_can_reagendar(self, obj):
+        return self._has_perm_obj('accounts.reschedule_event', obj)
+
+    def get_can_cancel(self, obj):
+        return self._has_perm_obj('accounts.cancel_event', obj)
+
+    def get_can_approve(self, obj):
+        return self._has_perm_obj('accounts.approve_event', obj)
     
     def get_status_choices(self, obj):
         return [{"value": choice[0], "label": choice[1]} 

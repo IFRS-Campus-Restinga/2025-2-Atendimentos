@@ -17,9 +17,9 @@ class Command(BaseCommand):
 
         # Obtém as permissões
         try:
-            perm_aprovar = Permission.objects.get(codename='pode_aprovar_evento', content_type=ct)
-            perm_cancelar = Permission.objects.get(codename='pode_cancelar_evento', content_type=ct)
-            perm_reagendar = Permission.objects.get(codename='pode_reagendar_evento', content_type=ct)
+            perm_aprovar = Permission.objects.get(codename='approve_event', content_type=ct)
+            perm_cancelar = Permission.objects.get(codename='cancel_event', content_type=ct)
+            perm_reagendar = Permission.objects.get(codename='reschedule_event', content_type=ct)
         except Permission.DoesNotExist as e:
             self.stdout.write(self.style.ERROR(f'Permissão não encontrada: {e}. Execute makemigrations e migrate primeiro.'))
             return
@@ -47,9 +47,9 @@ class Command(BaseCommand):
 
         self.stdout.write(self.style.SUCCESS('\n✅ Permissões de evento atribuídas com sucesso!'))
         self.stdout.write(self.style.SUCCESS('''
-Resumo:
-  - Alunos: pode_cancelar_evento, pode_reagendar_evento
-  - Professores: pode_aprovar_evento
-  - Coordenadores: pode_aprovar_evento, pode_cancelar_evento, pode_reagendar_evento
-  - Administradores: pode_aprovar_evento, pode_cancelar_evento, pode_reagendar_evento
+    Resumo (novos codenames):
+      - Alunos: cancel_event, reschedule_event
+      - Professores: approve_event
+      - Coordenadores: approve_event, cancel_event, reschedule_event
+      - Administradores: approve_event, cancel_event, reschedule_event
         '''))

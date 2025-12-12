@@ -24,3 +24,8 @@ class EventoOrdinario(Evento):
     class Meta:
         verbose_name = 'Evento Ordinário'
         verbose_name_plural = 'Eventos Ordinários'
+        permissions = [
+            ("approve_event", "Can approve/confirm event"),
+            ("cancel_event", "Can cancel event"),
+            ("reschedule_event", "Can reschedule event"),
+        ]
