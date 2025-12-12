@@ -5,6 +5,10 @@ from datetime import datetime, timedelta, date
 
 
 class EventoConvocacaoSerializer(serializers.ModelSerializer):
+    can_approve = serializers.SerializerMethodField()
+    can_cancel = serializers.SerializerMethodField()
+    can_reagendar = serializers.SerializerMethodField()
+    can_change = serializers.SerializerMethodField()
 
     class Meta:
         model = EventoConvocacao
@@ -78,3 +82,30 @@ class EventoConvocacaoSerializer(serializers.ModelSerializer):
             })
 
         return data
+
+    def _has_perm_obj(self, perm_codename, obj):
+        request = self.context.get('request') if hasattr(self, 'context') else None
+        if not request or not getattr(request, 'user', None) or not request.user.is_authenticated:
+            return False
+        try:
+            return request.user.has_perm(perm_codename, obj)
+        except Exception:
+            return False
+
+    def get_can_approve(self, obj):
+        return self._has_perm_obj('accounts.pode_aprovar_evento', obj)
+
+    def get_can_cancel(self, obj):
+        return (
+            self._has_perm_obj('accounts.pode_cancelar_evento', obj)
+            or self._has_perm_obj('accounts.pode_encerrar_convocacao', obj)
+        )
+
+    def get_can_reagendar(self, obj):
+        return self._has_perm_obj('accounts.pode_reagendar_evento', obj)
+
+    def get_can_change(self, obj):
+        return (
+            self._has_perm_obj('accounts.change_eventoconvocacao', obj)
+            or self._has_perm_obj('accounts.change_evento', obj)
+        )

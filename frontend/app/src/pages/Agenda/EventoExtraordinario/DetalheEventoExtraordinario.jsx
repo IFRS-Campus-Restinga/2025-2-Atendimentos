@@ -88,7 +88,7 @@ export default function DetalheEventoExtraordinario({
                         <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 12 }}>
                             <button className="btn btn-secondary" onClick={onClose}>Voltar</button>
 
-                            {onEdit && (
+                            {(data?.can_change || data?.can_reagendar || data?.can_cancel) && onEdit && (
                                 <button className="btn btn-primary" onClick={() => onEdit(data)}>
                                     Editar
                                 </button>

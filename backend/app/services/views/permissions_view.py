@@ -12,6 +12,7 @@ class PermissionsView(APIView):
         perms = {
             'can_create_ordinario': user.has_perm('accounts.add_eventoordinario'),
             'can_create_extraordinario': user.has_perm('accounts.add_eventoextraordinario'),
+            'can_create_convocacao': user.has_perm('accounts.add_eventoconvocacao') or user.has_perm('accounts.pode_criar_convocacao'),
             'can_change_event': user.has_perm('accounts.change_evento'),
             'can_delete_event': user.has_perm('accounts.delete_evento'),
             'can_approve_event': user.has_perm('accounts.pode_aprovar_evento'),

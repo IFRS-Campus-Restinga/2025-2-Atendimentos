@@ -19,7 +19,9 @@ export default function DetalheEventoConvocacao({ isOpen, onClose, onEdit, event
     async function load() {
       setLoading(true);
       try {
-        const res = await fetch(getApiUrl(`/services/evento-convocacao/${eventId}/`));
+        const token = localStorage.getItem('authToken');
+        const headers = token ? { Authorization: `Bearer ${token}` } : {};
+        const res = await fetch(getApiUrl(`/services/evento-convocacao/${eventId}/`), { headers });
         const data = await res.json();
         if (active) setEvento(data);
       } catch (e) {
@@ -81,12 +83,14 @@ export default function DetalheEventoConvocacao({ isOpen, onClose, onEdit, event
             <Row label="Cadastrado por">{cadastradoPor}</Row>
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 12 }}>
               <button className="btn btn-secondary" onClick={onClose}>Voltar</button>
-              <button
-                className="btn btn-primary"
-                onClick={() => onEdit?.(evento)}
-              >
-                Editar
-              </button>
+              {(evento?.can_change || evento?.can_reagendar || evento?.can_cancel) && (
+                <button
+                  className="btn btn-primary"
+                  onClick={() => onEdit?.(evento)}
+                >
+                  Editar
+                </button>
+              )}
             </div>
           </div>
         )}

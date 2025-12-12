@@ -1,8 +1,9 @@
 from rest_framework import viewsets, status
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import IsAuthenticated
 from datetime import datetime, timedelta, date
 from django.db import transaction
+from guardian.shortcuts import assign_perm
 
 from accounts.models.evento_convocacao import EventoConvocacao
 from accounts.models.curso import Curso
@@ -13,7 +14,8 @@ from ..serializers.evento_convocacao_serializer import EventoConvocacaoSerialize
 class EventoConvocacaoViewSet(viewsets.ModelViewSet):
     queryset = EventoConvocacao.objects.all().order_by('-data_evento', '-hora_evento_inicio')
     serializer_class = EventoConvocacaoSerializer
-    permission_classes = [AllowAny]
+    # Exigir autenticação para criação/edição (vincular criador)
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         qs = super().get_queryset()
@@ -113,6 +115,18 @@ class EventoConvocacaoViewSet(viewsets.ModelViewSet):
                 aluno=aluno_obj,
                 usuario_create=usuario_create,
             )
+
+        # Atribuir permissões de objeto ao criador (se houver)
+        try:
+            user = request.user if getattr(request, 'user', None) and request.user.is_authenticated else None
+            if user and evento is not None:
+                # permissões gerais de evento (reaproveitar nomes já usados)
+                assign_perm('accounts.pode_cancelar_evento', user, evento)
+                assign_perm('accounts.pode_reagendar_evento', user, evento)
+                # permissão específica do modelo convocação (se aplicável)
+                assign_perm('accounts.pode_encerrar_convocacao', user, evento)
+        except Exception:
+            pass
 
         serializer = self.get_serializer(evento)
         return Response(serializer.data, status=status.HTTP_201_CREATED)

@@ -207,12 +207,14 @@ const Agenda = () => {
               Solicitar / Marcar Atendimento
             </button>
           )}
-         
+
+          {permissions.can_create_convocacao !== false && (
             <button className="btn btn-success" style={{ marginLeft: '8px' }}
               onClick={() => { setModalTipo("convocacao"); setIsModalOpen(true); }}
               disabled={!turmaFilter}>
               + Nova Convocação
             </button>
+          )}
         
         </div>
 
