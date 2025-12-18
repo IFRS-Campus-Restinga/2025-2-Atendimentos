@@ -1,0 +1,147 @@
+/* Container da página */
+.pagina-atendimentos {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+/* Título */
+.titulo-pagina {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Campo de busca */
+.input-busca {
+  display: block;
+  margin: 0 auto 20px auto;
+  padding: 8px 12px;
+  width: 300px;
+}
+
+/* Tabela */
+.tabela-atendimentos {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #fff;
+}
+
+/* Cabeçalho */
+.tabela-atendimentos thead th {
+  border-bottom: 3px solid #333;
+  padding: 10px;
+  text-align: left;
+}
+
+/* Corpo */
+.tabela-atendimentos tbody td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+/* Linha hover */
+.tabela-atendimentos tbody tr:hover {
+  background-color: #f5f5f5;
+}
+
+/* Linha sem dados */
+.tabela-atendimentos tbody td[colspan] {
+  text-align: center;
+  padding: 20px;
+  color: #777;
+}
+
+/* Ações */
+.tabela-atendimentos td:last-child {
+  text-align: center;
+}
+
+/* Botões */
+.botao-editar,
+.botao-excluir {
+  padding: 6px 10px;
+  margin: 0 4px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* Botão editar */
+.botao-editar {
+  background-color: #1976d2;
+  color: #fff;
+}
+
+/* Botão excluir */
+.botao-excluir {
+  background-color: #d32f2f;
+  color: #fff;
+}
+
+/* Hover botões */
+.botao-editar:hover {
+  background-color: #125aa0;
+}
+
+.botao-excluir:hover {
+  background-color: #a52828;
+}
+
+
+.form-atendimento {
+  max-width: 600px;
+  margin: 0 auto;
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-atendimento label {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+  font-weight: 500;
+}
+
+.form-atendimento input,
+.form-atendimento select {
+  padding: 8px;
+  margin-top: 5px;
+}
+
+.linha-horarios {
+  display: flex;
+  gap: 20px;
+}
+
+.acoes-form {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.acoes-topo {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 12px;
+}
+
+
+.botao-novo-atendimento {
+  background-color: #2e7d32; /* verde */
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.botao-novo-atendimento:hover {
+  background-color: #1b5e20;
+}
+

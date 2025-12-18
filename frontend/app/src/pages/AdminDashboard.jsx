@@ -151,6 +151,22 @@ function AdminDashboard() {
               </div>
             </div>
           </Link>
+
+          <Link to="/atendimentos" className="text-decoration-none">
+            <div className="app-card is-reg position-relative mb-3">
+              <div className="app-card-body">
+                <div className="app-card-icon">At</div>
+                <div className="app-card-content">
+                  <h6 className="mb-1">Atendimentos</h6>
+                  <p className="text-muted small mb-2">Atendimentos escolares.</p>
+                  <div className="app-card-actions">
+                    <span className="app-card-hover-label">Acessar</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Link>
+
         </div>
       </div>
     </main>

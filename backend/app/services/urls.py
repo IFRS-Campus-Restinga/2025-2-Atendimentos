@@ -22,6 +22,7 @@ from services.views.admin_permissions import (
     AdminPermissionsList, AdminGroupsList, AdminUsersList,
     GroupPermsAssign, UserGroupsAssign,
 )
+from services.views.atendimento_escolar_view_set import AtendimentoEscolarViewSet
 
 app_name = 'api'
 router = DefaultRouter()
@@ -36,6 +37,7 @@ router.register(r'usuario', UsuarioViewSet, basename='usuario')
 router.register(r'registro-atendimento', RegistroAtendimentoViewSet, basename='registro-atendimento')
 router.register(r'notificacoes', NotificacaoViewSet, basename='notificacoes')
 router.register(r'evento-convocacao', EventoConvocacaoViewSet, basename='evento-convocacao')
+router.register(r'atendimentos-escolares', AtendimentoEscolarViewSet, basename='atendimento-escolar')
 
 
 

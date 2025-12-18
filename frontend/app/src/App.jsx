@@ -37,6 +37,8 @@ import CadastrarRegistroAtendimento from './pages/RegistroAtendimento/CadastrarR
 import ListarDisciplina from './pages/Disciplina/ListarDisciplina.jsx';
 import CadastrarDisciplina from './pages/Disciplina/CadastrarDisciplina.jsx';
 import Agenda from './pages/Agenda/Agenda.jsx';
+import ListaAtendimentosEscolares from './pages/AtendimentoEscolar/ListaAtendimentosEscolares.jsx';
+import CadastrarAtendimentoEscolar from './pages/AtendimentoEscolar/CadastrarAtendimentoEscolar.jsx';
 
 function App() {
   // Inicializa estado de autenticação de forma síncrona para evitar redirecionar ao recarregar rotas protegidas (ex.: /agenda)
@@ -282,6 +284,9 @@ function App() {
           <Route path="/registros" element={<RotaProtegida><ListarRegistro /></RotaProtegida>} />
           <Route path="/registros/cadastrar" element={<RotaProtegida><CadastrarRegistroAtendimento /></RotaProtegida>} />
           <Route path="/agenda" element={<RotaProtegida><Agenda /></RotaProtegida>} />
+          <Route path="/atendimentos" element={<RotaProtegida><ListaAtendimentosEscolares /></RotaProtegida>} />
+          <Route path="/atendimentos/cadastrar" element={<RotaProtegida><CadastrarAtendimentoEscolar /></RotaProtegida>} />
+
         </Routes>
       </div>
     </Router>
