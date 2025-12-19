@@ -32,17 +32,20 @@ const ListaAtendimentosEscolares = () => {
   }
 
   const atendimentosFiltrados = atendimentos.filter((item) =>
-    item.titulo?.toLowerCase().includes(busca.toLowerCase())
+    item.email?.toLowerCase().includes(busca.toLowerCase())
   );
 
   const iniciarEdicao = (item) => {
     setEditId(item.id);
     setEditData({
-      titulo: item.titulo,
+      modalidade_presencial: item.modalidade_presencial,
       data: item.data,
       hora_inicio: item.hora_inicio,
       hora_fim: item.hora_fim,
       status: item.status,
+      finalidade : item.finalidade,
+      sala : item.sala,
+
     });
   };
 
@@ -95,7 +98,7 @@ const ListaAtendimentosEscolares = () => {
       <input
         type="text"
         className="input-busca"
-        placeholder="Buscar por título"
+        placeholder="Buscar por email"
         value={busca}
         onChange={(e) => setBusca(e.target.value)}
       />
@@ -103,10 +106,13 @@ const ListaAtendimentosEscolares = () => {
       <table className="tabela-atendimentos">
         <thead>
           <tr>
-            <th>Título</th>
+            <th>Sala</th>
+            <th>Disciplina</th>
             <th>Data</th>
             <th>Horário</th>
             <th>Status</th>
+            <th>Finalidade</th>
+            <th>Modalidade</th>
             <th>Ações</th>
           </tr>
         </thead>
@@ -122,12 +128,24 @@ const ListaAtendimentosEscolares = () => {
               <td>
                 {editId === item.id ? (
                   <input
-                    name="titulo"
-                    value={editData.titulo}
+                    name="sala"
+                    value={editData.sala}
                     onChange={handleChange}
                   />
                 ) : (
-                  item.titulo
+                  item.sala
+                )}
+              </td>
+              
+              <td>
+                {editId === item.id ? (
+                  <input
+                    name="disciplinas"
+                    value={editData.disciplina}
+                    onChange={handleChange}
+                  />
+                ) : (
+                  item.sala
                 )}
               </td>
 
@@ -173,13 +191,45 @@ const ListaAtendimentosEscolares = () => {
                     value={editData.status}
                     onChange={handleChange}
                   >
-                    <option value="AGENDADO">Agendado</option>
-                    <option value="CONFIRMADO">Confirmado</option>
+                    <option value="CONVOCADO">Convocado</option>
                     <option value="REALIZADO">Realizado</option>
                     <option value="CANCELADO">Cancelado</option>
+                    <option value="AUSENTE">Ausente</option>
                   </select>
                 ) : (
                   item.status
+                )}
+              </td>
+
+              <td>
+                {editId === item.id ? (
+                  <select
+                    name="finalidade"
+                    value={editData.finalidade}
+                    onChange={handleChange}
+                  >
+                    <option value="ORIENTACAO_EST">Orientacao Estudos</option>
+                    <option value="REVISAO">Revisao</option>
+                    <option value="ORIENTACAO_ATI">Orientacao Atividade</option>
+                    <option value="OUTRO">Outro</option>
+                  </select>
+                ) : (
+                  item.finalidade
+                )}
+              </td>
+
+              <td>
+                {editId === item.id ? (
+                  <select
+                    name="modalidade"
+                    value={editData.modalidade_presencial}
+                    onChange={handleChange}
+                  >
+                    <option value="PRESENCIAL">Presencial</option>
+                    <option value="ONLINE">Online</option>
+                  </select>
+                ) : (
+                  item.modalidade_presencial
                 )}
               </td>
 

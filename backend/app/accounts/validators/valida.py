@@ -29,3 +29,4 @@ def validate_carga_horaria(self, valor):
     if valor <= 0:
         raise ValidationError("A carga horária deve ser maior que zero.")
     return valor
+

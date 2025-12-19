@@ -4,7 +4,7 @@ from .base_model import BaseModel
 from django.core.validators import *
 from .disciplina import Disciplina
 
-class AtendimentoEscolar(models.Model):
+class AtendimentoConvocatorio(models.Model):
 
     PRESENCIAL_CHOICES = [
         ('PRESENCIAL', 'Presencial'),
@@ -46,13 +46,13 @@ class AtendimentoEscolar(models.Model):
     professor = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name='professor',
-        default=''
+        related_name='professor'
     )
 
     disciplina = models.ForeignKey(
         Disciplina,
-        on_delete=models.CASCADE,
+        on_delete=models.PROTECT,
+        related_name='eventos',
         null=True,
         blank=True,
         help_text="Disciplina relacionada ao evento"
@@ -61,8 +61,7 @@ class AtendimentoEscolar(models.Model):
     aluno = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name='aluno',
-        default=''
+        related_name='aluno'
     )
 
     email_aluno = models.EmailField(unique=True, verbose_name="Email")
@@ -77,7 +76,7 @@ class AtendimentoEscolar(models.Model):
         help_text="Link se modalidade online"
     )
 
-    descricao_convocacao = models.TextField(max_length=500, validators=[MinLengthValidator(10)])
+    descricao_convocacao = models.TextField(max_length=500, validators=[MinValueValidator(1)], blank=False, null=False,)
 
     
 
@@ -96,7 +95,7 @@ class AtendimentoEscolar(models.Model):
     
 
     def __str__(self):
-        return f"{self.professor} - {self.disciplina} - {self.data.strftime('%d/%m/%Y %H:%M')}"
+        return f"{self.professor} - {self.disciplina}"
 
     def clean(self):
         if self.modalidade_presencial in ['ONLINE']:
@@ -109,5 +108,3 @@ class AtendimentoEscolar(models.Model):
                 raise ValidationError("O campo 'sala' é obrigatório para modalidade presencial.")
             if self.link is not None:
                 raise ValidationError("O campo 'link' não deve ser preenchido para modalidade presencial.")
-
-

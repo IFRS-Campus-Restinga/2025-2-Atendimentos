@@ -11,15 +11,22 @@ const CadastrarAtendimentoEscolar = () => {
   });
 
   const [usuarios, setUsuarios] = useState([]);
+  
 
   const [form, setForm] = useState({
-    solicitante: "",
-    titulo: "",
-    descricao: "",
+    professor: "",
+    aluno: "",
+    disciplina: "",
+    email_aluno: "",
+    descricao_convocacao: "",
     data: "",
     hora_inicio: "",
     hora_fim: "",
-    status: "AGENDADO",
+    status: "",
+    finalidade: "",
+    modalidade_presencial: "",
+    sala: "",
+    link: "",
   });
 
   useEffect(() => {
@@ -39,9 +46,21 @@ const CadastrarAtendimentoEscolar = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
+    if (name === "modalidade_presencial") {
+      const modalidade_presencial = modalidade_presencial.find(c => String(c.id) === value);
+      setModalidade_presencialSelecionado(modalidade_presencial || null);
+    }
   };
 
+  const [modalidade_presencialSelecionado, setModalidade_presencialSelecionado] = useState(null);
+  const tipoModalidade = modalidade_presencialSelecionado;
+
   async function salvarAtendimento(e) {
+
+    if (hora_fim <= hora_inicio) {
+      alert("O horário de término deve ser maior que o de início.");
+      return;
+  }
     e.preventDefault();
 
     try {
@@ -54,6 +73,8 @@ const CadastrarAtendimentoEscolar = () => {
     }
   }
 
+  
+
   return (
     <div className="pagina-atendimentos">
       <h2 className="titulo-pagina">Cadastrar Atendimento Escolar</h2>
@@ -61,10 +82,10 @@ const CadastrarAtendimentoEscolar = () => {
       <form className="form-atendimento" onSubmit={salvarAtendimento}>
 
         <label>
-          Solicitante
+          Professor
           <select
-            name="solicitante"
-            value={form.solicitante}
+            name="professor"
+            value={form.professor}
             onChange={handleChange}
             required
           >
@@ -78,23 +99,59 @@ const CadastrarAtendimentoEscolar = () => {
         </label>
 
         <label>
-          Título
+          Descricao
           <input
             type="text"
-            name="titulo"
-            value={form.titulo}
+            name="descricao_convocacao"
+            value={form.descricao_convocacao}
+            onChange={handleChange}
+            required
+          />
+        </label>
+        
+        <label>
+          Disciplina
+          <input
+            type="text"
+            name="disciplina"
+            value={form.disciplina}
             onChange={handleChange}
             required
           />
         </label>
 
         <label>
-          Descrição
-          <textarea
-            name="descricao"
-            value={form.descricao}
+          Aluno
+          <select
+            name="aluno"
+            value={form.aluno}
             onChange={handleChange}
-          />
+            required
+          >
+            <option value="">Selecione</option>
+            {usuarios.map((u) => (
+              <option key={u.id} value={u.id}>
+                {u.nome || u.username || u.email}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <label>
+          Email do Aluno
+          <select
+            name="aluno"
+            value={form.aluno}
+            onChange={handleChange}
+            required
+          >
+            <option value="">Selecione</option>
+            {usuarios.map((u) => (
+              <option key={u.id} value={u.id}>
+                {u.email}
+              </option>
+            ))}
+          </select>
         </label>
 
         <label>
@@ -139,12 +196,90 @@ const CadastrarAtendimentoEscolar = () => {
             value={form.status}
             onChange={handleChange}
           >
-            <option value="AGENDADO">Agendado</option>
-            <option value="CONFIRMADO">Confirmado</option>
+            <option value="CONVOCADO">Convocado</option>
             <option value="REALIZADO">Realizado</option>
             <option value="CANCELADO">Cancelado</option>
+            <option value="AUSENTE">Ausente</option>
           </select>
         </label>
+
+        <label>
+          Finalidade
+          <select
+            name="finalidade"
+            value={form.Finalidade}
+            onChange={handleChange}
+          >
+            <option value="ORIENTACAO_EST">Orientacao Estudos</option>
+            <option value="REVISAO">Revisao</option>
+            <option value="ORIENTACAO_ATI">Orientacao Atividade</option>
+            <option value="OUTRO">Outro</option>
+          </select>
+        </label>
+
+        <label>
+          Modalidade
+          <select
+            name="modalidade_presencial"
+            value={form.modalidade_presencial}
+            onChange={handleChange}
+          >
+            <option value="PRESENCIAL">Presencial</option>
+            <option value="ONLINE">Online</option>
+          </select>
+        </label>
+
+        <label>
+          Sala
+          <input
+            type="text"
+            name="sala"
+            value={form.sala}
+            onChange={handleChange}
+            required
+          />
+        </label>
+
+        <label>
+          Link
+          <input
+            type="text"
+            name="link"
+            value={form.link}
+            onChange={handleChange}
+            required
+          />
+        </label>
+
+        
+
+        {/* {modalidade_presencialSelecionado && (
+          modalidade_presencialSelecionado === "PRESENCIAL" ? (
+            <>
+              <label>Sala:</label>
+              <input
+                type="text"
+                name="sala"
+                value={formData.sala}
+                onChange={handleChange}
+                required
+              />
+            </>
+          ) : (
+            <>
+              <label>Link:</label>
+              <input
+                type="text"
+                name="link"
+                value={formData.link}
+                onChange={handleChange}
+                required
+              />
+            </>
+          )
+        )} */}
+
+
 
         <div className="acoes-form">
           <button type="submit" className="botao-salvar">
