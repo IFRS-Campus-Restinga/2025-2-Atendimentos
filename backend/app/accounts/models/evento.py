@@ -3,22 +3,46 @@ from django.db import models
 from django.utils import timezone
 from accounts.enumerations.status_atendimento import StatusAtendimento
 from .usuario import Usuario
+from .turma import Turma
+from .disciplina import Disciplina
 
 class Evento(BaseModel):
-
-    dia_semana = models.DateField(
-        help_text="Data do dia da semana do evento"
-        )
-
-    data_hora = models.DateTimeField(
+    
+    data_evento = models.DateField(
         default=timezone.now,
-        help_text="Data e hora do evento")
+        help_text="Data do evento" )
+        
+    hora_evento_inicio = models.TimeField(
+        null=False,
+        blank=False,
+        help_text="Horário de início do evento",
+    )
 
-    turma = models.CharField(
-        max_length=50, 
-        blank=True, 
+    hora_evento_fim = models.TimeField(
+        null=False,
+        blank=False,
+        help_text="Horário de término do evento",
+    )
+
+    
+    # Impede que o registro  pai seja deletado se ainda existir registros filhos.  - Verificar se esta correto
+    turma = models.ForeignKey(
+        Turma,
+        on_delete=models.PROTECT,
+        related_name='eventos',
+        null=True,
+        blank=True,
         help_text="Turma relacionada ao evento"
-        )
+    )
+
+    disciplina = models.ForeignKey(
+        Disciplina,
+        on_delete=models.PROTECT,
+        related_name='eventos',
+        null=True,
+        blank=True,
+        help_text="Disciplina relacionada ao evento"
+    )
 
     limite = models.PositiveIntegerField(
         default=25, 
@@ -29,7 +53,7 @@ class Evento(BaseModel):
     status_atendimento = models.CharField(
         max_length=5,
         choices=StatusAtendimento.choices,
-        default=StatusAtendimento.PENDENTE
+        default=StatusAtendimento.CONFIRMADO
     )
 
     usuario_create = models.ForeignKey(
@@ -38,10 +62,11 @@ class Evento(BaseModel):
     null=True,
     blank=True,
     related_name='eventos_criados'
-)
+    )
 
-    # usuarios = models.ManyToManyField(
-    #     Usuario,
-    #     related_name='eventos_participando',
-    #     blank=True
-    # )
+    class Meta:
+        permissions = [
+            ("approve_event", "Can approve/confirm event"),
+            ("cancel_event", "Can cancel event"),
+            ("reschedule_event", "Can reschedule event"),
+        ]

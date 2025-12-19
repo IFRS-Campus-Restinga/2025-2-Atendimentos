@@ -13,6 +13,8 @@ def verify_google_token(token):
 
         if idinfo['exp'] < time.time():
             raise ValueError("Token expirado")
+        print("token: " + token)
+        print("idinfo: " + token)
 
         return {
             "email": idinfo.get("email"),

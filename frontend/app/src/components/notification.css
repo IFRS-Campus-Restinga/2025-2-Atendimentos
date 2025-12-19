@@ -1,0 +1,98 @@
+.notification-wrapper {
+  position: relative;
+}
+
+.notification-btn {
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: transparent;
+  color: white;
+  cursor: pointer;
+  border-radius: 50%;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background 0.15s;
+}
+
+.notification-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.notification-btn i {
+  font-size: 1.3rem;
+}
+
+.notification-btn .badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(30%, -30%);
+  background: red;
+  color: white;
+  padding: 2px 6px;
+  font-size: 0.6rem;
+  border-radius: 12px;
+}
+
+.notification-dropdown {
+  position: absolute;
+  right: 0;
+  top: 42px;
+  width: 260px;
+  background: white;
+  border-radius: 10px;
+  padding: 10px;
+  z-index: 1000;
+}
+
+.notification-dropdown .title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 8px;
+}
+
+.notification-item {
+  padding: 8px;
+  font-size: 0.85rem;
+  border-radius: 6px;
+  margin-bottom: 4px;
+  cursor: default;
+}
+
+.notification-item:hover {
+  background: #f4f4f4;
+}
+
+.empty {
+  text-align: center;
+  font-size: 0.85rem;
+  color: #666;
+  padding: 10px 0;
+}
+
+.notification-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem;
+  border-bottom: 1px solid #eee;
+}
+
+.btn-lida {
+  background-color: transparent;
+  border: none;
+  color: green;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 1rem;
+  margin-left: 0.5rem;
+}
+
+.btn-lida:hover {
+  color: darkgreen;
+}

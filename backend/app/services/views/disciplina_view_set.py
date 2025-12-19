@@ -12,3 +12,11 @@ class DisciplinaViewSet(ModelViewSet):
     serializer_class = DisciplinaSerializer
     permission_classes = [AllowAny]
     #permission_classes = [BackendTokenPermission]
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        turma_id = self.request.query_params.get('turma')
+        if turma_id:
+            # filtra apenas disciplinas relacionadas com a turma
+            qs = qs.filter(turmas__id=turma_id)
+        return qs

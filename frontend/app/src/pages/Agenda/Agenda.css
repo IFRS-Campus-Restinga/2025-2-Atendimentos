@@ -1,3 +1,4 @@
+/* Wrapper e container */
 .agenda-wrapper {
   padding: 20px;
   background-color: #f0f2f5;
@@ -5,7 +6,7 @@
 }
 
 .agenda-container {
-  max-width: 1200px;
+  max-width: 1100px;
   margin: 0 auto;
   padding: 20px;
   background-color: #fff;
@@ -14,6 +15,7 @@
   font-family: Arial, sans-serif;
 }
 
+/* Cabeçalho */
 .agenda-header {
   text-align: center;
   margin-bottom: 20px;
@@ -29,12 +31,15 @@
   margin: 0;
 }
 
+/* Botões */
 .btn {
   cursor: pointer;
 }
 
+/* Calendário semanal */
 .weekly-calendar {
   margin-top: 20px;
+  overflow-x: auto;
 }
 
 .calendar-header {
@@ -46,20 +51,164 @@
 
 .calendar-grid {
   display: grid;
-  grid-template-columns: 60px repeat(6, 1fr);
 }
 
-.time-column-header {
-  height: 40px;
+.periods-grid {
+  display: grid;
+  grid-template-columns: 90px repeat(6, 130px);
+  grid-auto-rows: minmax(60px, auto);
+  gap: 8px;
+  padding: 8px;
+  justify-content: center;
 }
 
+.period-column-header {
+  height: 44px;
+}
+
+.period-row {
+  display: contents;
+}
+
+.period-label {
+  padding: 6px 6px;
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: .3px;
+  background: linear-gradient(135deg, #198754, #157347);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  align-self: stretch;
+}
+
+.periods-grid .day-cell {
+  background: #ffffff;
+  border: 1px solid #e1e1e1;
+  border-radius: 8px;
+  padding: 6px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow: visible;
+  scrollbar-width: thin;
+}
+
+.periods-grid .day-cell:hover {
+  border-color: #198754;
+  box-shadow: 0 0 0 2px rgba(25, 135, 84, 0.15);
+}
+
+/* Indicadores de evento */
+.appointment-indicator {
+  color: #fff;
+  font-size: 0.72rem;
+  padding: 4px 6px;
+  border-radius: 6px;
+  margin: 2px 0;
+  line-height: 1.2;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  transition: all 0.2s ease;
+}
+
+/* Ordinário */
+.appointment-indicator.evento-ordinario {
+  background-color: #52b788;
+  border-left: 3px solid #2d6a4f;
+}
+.appointment-indicator.evento-ordinario:hover {
+  background-color: #40916c;
+}
+
+/* Extraordinário */
+.appointment-indicator.evento-extraordinario {
+  background-color: #7cb992;
+  border-left: 3px solid #5a9d72;
+  opacity: 0.85;
+}
+.appointment-indicator.evento-extraordinario:hover {
+  background-color: #6fa884;
+}
+
+/* Convocação */
+.appointment-indicator.evento-convocacao {
+  background-color: #498660;
+  border-left: 3px solid #4e8f67;
+  opacity: 0.9;
+}
+.appointment-indicator.evento-convocacao:hover {
+  background-color: #4e8f67;
+}
+
+/* Hover geral */
+.appointment-indicator:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.appointment-indicator .appt-line {
+  display: block;
+}
+
+.appointment-indicator .appt-tipo {
+  font-size: 0.65rem;
+  font-weight: 600;
+  margin-top: 2px;
+  opacity: 0.9;
+}
+
+/* Legenda */
+.legenda-eventos {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  padding: 10px 12px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  font-size: 0.85rem;
+}
+
+.legenda-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.legenda-cor {
+  width: 24px;
+  height: 16px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.legenda-cor.evento-ordinario {
+  background-color: #52b788;
+  border-left: 3px solid #2d6a4f;
+}
+
+.legenda-cor.evento-extraordinario {
+  background-color: #7cb992;
+  border-left: 3px solid #5a9d72;
+}
+
+.legenda-cor.evento-convocacao {
+  background-color: #498660;
+  border-left: 3px solid #4e8f67;
+}
+
+/* Cabeçalhos de dia */
 .day-column-header {
+  width: 125px;
   text-align: center;
-  padding: 5px 0;
+  padding: 6px 0;
   border-radius: 8px;
   background-color: #198754;
   color: white;
-  margin: 0 5px;
+  margin: 0 4px;
 }
 
 .day-name {
@@ -67,94 +216,26 @@
 }
 
 .day-date {
-  font-size: 0.85rem;
+  font-size: 0.9rem;
 }
 
-.hour-row {
-  display: contents;
+/* Responsividade */
+@media (max-width: 1024px) {
+  .periods-grid {
+    grid-template-columns: 80px repeat(6, 120px);
+    grid-auto-rows: minmax(120px, auto);
+  }
 }
 
-.time-label {
-  border-right: 1px solid #dee2e6;
-  padding: 5px;
-  text-align: right;
-  font-size: 0.85rem;
-  color: #495057;
-}
+@media (max-width: 768px) {
+  .periods-grid {
+    grid-template-columns: 70px repeat(6, 110px);
+    grid-auto-rows: minmax(110px, auto);
+  }
 
-.day-cell {
-  border-left: 1px solid #e1e1e1;
-  border-bottom: 1px solid #e1e1e1;
-  height: 60px;
-  padding: 2px;
-  position: relative;
-}
-
-/* Evento */
-.appointment-indicator {
-  background-color: #198754;
-  color: white;
-  font-size: 0.8rem;
-  padding: 4px 6px;
-  border-radius: 8px;
-  margin: 2px 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  width: 95%;
-}
-
-/* Modal */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.4);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.modal-container {
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 12px;
-  width: 400px;
-  max-width: 90%;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
-}
-
-.modal-container h4 {
-  margin-top: 0;
-  margin-bottom: 15px;
-  color: #198754;
-}
-
-.modal-container .btn {
-  margin-right: 10px;
-}
-
-.btn-success {
-  background-color: #198754;
-  border-color: #198754;
-  color: #fff;
-}
-
-.btn-success:hover {
-  background-color: #157347;
-  border-color: #157347;
-}
-
-.btn-outline-secondary {
-  background-color: transparent;
-  color: #6c757d;
-  border-color: #6c757d;
-}
-
-.btn-outline-secondary:hover {
-  background-color: #6c757d;
-  color: #fff;
+  .day-column-header {
+    width: 110px;
+    margin: 0 2px;
+    border-radius: 6px;
+  }
 }

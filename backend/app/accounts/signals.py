@@ -3,7 +3,7 @@ from django.dispatch import receiver
 from allauth.account.signals import user_signed_up 
 from django.contrib.auth.models import Group
 from .models.usuario import Usuario 
-from .enumerations.tipo_usuario import TipoUsuario
+#from .enumerations.tipo_usuario import TipoUsuario
 from django.db.models.signals import post_migrate 
 from django.db.models import ObjectDoesNotExist
 
@@ -39,7 +39,7 @@ def initial_profile_setup(sender, request, user, sociallogin=None, **kwargs):
             user=user,
             nome=user.get_full_name() or user.username or user.email.split('@')[0],
             email=user.email,
-            tipoPerfil=TipoUsuario.ALUNO,
+#            tipoPerfil=TipoUsuario.ALUNO,
             needs_complemento=True 
         )
         print(f"Novo Perfil Usuario para {user.email} criado. Aguardando complemento.")

@@ -1,14 +1,16 @@
 from .disciplina_serializer import *
 from .turma_serializer import *
-from .aluno_serializer import *
+# Removed aluno_serializer
 from .usuario_serializer import *
 from .evento_serializer import *
 from .evento_ordinario_serializer import *
-from .coordenador_resumido_serializer import *
-from .coordenador_serializer import *
+# Removed coordenador serializers
 from .curso_serializer import *
-from .professor_serializer import *
-from .curso_coordenador_resumido_serializer import *
+# Removed professor_serializer
+# Removed curso_coordenador_resumido_serializer
 from .evento_extraordinario_serializer import *
 from .registro_atendimento_serializer import *
 from .complemento_cadastro_serializer import *
+from .complemento_cadastro_serializer import *
+from .evento_convocacao_serializer import *
+# Removed complemento_cadastro_serializer
