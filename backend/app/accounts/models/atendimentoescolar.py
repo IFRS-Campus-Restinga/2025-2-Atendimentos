@@ -31,9 +31,10 @@ class AtendimentoEscolar(models.Model):
     )
 
     FINALIDADE_CHOICES = [
-        ('ORIENTACAO_EST', 'Orientacao Estudos'),
-        ('REVISAO', 'Revisao'),
-        ('ORIENTACAO_ATI', 'Orientacao Atividade'),
+        ('ORIENTACAO_EST', 'Orientações de estudoes'),
+        ('REVISAO', 'Revisão para avaliação'),
+        ('ORIENTACAO_ATI', 'Orientação de atividade'),
+        ('ATENDIMENTO', 'Atendimento pedagógico'),
         ('OUTRO', 'Outro'),
     ]
 

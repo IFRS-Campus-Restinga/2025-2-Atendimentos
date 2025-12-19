@@ -208,9 +208,10 @@ const ListaAtendimentosEscolares = () => {
                     value={editData.finalidade}
                     onChange={handleChange}
                   >
-                    <option value="ORIENTACAO_EST">Orientacao Estudos</option>
-                    <option value="REVISAO">Revisao</option>
-                    <option value="ORIENTACAO_ATI">Orientacao Atividade</option>
+                    <option value="ORIENTACAO_EST">Orientações de estudoes</option>
+                    <option value="REVISAO">Revisão para avaliação</option>
+                    <option value="ORIENTACAO_ATI">Orientação de atividade</option>
+                    <option value="ATENDIMENTO">Atendimento pedagógico</option>
                     <option value="OUTRO">Outro</option>
                   </select>
                 ) : (
