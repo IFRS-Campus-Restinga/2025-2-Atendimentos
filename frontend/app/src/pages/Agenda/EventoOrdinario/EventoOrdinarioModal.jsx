@@ -1,0 +1,43 @@
+import EventoOrdinarioForm from './EventoOrdinarioForm';
+import EventoExtraordinarioForm from '../EventoExtraordinario/EventoExtraordinarioForm';
+import EventoConvocacaoForm from '../EventoConvocacao/EventoConvocacaoForm';
+import '../Evento.css';
+
+const EventoOrdinarioModal = ({ isOpen, tipo, onClose, onSuccess }) => {
+  if (!isOpen) return null;
+
+  const handleOverlayClick = (e) => {
+    if (e.target.classList.contains("modal-overlay")) {
+      onClose();
+    }
+  };
+
+  return (
+    <div className="modal-overlay" onClick={handleOverlayClick}>
+      <div className="modal-container" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-header">
+          <h4>
+            {tipo === "ordinario"
+              ? "Cadastrar Atendimento de Turma"
+              : tipo === "extraordinario"
+              ? "Solicitar / Marcar Atendimento"
+              : tipo === "convocacao"
+              ? "Cadastrar Convocação"
+              : "Evento"}
+          </h4>
+          <button className="modal-close-btn" onClick={onClose}>×</button>
+        </div>
+
+        {tipo === "ordinario" ? (
+          <EventoOrdinarioForm onSuccess={onSuccess || onClose} />
+        ) : tipo === "extraordinario" ? (
+          <EventoExtraordinarioForm onSuccess={onSuccess || onClose} />
+        ) : tipo === "convocacao" ? (
+          <EventoConvocacaoForm onSuccess={onSuccess || onClose} />
+        ) : null}
+      </div>
+    </div>
+  );
+};
+
+export default EventoOrdinarioModal;

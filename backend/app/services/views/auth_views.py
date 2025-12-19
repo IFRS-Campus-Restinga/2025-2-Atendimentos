@@ -4,6 +4,8 @@ from rest_framework.permissions import AllowAny
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import get_user_model
 from services.auth import verify_google_token
+from accounts.models.usuario import Usuario
+from accounts.enumerations.tipo_usuario import TipoUsuario
 
 class GoogleLoginView(APIView):
     permission_classes = [AllowAny]
@@ -24,12 +26,28 @@ class GoogleLoginView(APIView):
             )
             token, _ = Token.objects.get_or_create(user=user)
 
+            # Vincula um perfil `Usuario` existente (pelo email) ao `user` do Django, caso não esteja vinculado
+            try:
+                usuario = Usuario.objects.get(email=email)
+                if not usuario.user:
+                    usuario.user = user
+                    usuario.save()
+            except Usuario.DoesNotExist:
+                usuario = Usuario.objects.create(
+                    user=user,
+                    nome=name or (user.get_full_name() or user.username or email.split('@')[0]),
+                    email=email,
+                    tipoPerfil=TipoUsuario.ALUNO,
+                    needs_complemento=True,
+                )
+
             return Response({
                 "token": token.key,
                 "user": {
                     "email": email,
                     "name": name,
-                    "picture": picture
+                    "picture": picture,
+                    "needs_complemento": getattr(usuario, 'needs_complemento', True)
                 }
             })
         else:

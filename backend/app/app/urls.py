@@ -1,6 +1,5 @@
 from django.contrib import admin
 from django.urls import path, include
-from services.views.complemento_views import ComplementoCadastroView
 from django.shortcuts import redirect
 
 urlpatterns = [

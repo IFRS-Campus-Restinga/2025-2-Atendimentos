@@ -2,13 +2,19 @@
 export const API_CONFIG = {
   baseURL: import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000',
   endpoints: {
-    googleLogin: '/api/google-login/',
-    alunos: '/services/alunos/',
+    googleLogin: '/services/api/google-login/',
     coordenadores: '/services/coord/',
     cursos: '/services/cursos/',
     disciplinas: '/services/disciplinas/',
     professores: '/services/professores/',
     turmas: '/services/turmas/',
+    usuarioMe: '/services/api/usuario/me',
+    usuarios: '/services/usuarios/',
+    profileStatus: '/services/api/profile/status/',
+    complementoCadastro: '/services/api/usuario/complemento/', 
+    eventoOrdinario: '/services/evento-ordinario/',
+    eventoExtraordinario: '/services/evento-extraordinario/',
+    eventoConvocacao: '/services/evento-convocacao/',
   }
 };
 
@@ -55,3 +61,138 @@ export const dateUtils = {
 };
 
 export default dateUtils;
+
+export const getAuthHeaders = () => {
+  const token = localStorage.getItem('authToken');
+  return token ? { Authorization: `Bearer ${token}` } : {};
+};
+
+export async function checkProfileStatus(role) {
+  const url = `${API_CONFIG.baseURL}${API_CONFIG.endpoints.profileStatus}?role=${encodeURIComponent(role)}`;
+  const res = await fetch(url, {
+    method: 'GET',
+    headers: {
+      'Accept': 'application/json',
+      ...getAuthHeaders(),
+    },
+    credentials: 'include',
+  });
+  if (!res.ok) throw new Error('Falha ao verificar status do perfil');
+  return res.json();
+}
+
+export async function postComplementoCadastro(payload) {
+  const url = `${API_CONFIG.baseURL}${API_CONFIG.endpoints.complementoCadastro}`;
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getAuthHeaders(),
+    },
+    credentials: 'include',
+    body: JSON.stringify(payload),
+  });
+  const contentType = res.headers.get('content-type');
+  const data = contentType && contentType.includes('application/json') ? await res.json() : null;
+  if (!res.ok) throw new Error(data?.detail || 'Falha ao completar cadastro');
+  return data;
+}
+
+export async function getMyProfile(role) {
+  // Usar o novo endpoint usuarioMe que substitui profileMe
+  const url = `${API_CONFIG.baseURL}${API_CONFIG.endpoints.usuarioMe}`;
+  const res = await fetch(url, {
+    method: 'GET',
+    headers: {
+      'Accept': 'application/json',
+      ...getAuthHeaders(),
+    },
+    credentials: 'include',
+  });
+  if (!res.ok) throw new Error('Falha ao obter dados do perfil');
+  return res.json();
+}
+
+export async function saveUsuarioMe(payload) {
+  const url = `${API_CONFIG.baseURL}${API_CONFIG.endpoints.usuarioMe}`;
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getAuthHeaders(),
+    },
+    credentials: 'include',
+    body: JSON.stringify(payload),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data?.detail || 'Falha ao salvar usuário');
+  return data;
+}
+
+// --- Funções de Convocação ---
+export async function criarConvocacao(payload) {
+  const url = getApiUrl("eventoConvocacao");
+  const res = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...getAuthHeaders(),
+    },
+    body: JSON.stringify(payload),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data?.detail || "Falha ao criar convocação");
+  return data;
+}
+
+export async function listarConvocacoes() {
+  const url = getApiUrl("eventoConvocacao");
+  const res = await fetch(url, {
+    method: "GET",
+    headers: {
+      "Accept": "application/json",
+      ...getAuthHeaders(),
+    },
+  });
+  if (!res.ok) throw new Error("Falha ao listar convocações");
+  return res.json();
+}
+
+export async function editarConvocacao(id, payload) {
+  const url = `${getApiUrl("eventoConvocacao")}${id}/`;
+  const res = await fetch(url, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      ...getAuthHeaders(),
+    },
+    body: JSON.stringify(payload),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data?.detail || "Falha ao editar convocação");
+  return data;
+}
+
+export async function encerrarConvocacao(id) {
+  const url = `${getApiUrl("eventoConvocacao")}${id}/encerrar/`;
+  const res = await fetch(url, {
+    method: "POST",
+    headers: {
+      ...getAuthHeaders(),
+    },
+  });
+  if (!res.ok) throw new Error("Falha ao encerrar convocação");
+  return res.json();
+}
+
+export async function cancelarConvocacao(id) {
+  const url = `${getApiUrl("eventoConvocacao")}${id}/cancelar/`;
+  const res = await fetch(url, {
+    method: "POST",
+    headers: {
+      ...getAuthHeaders(),
+    },
+  });
+  if (!res.ok) throw new Error("Falha ao cancelar convocação");
+  return res.json();
+}
