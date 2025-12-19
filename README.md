@@ -98,6 +98,9 @@ npm install jwt-decode
 npm install @react-oauth/google
 ```
 
+coloque o arquivo .env pra conseguir usar o google
+
+
 ### Inicie o servidor de desenvolvimento
 ```
 npm run dev
